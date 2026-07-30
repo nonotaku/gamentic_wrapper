@@ -597,6 +597,35 @@
       "source": "local",
       "embed": "iframe",
       "downloaded": true
+    },
+    {
+      "id": "local:tank-war",
+      "slug": "tank-war",
+      "title": "Tank War 3D",
+      "author": "Bosco Wong",
+      "category": "action",
+      "tags": [
+        "tank",
+        "3d",
+        "pve",
+        "co-op",
+        "versus",
+        "campaign",
+        "multiplayer"
+      ],
+      "desc": "Realistic 3D tank combat — PVE, co-op, versus and campaign modes, with peer-to-peer online play. Built as a single self-contained HTML file.",
+      "stars": null,
+      "license": "own work",
+      "created": "",
+      "emoji": "🪖",
+      "entry": "index.html",
+      "playUrl": "/play/local/tank-war/index.html",
+      "url": "",
+      "thumb": "/thumbs/tank-war.svg",
+      "source": "local",
+      "embed": "iframe",
+      "imported": true,
+      "homepage": "https://bosco-portfolio.azurewebsites.net/projects/tank-war"
     }
   ]
 }
