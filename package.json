@@ -1,0 +1,12 @@
+{
+  "name": "gamentic",
+  "version": "1.0.0",
+  "description": "Local wrapper/portal for good-quality human-made HTML5 games: stores them in a folder, serves them on localhost, ranks them by category, and analyzes them with the local Claude Code CLI.",
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs",
+    "fetch": "node scripts/fetch-games.mjs",
+    "refetch": "node scripts/fetch-games.mjs --force"
+  },
+  "engines": { "node": ">=18" }
+}

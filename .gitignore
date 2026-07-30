@@ -1,0 +1,10 @@
+# Downloaded game files — re-fetchable via `npm run fetch` or the portal's download buttons
+games/
+
+# Remote listing caches — refetched automatically (24h TTL)
+data/cache/
+
+# Local noise
+node_modules/
+*.log
+Thumbs.db

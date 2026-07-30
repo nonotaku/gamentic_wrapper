@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gamentic — local HTML5 game portal</title>
+<link rel="stylesheet" href="/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎮</text></svg>">
+</head>
+<body>
+
+<header>
+  <div class="brand" id="brandBtn" title="Back to the websites home page">🎮 <b>GAM<span>ENTIC</span></b><span class="tagline">local HTML5 game wrapper</span></div>
+  <input id="q" type="search" placeholder="Search games…  ( press / )" autocomplete="off">
+  <div class="hdr-right">
+    <button id="invBtn" class="chip" title="My inventory — your collected games">🎒 Inventory <span id="invCount" class="pill">0</span></button>
+    <span id="claudeDot" class="dot" title="checking Claude CLI…">🤖</span>
+    <button id="refreshBtn" class="chip" title="Re-fetch rankings from all game websites"><span id="refreshIco">⟳</span></button>
+  </div>
+</header>
+
+<!-- ============ VIEW 1: home — pick a game website ============ -->
+<div id="viewHome" class="homeview">
+  <div class="hero">
+    <h1>Pick a game website</h1>
+    <p>Real, human-made HTML5 games wrapped into one local portal. Enter a website to browse its games —
+       collect them into your 🎒 inventory, ⬇ download the open-source ones into <code>./games/</code>,
+       and let 🤖 Claude review single games or rank a whole group.</p>
+  </div>
+  <div id="siteCards" class="sitecards"></div>
+</div>
+
+<!-- ============ VIEW 2: inside one website (the wrap) ============ -->
+<div class="layout" id="viewSite" hidden>
+  <aside id="side">
+    <nav id="cats" class="cats"></nav>
+    <section class="box" id="srcBox">
+      <h4>Game websites</h4>
+      <div id="sources"></div>
+    </section>
+    <section class="box">
+      <h4>Rank by</h4>
+      <select id="sort">
+        <option value="top">🏆 Top score (blended)</option>
+        <option value="metric">📈 Site metric (stars / rating)</option>
+        <option value="plays">👁 My views (plays)</option>
+        <option value="likes">❤ My likes</option>
+        <option value="new">🕒 Newest</option>
+        <option value="az">🔤 A–Z</option>
+      </select>
+    </section>
+    <section class="box">
+      <h4>Claude</h4>
+      <button id="batchBtn" class="chip accent wide" title="One Claude report that ranks the games currently shown">🤖 Rank this view</button>
+    </section>
+    <p class="note">Human-made games only — AI-generated titles are filtered out. Stored games live in <code>./games/</code>.</p>
+  </aside>
+  <main>
+    <div class="crumbs">
+      <button id="backHome" class="chip">← Websites</button>
+      <b id="siteTitle"></b>
+    </div>
+    <div id="statsline" class="statsline"></div>
+    <div id="grid" class="grid"></div>
+    <div id="empty" class="empty" hidden>Nothing here — try another category, source or search.</div>
+  </main>
+</div>
+
+<!-- ============ VIEW 3: inventory — my collection ============ -->
+<div id="viewInv" class="invview" hidden>
+  <div class="crumbs">
+    <button id="backHome2" class="chip">← Websites</button>
+    <b>🎒 My inventory</b>
+    <span class="spacer"></span>
+    <button id="batchInvBtn" class="chip accent" title="One Claude report that ranks everything in your inventory">🤖 Review &amp; rank inventory</button>
+  </div>
+  <p class="note invnote">Your personal collection. On any game card: ▶ play · 🎒 collect · ⬇ download open-source games to disk · 🤖 Claude review · ❤ like.</p>
+  <div id="invGrid" class="grid"></div>
+  <div id="invEmpty" class="empty" hidden>Inventory is empty — press 🎒 on any game card to collect it here.</div>
+</div>
+
+<!-- ============ player / detail modal ============ -->
+<div id="modal" class="modal" hidden>
+  <div class="sheet">
+    <div class="bar">
+      <span id="mEmoji" class="memoji"></span>
+      <div class="titlebox"><b id="mTitle"></b><span id="mMeta"></span></div>
+      <span class="spacer"></span>
+      <button id="mLike" class="chip" title="Like this game">❤ <span id="mLikeTxt">Like</span></button>
+      <button id="mInv" class="chip" title="Add to / remove from inventory">🎒</button>
+      <button id="mAnalyze" class="chip accent" title="Analyze this game with your local Claude CLI">🤖 Analyze</button>
+      <a id="mSite" class="chip" target="_blank" rel="noopener" title="Open the game's source page">↗ Site</a>
+      <button id="mClose" class="chip" title="Close (Esc)"
+        onclick="document.getElementById('modal').hidden=true;document.getElementById('apanel').hidden=true;document.getElementById('mFrame').src='about:blank';document.body.classList.remove('locked')">✕</button>
+    </div>
+    <div class="stage">
+      <iframe id="mFrame" allow="autoplay; fullscreen; gamepad; pointer-lock"
+        sandbox="allow-scripts allow-same-origin allow-pointer-lock allow-popups allow-forms"></iframe>
+      <div id="mCover" class="cover" hidden>
+        <div id="cEmoji" class="cemoji" style="display:none">🎮</div>
+        <img id="cThumb" alt="">
+        <p id="cDesc"></p>
+        <a id="cPlay" class="bigbtn" target="_blank" rel="noopener">▶ Play on site ↗</a>
+        <p class="covernote">This website doesn't allow embedding, so the game opens in a new tab — your view still counts here.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- analysis panel lives outside the modal so it also works standalone (card 🤖 / batch ranking) -->
+<aside id="apanel" class="apanel" hidden>
+  <div class="abar">
+    <b>🤖 Claude analysis</b>
+    <span id="aStatus" class="astatus"></span>
+    <span class="spacer"></span>
+    <button id="aRedo" class="chip" title="Re-run the analysis">↻</button>
+    <button id="aClose" class="chip" title="Close"
+      onclick="document.getElementById('apanel').hidden=true">✕</button>
+  </div>
+  <div id="aBody" class="md"><p class="amuted">Pick a game and press 🤖 Analyze.</p></div>
+</aside>
+
+<script src="/app.js"></script>
+</body>
+</html>

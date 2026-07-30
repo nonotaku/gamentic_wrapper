@@ -1,0 +1,42 @@
+[
+  {
+    "id": "local:html5-asteroids",
+    "slug": "html5-asteroids",
+    "title": "HTML5 Asteroids",
+    "author": "dmcinnes",
+    "category": "other",
+    "tags": [],
+    "desc": "Pure Javascript Asteroids",
+    "repoUrl": "https://github.com/dmcinnes/HTML5-Asteroids",
+    "homepage": "http://dougmcinnes.com/2010/05/12/html-5-asteroids/",
+    "stars": 353,
+    "license": "MIT",
+    "created": "2010-05-13",
+    "emoji": "🎮",
+    "entry": "index.html",
+    "playUrl": "/play/local/html5-asteroids/index.html",
+    "url": "https://github.com/dmcinnes/HTML5-Asteroids",
+    "thumb": "https://opengraph.githubassets.com/1/dmcinnes/HTML5-Asteroids",
+    "source": "local",
+    "embed": "iframe",
+    "downloaded": true
+  },
+  {
+    "id": "itch:1i76fbh",
+    "title": "How to Date an Entity (and stay alive)",
+    "author": "sfour-s4",
+    "category": "card",
+    "desc": "",
+    "thumb": "https://img.itch.zone/aW1nLzE5Mzk2MTczLnBuZw==/315x250%23c/sNBALD.png",
+    "url": "https://sfour-s4.itch.io/how-to-date-an-entity",
+    "playUrl": "https://sfour-s4.itch.io/how-to-date-an-entity",
+    "embed": "external",
+    "source": "itch",
+    "metric": {
+      "label": "itch.io popularity",
+      "value": "#16"
+    },
+    "rankScore": 55,
+    "created": "Wed, 27 Nov 2024"
+  }
+]

@@ -1,0 +1,17 @@
+## Verdict
+This is a masterclass in doing one thing perfectly. Cirulli's 2048 is ~500 lines of dependency-free ES5 split into single-responsibility objects (`GameManager`, `Grid`, `Tile`, `HTMLActuator`, `KeyboardInputManager`, `LocalStorageManager`), rendered entirely with DOM + CSS transforms and no game engine. The architecture is textbook MVC: the model never touches the DOM, input is event-emitted, and rendering is a pure function of grid state. It's dated (ES5 prototypes, vendor-prefixed polyfills, jQuery-era swipe handling) but astonishingly clean, and the merge/animation logic still repays study. **Fun: 9/10 · Code quality: 8/10 · Learning value: 10/10.**
+
+## How it plays
+The core loop is one gesture: press an arrow (or WASD, or HJKL vim keys — see the keymap in `keyboard_input_manager.js:37`), every tile slides that way, equal neighbors merge and double, one new 2-or-4 tile spawns. Reach 2048 to win, then "Keep going" for higher tiles; the board filling with no legal merges ends it. Difficulty is emergent and self-scaling — the board gets more crowded as your numbers climb, so pressure rises naturally without any level system. Sessions are 2–10 minutes but the auto-saved state (`local_storage_manager.js`) means it's really one endless session you dip into. `startTiles = 2`, and spawns are 90% "2" / 10% "4" (`addRandomTile`, `game_manager.js:71`).
+
+## Under the hood
+No engine, no canvas, no WebGL, **no libraries at all** — just five hand-rolled classes wired together in `application.js`, itself wrapped in a `requestAnimationFrame` to avoid first-paint glitches. Rendering is **pure DOM**: `HTMLActuator.actuate` clears `.tile-container` and re-creates every tile `<div>` each move, letting CSS do the work. There's no continuous game loop — it's event-driven; a move only fires on input. The clever bits are real:
+- **Movement algorithm** (`GameManager.move`): direction becomes a `vector`, `buildTraversals` reverses iteration order so tiles are always processed farthest-first (preventing double-slides), and `findFarthestPosition` walks until an obstacle. The `!next.mergedFrom` guard (`game_manager.js:156`) enforces "one merge per tile per move" — the single subtlest rule in the game, handled in one boolean.
+- **Animation via position classes**: tiles carry `previousPosition`; `addTile` renders them in the old cell, then a nested `requestAnimationFrame` swaps to the new `tile-position-x-y` class, so a CSS `transition` on `transform: translate` animates the slide (`main.scss:329`). Merges spawn a new tile *plus* re-render both `mergedFrom` sources underneath for the pop.
+- **Persistence**: `LocalStorageManager` feature-detects `localStorage` and silently falls back to an in-memory `fakeStorage` shim — so it never throws in private-mode Safari. Full grid + score serialize to JSON on every move.
+- **Input**: one emitter (`on`/`emit`), keyboard + touch/swipe + MSPointer, with a 10px swipe threshold and modifier-key filtering so browser shortcuts still work.
+
+No audio at all.
+
+## What makes it good
+The separation of concerns is the star: you could swap `HTMLActuator` for a canvas renderer without touching game logic, which is exactly why hundreds of forks exist. The animation trick — using
