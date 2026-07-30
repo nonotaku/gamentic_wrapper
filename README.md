@@ -73,6 +73,16 @@ Other notes:
 - Analyses stream live, run at most 2 at a time (extra clicks attach to the running one),
   and are cached in `data/analysis/` — the 🤖 icon turns green when a saved report exists.
 
+## Importing games you downloaded yourself (e.g. official itch.io downloads)
+
+Many itch.io games offer an official **Download** button (the developer provides the files).
+Download the game there, unzip it, and drop the folder into `./games/` — the portal
+auto-detects any folder containing a playable HTML file and lists it as a LOCAL game
+(📦 imported). Delete the folder and it de-lists automatically. Note: only **HTML5/web
+builds** are playable inside the portal; Windows/Mac builds run outside the browser.
+Browser-only itch games (no Download button) can't be stored — play them via the portal
+and use 🤖 analysis instead. (The portal never rips files from itch's servers.)
+
 ## Adding more games to the library
 
 Add an entry to `data/curated.json` (any static open-source HTML5 game on GitHub):

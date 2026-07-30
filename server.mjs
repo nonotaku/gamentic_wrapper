@@ -292,6 +292,52 @@ const SOURCES = {
   github: { label: 'GitHub open source', fn: fetchGitHub },
 };
 
+// Manual import: any game folder dropped into games/ (e.g. an official itch.io
+// download, unzipped) is auto-cataloged; vanished folders are auto-removed.
+function scanManualGames(catalog) {
+  let changed = false;
+  const before = catalog.games.length;
+  catalog.games = catalog.games.filter((g) => {
+    try { return fs.existsSync(path.join(GAMES_DIR, g.slug)); } catch { return false; }
+  });
+  if (catalog.games.length !== before) changed = true;
+  const known = new Set(catalog.games.map((g) => g.slug));
+  let dirs = [];
+  try { dirs = fs.readdirSync(GAMES_DIR); } catch { return changed; }
+  for (const dir of dirs) {
+    if (dir.startsWith('_') || dir.startsWith('.') || known.has(dir)) continue;
+    const full = path.join(GAMES_DIR, dir);
+    try { if (!fs.statSync(full).isDirectory()) continue; } catch { continue; }
+    let entry = findHtmlEntry(full);
+    if (!entry) {
+      // unzipped-into-a-subfolder case: descend one level if there's exactly one dir
+      try {
+        const subs = fs.readdirSync(full).filter((s) => {
+          try { return fs.statSync(path.join(full, s)).isDirectory(); } catch { return false; }
+        });
+        if (subs.length === 1) {
+          const e2 = findHtmlEntry(path.join(full, subs[0]));
+          if (e2) entry = `${subs[0]}/${e2}`;
+        }
+      } catch { /* ignore */ }
+    }
+    if (!entry) continue;
+    catalog.games.push({
+      id: `local:${dir}`, slug: dir,
+      title: dir.replace(/[-_]+/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
+      author: 'imported', category: 'other', tags: [],
+      desc: 'Imported game (dropped into games/ — e.g. an official itch.io download)',
+      stars: null, license: 'see the original store page', created: '',
+      emoji: '📦', entry,
+      playUrl: '/play/local/' + [dir, ...entry.split('/')].map(encodeURIComponent).join('/'),
+      url: '', thumb: '', source: 'local', embed: 'iframe', imported: true,
+    });
+    changed = true;
+    console.log(`[gamentic] imported manual game: games/${dir} (entry: ${entry})`);
+  }
+  return changed;
+}
+
 function localRepoSet() {
   const catalog = readJSON(path.join(DATA_DIR, 'catalog.json'), { games: [] });
   return new Set(catalog.games.map((g) => (g.repoUrl || '').replace('https://github.com/', '').toLowerCase()));
@@ -392,24 +438,29 @@ async function downloadRepoGame(repo, hint = {}) {
     if (r.ok) meta = await r.json();
   } catch { /* rate-limited is fine */ }
 
+  // Try branches until one yields a playable build. Source branches first (canonical),
+  // then gh-pages — build-required repos usually publish their COMPILED site there.
   const zip = path.join(GAMES_DIR, `_${slug}.zip`);
-  let got = false, lastErr = null;
-  for (const br of [...new Set([meta?.default_branch, 'main', 'master'].filter(Boolean))]) {
+  const tried = [];
+  let entry = null;
+  for (const br of [...new Set([meta?.default_branch, 'main', 'master', 'gh-pages'].filter(Boolean))]) {
+    let got = false;
     try {
       const r = await fetch(`https://codeload.github.com/${repo}/zip/refs/heads/${br}`, { headers: UA });
-      if (!r.ok) { lastErr = new Error(`HTTP ${r.status} on branch ${br}`); continue; }
+      if (!r.ok) { tried.push(`${br}: HTTP ${r.status}`); continue; }
       fs.writeFileSync(zip, Buffer.from(await r.arrayBuffer()));
-      got = true; break;
-    } catch (e) { lastErr = e; }
-  }
-  if (!got) throw new Error(`could not download ${repo}: ${lastErr?.message || lastErr}`);
-  extractZipTo(zip, slug);
-  fs.rmSync(zip, { force: true });
-
-  const entry = findHtmlEntry(destDir);
-  if (!entry) {
+      got = true;
+    } catch (e) { tried.push(`${br}: ${e.message}`); }
+    if (!got) continue;
+    extractZipTo(zip, slug);
+    fs.rmSync(zip, { force: true });
+    entry = findHtmlEntry(destDir);
+    if (entry) { tried.push(`${br}: ✓ playable`); break; }
+    tried.push(`${br}: no playable HTML`);
     fs.rmSync(destDir, { recursive: true, force: true });
-    throw new Error('this repo has no ready-to-play HTML file (it likely needs a build step), so it cannot be stored');
+  }
+  if (!entry) {
+    throw new Error(`no ready-to-play build on any branch (${tried.join(' · ')}) — this repo needs a build step`);
   }
   const game = {
     id: `local:${slug}`, slug,
@@ -636,6 +687,7 @@ const handler = async (req, res) => {
     // ---- API
     if (p === '/api/games') {
       const catalog = readJSON(path.join(DATA_DIR, 'catalog.json'), { games: [] });
+      if (scanManualGames(catalog)) writeJSON(path.join(DATA_DIR, 'catalog.json'), catalog);
       const remote = [];
       const meta = {};
       for (const n of Object.keys(SOURCES)) {
