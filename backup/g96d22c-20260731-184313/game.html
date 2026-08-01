@@ -1,0 +1,2919 @@
+<!DOCTYPE html>
+<html>
+<head><script>(function(){var w=window;w.__giEntities=w.__giEntities||{};w.__giTrackEntity=w.__giTrackEntity||function(){};w.__giTrackAnims=w.__giTrackAnims||function(){};w.__giUntrack=w.__giUntrack||function(){};})();</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tea with the Godmother</title>
+<style>html,body{margin:0;background:#0b0a12;height:100%;display:flex;align-items:center;justify-content:center}canvas{max-width:100vw;max-height:100vh;aspect-ratio:16/9}</style>
+</head>
+<body>
+<canvas id="c" width="960" height="540"></canvas>
+<script>
+window.GAME_CONFIG = {
+  "textSpeed": 34,
+  "musicVolume": 0.6,
+  "sfxVolume": 0.8,
+  "spriteTweenSecs": 0.9,
+  "spriteBrightness": 0.88,
+  "spriteSaturate": 0.85,
+  "spriteContrast": 1,
+  "menuYPct": 0.84,
+  "menuWPct": 0.36,
+  "menuRowH": 44,
+  "menuGap": 10,
+  "showTitle": true,
+  "titleYPct": 0.17,
+  "titleSize": 32
+}; // __GI_CONFIG__
+window.__GI_SET=function(patch){Object.assign(window.GAME_CONFIG,patch);if(typeof window.__giOnChange==='function')window.__giOnChange(patch);};
+console.log('__GI__'+JSON.stringify({type:'ready',config:window.GAME_CONFIG,schema:{groups:[{label:'Layout',fields:[{key:'menuYPct',type:'float',min:0.35,max:0.88,step:0.01,label:'Menu Y %'},{key:'menuWPct',type:'float',min:0.28,max:0.7,step:0.01,label:'Menu Width %'},{key:'menuRowH',type:'float',min:28,max:64,step:1,label:'Menu Row H'},{key:'menuGap',type:'float',min:4,max:24,step:1,label:'Menu Gap'},{key:'choiceYPct',type:'float',min:0.25,max:0.85,step:0.01,label:'Choice Y %'},{key:'titleYPct',type:'float',min:0.05,max:0.4,step:0.01,label:'Title Y %'},{key:'titleSize',type:'float',min:18,max:56,step:1,label:'Title Size'},{key:'showTitle',type:'boolean',label:'Show Title'}]},{label:'Motion',fields:[{key:'spriteTweenSecs',type:'float',min:0,max:2.5,step:0.05,label:'Sprite Tween Secs'},{key:'bgFit',type:'select',options:['cover','contain'],label:'BG Fit'}]},{label:'Text',fields:[{key:'textSpeed',type:'float',min:8,max:80,step:1,label:'Text Speed'}]},{label:'Audio',fields:[{key:'musicVolume',type:'float',min:0,max:1,step:0.05,label:'Music Volume'}]}]}}));
+window.GAME_ASSETS = {
+  "char_gm": "media/char_gm.png",
+  "char_gm_pleased": "media/char_gm_pleased.png",
+  "char_gm_hollow": "media/char_gm_hollow.png",
+  "bg_parlor": "media/bg_parlor.jpg",
+  "bg_wrong": "media/bg_wrong.jpg",
+  "char_gm_sad": "media/char_gm_sad.png",
+  "char_gm_angry": "media/char_gm_angry.png",
+  "char_gm_excited": "media/char_gm_excited.png",
+  "char_gm_far": "media/char_gm_far.png",
+  "char_gm_seated": "media/char_gm_seated.png",
+  "cg_door": "media/cg_door.jpg",
+  "char_gm_seated_v3": "media/char_gm_seated_v3.png",
+  "char_gm_invite": "media/char_gm_invite.png",
+  "cg_forest": "media/cg_forest.jpg",
+  "cg_door_closed": "media/cg_door_closed.jpg",
+  "cg_door_push": "media/cg_door_push.jpg",
+  "cg_parlor_up": "media/cg_parlor_up.jpg",
+  "cg_parlor_right": "media/cg_parlor_right.jpg",
+  "cg_back_shelf": "media/cg_back_shelf.jpg",
+  "char_gm_back": "media/char_gm_back.png",
+  "char_gm_back_a": "media/char_gm_back_a.png",
+  "char_gm_back_b": "media/char_gm_back_b.png",
+  "char_gm_toned": "media/char_gm_toned.png",
+  "char_gm_neutral": "media/char_gm_neutral.png"
+}; // __GI_ASSETS__
+window.GAME_AUDIO = {
+  "bgm_main": "https://gamentic.net/asset/a577ce4a58c.mp3?t=1786099394.c6ae76f63510dceb8ac77a43",
+  "bgm_tension": "https://gamentic.net/asset/a23eeb949f4.mp3?t=1786099394.31edb5cbaf2ff722784aa3cd",
+  "sfx_teacup": "media/sfx_teacup.mp3",
+  "sfx_page": "media/sfx_page.mp3",
+  "sfx_sting": "media/sfx_sting.mp3"
+}; // __GI_AUDIO__
+window.GAME_DATA = {
+  "characters": {
+    "gm": {
+      "name": "The Godmother",
+      "color": "#d4b46a",
+      "sprite": "char_gm_neutral"
+    },
+    "you": {
+      "name": "You",
+      "color": "#9fb4d8"
+    },
+    "gmt": {
+      "name": "教母",
+      "color": "#d4b46a",
+      "sprite": "char_gm_neutral"
+    }
+  },
+  "theme": {
+    "boxColor": "rgba(242,232,214,0.96)",
+    "boxBorder": "#b99a5e",
+    "boxRadius": 14,
+    "boxMargin": 56,
+    "boxBottom": 12,
+    "boxHeight": 0.3,
+    "pad": 20,
+    "textColor": "#2e2418",
+    "textSize": 16,
+    "lineHeight": 24,
+    "maxLines": 4,
+    "font": "Georgia, 'Times New Roman', serif",
+    "nameSize": 15,
+    "nameColor": "#6e4f24",
+    "namePlate": "#e9dcc2",
+    "choiceColor": "rgba(246,238,222,0.97)",
+    "choiceBorder": "#b99a5e",
+    "choiceText": "#3a2c16",
+    "choiceRadius": 16,
+    "choiceW": 0.6,
+    "choiceH": 42,
+    "choiceGap": 12,
+    "arrow": "❧",
+    "logLabel": "☰ Log／記錄 (L)"
+  },
+  "script": {
+    "start": [
+      {
+        "cmd": "bg",
+        "key": "bg_parlor"
+      },
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm",
+        "pos": 0.5
+      },
+      {
+        "cmd": "bgm",
+        "key": "bgm_main"
+      },
+      {
+        "cmd": "choice",
+        "options": [
+          {
+            "text": "❧ Begin the tea",
+            "goto": "prologue",
+            "if": "!lang_tw"
+          },
+          {
+            "text": "How to play",
+            "goto": "howto",
+            "if": "!lang_tw"
+          },
+          {
+            "text": "⚙ Settings",
+            "goto": "settings",
+            "if": "!lang_tw"
+          },
+          {
+            "text": "❧ 開始茶會",
+            "goto": "prologue",
+            "if": "lang_tw"
+          },
+          {
+            "text": "玩法說明",
+            "goto": "howto",
+            "if": "lang_tw"
+          },
+          {
+            "text": "⚙ 設定",
+            "goto": "settings",
+            "if": "lang_tw"
+          }
+        ]
+      }
+    ],
+    "settings": [
+      {
+        "cmd": "goto",
+        "label": "start"
+      }
+    ],
+    "set_tw": [
+      {
+        "cmd": "set",
+        "flag": "lang_tw",
+        "value": true
+      },
+      {
+        "cmd": "goto",
+        "label": "start"
+      }
+    ],
+    "set_en": [
+      {
+        "cmd": "set",
+        "flag": "lang_tw",
+        "value": false
+      },
+      {
+        "cmd": "goto",
+        "label": "start"
+      }
+    ],
+    "howto": [
+      {
+        "cmd": "say",
+        "text": "Click or press Space to continue. L opens the log.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "點擊畫面或按空白鍵繼續。按 L 開啟對話記錄。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "Your choices move her hidden Interest in you.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "你的每個選擇，都牽動著她對你隱藏的興致。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "She never shows a number. Watch her eyes instead.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "她不會顯示數字。留意她的眼神就好。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "There are 6 endings. Survive at least one of them.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "共有六種結局。至少……活著見到其中一種吧。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "goto",
+        "label": "start"
+      }
+    ],
+    "prologue": [
+      {
+        "cmd": "hide",
+        "who": "gm"
+      },
+      {
+        "cmd": "bg",
+        "key": "cg_forest"
+      },
+      {
+        "cmd": "say",
+        "text": "Hours of walking. The path stopped matching the map long ago.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "走了幾個小時。這條路早就對不上地圖了。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "Then, between the pines — one lit window.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "然後，在松林之間——一扇亮著燈的窗。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "bg",
+        "key": "cg_door_closed"
+      },
+      {
+        "cmd": "say",
+        "text": "No name on the door. You knock. Nothing answers.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "門上沒有名字。你敲了門。沒有任何回應。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "But the gap beneath it is warm. Someone has lit the lamps.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "但門縫底下透著暖光。有人點了燈。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "choice",
+        "options": [
+          {
+            "text": "Knock again, and wait.",
+            "goto": "pro_knock",
+            "if": "!lang_tw"
+          },
+          {
+            "text": "Push the door open.",
+            "goto": "pro_push",
+            "if": "!lang_tw"
+          },
+          {
+            "text": "Step back into the trees.",
+            "goto": "pro_back",
+            "if": "!lang_tw"
+          },
+          {
+            "text": "再敲一次，等一等。",
+            "goto": "pro_knock",
+            "if": "lang_tw"
+          },
+          {
+            "text": "直接推門進去。",
+            "goto": "pro_push",
+            "if": "lang_tw"
+          },
+          {
+            "text": "退回樹林裡。",
+            "goto": "pro_back",
+            "if": "lang_tw"
+          }
+        ]
+      }
+    ],
+    "pro_knock": [
+      {
+        "cmd": "set",
+        "flag": "via_knock",
+        "value": true
+      },
+      {
+        "cmd": "say",
+        "text": "You knock again. The sound goes in — and does not come back.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "你再敲一次。聲音進去了，卻沒有回來。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "goto",
+        "label": "pro_enter"
+      }
+    ],
+    "pro_push": [
+      {
+        "cmd": "set",
+        "flag": "via_push",
+        "value": true
+      },
+      {
+        "cmd": "say",
+        "text": "You do not knock twice. Your palm finds the wood.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "你沒有敲第二次。掌心貼上了門板。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "goto",
+        "label": "pro_enter"
+      }
+    ],
+    "pro_back": [
+      {
+        "cmd": "set",
+        "flag": "via_back",
+        "value": true
+      },
+      {
+        "cmd": "say",
+        "text": "You turn to leave. Behind you the path is gone — only trees.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "你轉身要走。身後的路不見了——只剩下樹。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "goto",
+        "label": "pro_enter"
+      }
+    ],
+    "pro_enter": [
+      {
+        "cmd": "bg",
+        "key": "cg_door_push"
+      },
+      {
+        "cmd": "say",
+        "text": "The door is not locked. It never was.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "門沒有鎖。從來都沒有。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "goto",
+        "label": "ch1"
+      }
+    ],
+    "ch1": [
+      {
+        "cmd": "set",
+        "flag": "favor",
+        "value": 50
+      },
+      {
+        "cmd": "set",
+        "flag": "pages",
+        "value": 0
+      },
+      {
+        "cmd": "bg",
+        "key": "cg_door"
+      },
+      {
+        "cmd": "hide",
+        "who": "gm"
+      },
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm_far",
+        "pos": 0.72,
+        "secs": 0
+      },
+      {
+        "cmd": "say",
+        "text": "You push the door open. A veiled figure is already waiting.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "你推開門。門後，一道蒙紗的身影已經在等。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "hide",
+        "who": "gm"
+      },
+      {
+        "cmd": "bg",
+        "key": "cg_parlor_up"
+      },
+      {
+        "cmd": "say",
+        "text": "You step inside and look up. This ceiling is far higher than that little house could hold.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "你踏進去，抬頭。這天花板，遠比那間小屋裝得下的高。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "bg",
+        "key": "bg_parlor"
+      },
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm_seated_v3",
+        "pos": 0.58,
+        "scale": 1,
+        "secs": 0.8
+      },
+      {
+        "cmd": "sfx",
+        "key": "sfx_teacup"
+      },
+      {
+        "cmd": "say",
+        "text": "She sits, and pours. The seat across is yours.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "她落座斟茶。對面的位子，是你的。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm_invite",
+        "pos": 0.58,
+        "scale": 1,
+        "secs": 0.6
+      },
+      {
+        "cmd": "say",
+        "text": "The parlor smells of bergamot and old paper.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "茶室裡瀰漫著佛手柑與舊紙頁的氣味。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "There you are. Sit, little guest. The tea is patient.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "你來了。坐吧，小客人。茶，是有耐心的。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "hide",
+        "who": "gm"
+      },
+      {
+        "cmd": "bg",
+        "key": "cg_parlor_right"
+      },
+      {
+        "cmd": "say",
+        "text": "Across the table, a chair has already been pulled out for you.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "桌子對面，一張椅子早就替你拉開了。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "bg",
+        "key": "bg_parlor"
+      },
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm_neutral",
+        "pos": 0.66
+      },
+      {
+        "cmd": "say",
+        "text": "Beneath her veil, many amber eyes settle on you.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "面紗底下，無數琥珀色的眼睛靜靜落在你身上。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "choice",
+        "options": [
+          {
+            "text": "\"Good evening, madam.\"",
+            "goto": "c1_polite",
+            "if": "!lang_tw"
+          },
+          {
+            "text": "\"Who... what are you?\"",
+            "goto": "c1_blunt",
+            "if": "!lang_tw"
+          },
+          {
+            "text": "(Say nothing. Sit.)",
+            "goto": "c1_quiet",
+            "if": "!lang_tw"
+          },
+          {
+            "text": "「晚安，夫人。」",
+            "goto": "c1_polite",
+            "if": "lang_tw"
+          },
+          {
+            "text": "「妳……妳到底是什麼？」",
+            "goto": "c1_blunt",
+            "if": "lang_tw"
+          },
+          {
+            "text": "（什麼都不說，坐下。）",
+            "goto": "c1_quiet",
+            "if": "lang_tw"
+          }
+        ]
+      },
+      {
+        "cmd": "goto",
+        "label": "c1_join"
+      }
+    ],
+    "c1_polite": [
+      {
+        "cmd": "add",
+        "flag": "favor",
+        "value": 5
+      },
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm",
+        "pos": 0.66
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "Manners! How rare in this century. I am delighted.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "懂禮數！這年頭多難得。我很欣喜。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "goto",
+        "label": "c1_join"
+      }
+    ],
+    "c1_blunt": [
+      {
+        "cmd": "add",
+        "flag": "favor",
+        "value": -5
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "A question with teeth. Careful where you point it.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "好一個帶刺的問題。小心它指著的方向。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "goto",
+        "label": "c1_join"
+      }
+    ],
+    "c1_quiet": [
+      {
+        "cmd": "set",
+        "flag": "quiet",
+        "value": true
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "Silent. Like the good children in my stories.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "沉默。就像我故事裡那些乖孩子一樣。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "goto",
+        "label": "c1_join"
+      }
+    ],
+    "c1_join": [
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "Drink. It is a small courtesy, between friends.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "喝吧。朋友之間，小小的禮尚往來。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "The cup steams. Something golden coils in it.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "杯中蒸氣裊裊。某種金色的東西在裡頭盤繞。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "choice",
+        "options": [
+          {
+            "text": "Drink deeply.",
+            "goto": "c2_deep",
+            "if": "!lang_tw"
+          },
+          {
+            "text": "A polite sip.",
+            "goto": "c2_sip",
+            "if": "!lang_tw"
+          },
+          {
+            "text": "Refuse the cup.",
+            "goto": "c2_refuse",
+            "if": "!lang_tw"
+          },
+          {
+            "text": "一飲而盡。",
+            "goto": "c2_deep",
+            "if": "lang_tw"
+          },
+          {
+            "text": "禮貌地啜一口。",
+            "goto": "c2_sip",
+            "if": "lang_tw"
+          },
+          {
+            "text": "拒絕這杯茶。",
+            "goto": "c2_refuse",
+            "if": "lang_tw"
+          }
+        ]
+      }
+    ],
+    "c2_deep": [
+      {
+        "cmd": "add",
+        "flag": "favor",
+        "value": 12
+      },
+      {
+        "cmd": "set",
+        "flag": "drank",
+        "value": true
+      },
+      {
+        "cmd": "say",
+        "text": "Warmth spreads to your fingertips. The room hums.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "暖意蔓延到指尖。整個房間都在低鳴。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm_excited",
+        "pos": 0.66
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "Oh, I LIKE you. Bold guests make the best chapters.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "噢，我喜歡你。大膽的客人，總能寫成最好的章節。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "goto",
+        "label": "c2_join"
+      }
+    ],
+    "c2_sip": [
+      {
+        "cmd": "add",
+        "flag": "favor",
+        "value": 5
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "Cautious courtesy. Sensible. A little dull. Sensible.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "謹慎的禮貌。明智。有點無趣。但明智。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "goto",
+        "label": "c2_join"
+      }
+    ],
+    "c2_refuse": [
+      {
+        "cmd": "add",
+        "flag": "favor",
+        "value": -12
+      },
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm_angry",
+        "pos": 0.66
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "...The cup will not forget that. Neither shall I.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "……這杯茶不會忘記的。我也不會。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "sfx",
+        "key": "sfx_sting"
+      },
+      {
+        "cmd": "goto",
+        "label": "c2_join"
+      }
+    ],
+    "c2_join": [
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm_neutral",
+        "pos": 0.66
+      },
+      {
+        "cmd": "say",
+        "text": "A torn page peeks from beneath your saucer.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "一頁撕下的殘頁，從你的茶碟底下露出一角。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "choice",
+        "options": [
+          {
+            "text": "(Palm it quietly.)",
+            "goto": "p1_take",
+            "if": "!lang_tw"
+          },
+          {
+            "text": "(Leave it be.)",
+            "goto": "ch1_out",
+            "if": "!lang_tw"
+          },
+          {
+            "text": "（悄悄收進掌心。）",
+            "goto": "p1_take",
+            "if": "lang_tw"
+          },
+          {
+            "text": "（別去動它。）",
+            "goto": "ch1_out",
+            "if": "lang_tw"
+          }
+        ]
+      }
+    ],
+    "p1_take": [
+      {
+        "cmd": "add",
+        "flag": "pages",
+        "value": 1
+      },
+      {
+        "cmd": "set",
+        "flag": "page1",
+        "value": true
+      },
+      {
+        "cmd": "sfx",
+        "key": "sfx_page"
+      },
+      {
+        "cmd": "say",
+        "text": "The page whispers as it folds into your sleeve.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "殘頁滑進你袖口時，發出耳語般的窸窣聲。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "\"...she was not always the Godmother...\"",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "『……她並非一直都是教母……』",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "goto",
+        "label": "ch1_out"
+      }
+    ],
+    "ch1_out": [
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm_pleased",
+        "if": "favor>=65"
+      },
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm_hollow",
+        "if": "favor<=30"
+      },
+      {
+        "cmd": "bgm",
+        "key": "bgm_tension",
+        "if": "favor<=30"
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "Now then. To business, as the mortals say.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "那麼——照凡人的說法，該談正事了。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "goto",
+        "label": "ch2"
+      }
+    ],
+    "ch2": [
+      {
+        "cmd": "bg",
+        "key": "bg_parlor"
+      },
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm_back_b",
+        "pos": 0.66
+      },
+      {
+        "cmd": "say",
+        "text": "She rises and turns to the shelves. She does not look at you while she speaks.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "她起身走向書架。接下來的話，她都沒有回頭看你。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "I grant wishes, little guest. For a fair trade.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "我能實現願望，小客人。只要交易公道。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "A wish for a memory. Any memory. You may choose.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "一個願望，換一段記憶。任何記憶。由你來選。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "bg",
+        "key": "bg_parlor"
+      },
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm_neutral",
+        "pos": 0.66
+      },
+      {
+        "cmd": "choice",
+        "options": [
+          {
+            "text": "\"Take my worst memory.\"",
+            "goto": "b_worst",
+            "if": "!lang_tw"
+          },
+          {
+            "text": "\"Take my happiest one.\"",
+            "goto": "b_happy",
+            "if": "!lang_tw"
+          },
+          {
+            "text": "\"I make no bargains.\"",
+            "goto": "b_none",
+            "if": "!lang_tw"
+          },
+          {
+            "text": "「拿走我最糟的記憶。」",
+            "goto": "b_worst",
+            "if": "lang_tw"
+          },
+          {
+            "text": "「拿走我最快樂的那段。」",
+            "goto": "b_happy",
+            "if": "lang_tw"
+          },
+          {
+            "text": "「我不做任何交易。」",
+            "goto": "b_none",
+            "if": "lang_tw"
+          }
+        ]
+      }
+    ],
+    "b_worst": [
+      {
+        "cmd": "add",
+        "flag": "favor",
+        "value": -12
+      },
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm_angry",
+        "pos": 0.66
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "Clever. And insulting. Scraps are not payment.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "聰明。也很無禮。殘渣可抵不了帳。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "goto",
+        "label": "b_join"
+      }
+    ],
+    "b_happy": [
+      {
+        "cmd": "add",
+        "flag": "favor",
+        "value": 12
+      },
+      {
+        "cmd": "set",
+        "flag": "paid",
+        "value": true
+      },
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm_pleased",
+        "pos": 0.66
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "A true price. You honor the old ways, dear one.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "這才是真正的代價。親愛的，你懂得古老的規矩。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "Something bright leaves you. You cannot say what.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "某種明亮的東西離你而去。你說不上來是什麼。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "goto",
+        "label": "b_join"
+      }
+    ],
+    "b_none": [
+      {
+        "cmd": "add",
+        "flag": "favor",
+        "value": 5
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "Wise, perhaps. The unbargained keep their names.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "或許是明智的。不交易的人，留得住自己的名字。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "goto",
+        "label": "b_join"
+      }
+    ],
+    "b_join": [
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm_neutral",
+        "pos": 0.66
+      },
+      {
+        "cmd": "say",
+        "text": "She opens a ledger. Its pages turn by themselves.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "她攤開一本帳冊。頁面自己翻動著。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "One page is loose. She is not looking at it.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "有一頁鬆脫了。她的視線並不在那上頭。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "choice",
+        "options": [
+          {
+            "text": "(Slip the loose page free.)",
+            "goto": "p2_take",
+            "if": "!lang_tw"
+          },
+          {
+            "text": "(Touch nothing of hers.)",
+            "goto": "ch2_out",
+            "if": "!lang_tw"
+          },
+          {
+            "text": "（把那頁悄悄抽走。）",
+            "goto": "p2_take",
+            "if": "lang_tw"
+          },
+          {
+            "text": "（她的東西，一概不碰。）",
+            "goto": "ch2_out",
+            "if": "lang_tw"
+          }
+        ]
+      }
+    ],
+    "p2_take": [
+      {
+        "cmd": "add",
+        "flag": "pages",
+        "value": 1
+      },
+      {
+        "cmd": "set",
+        "flag": "page2",
+        "value": true
+      },
+      {
+        "cmd": "sfx",
+        "key": "sfx_page"
+      },
+      {
+        "cmd": "say",
+        "text": "\"...twelve guests came before you. Twelve cups...\"",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "『……在你之前，來過十二位客人。十二個杯子……』",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "goto",
+        "label": "ch2_out"
+      }
+    ],
+    "ch2_out": [
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm_pleased",
+        "if": "favor>=65"
+      },
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm_hollow",
+        "if": "favor<=30"
+      },
+      {
+        "cmd": "say",
+        "text": "The candles gutter. The shadows lean closer to hear.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "燭火搖曳將熄。暗影傾身，湊近聆聽。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "goto",
+        "label": "ch3"
+      }
+    ],
+    "ch3": [
+      {
+        "cmd": "bg",
+        "key": "bg_wrong"
+      },
+      {
+        "cmd": "say",
+        "text": "The room is the same. The room is not the same.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "房間還是原樣。房間已不是原樣。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "Last course, little guest. Look at me as I am.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "最後一道茶點，小客人。看看真正的我吧。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "Her veil stirs, though there is no wind at all.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "明明沒有一絲風，她的面紗卻在輕輕顫動。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "choice",
+        "options": [
+          {
+            "text": "(Lift her veil.)",
+            "goto": "t_veil",
+            "if": "!lang_tw"
+          },
+          {
+            "text": "(Hold her gaze. All of them.)",
+            "goto": "t_gaze",
+            "if": "!lang_tw"
+          },
+          {
+            "text": "(Lower your eyes politely.)",
+            "goto": "t_bow",
+            "if": "!lang_tw"
+          },
+          {
+            "text": "（掀開她的面紗。）",
+            "goto": "t_veil",
+            "if": "lang_tw"
+          },
+          {
+            "text": "（迎上她的目光。所有的目光。）",
+            "goto": "t_gaze",
+            "if": "lang_tw"
+          },
+          {
+            "text": "（禮貌地垂下眼。）",
+            "goto": "t_bow",
+            "if": "lang_tw"
+          }
+        ]
+      }
+    ],
+    "t_veil": [
+      {
+        "cmd": "add",
+        "flag": "favor",
+        "value": -25
+      },
+      {
+        "cmd": "shake",
+        "amount": 0.7
+      },
+      {
+        "cmd": "sfx",
+        "key": "sfx_sting"
+      },
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm_angry",
+        "pos": 0.66
+      },
+      {
+        "cmd": "say",
+        "text": "Your hand passes through cold lace and colder light.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "你的手穿過冰冷的蕾絲，和更冰冷的光。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "THAT WAS NOT YOURS TO LIFT.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "那不是你能掀開的東西。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm_neutral",
+        "pos": 0.66
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "...Forgive me. The tea has gone bitter, hasn't it.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "……原諒我。茶都變苦了，是不是？",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "goto",
+        "label": "tw_t_join",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "goto",
+        "label": "t_join"
+      }
+    ],
+    "t_gaze": [
+      {
+        "cmd": "add",
+        "flag": "favor",
+        "value": 12
+      },
+      {
+        "cmd": "say",
+        "text": "You count her eyes until counting loses meaning.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "你數著她的眼睛，直到數字失去了意義。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm_pleased",
+        "pos": 0.66
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "You did not look away. No one ever... stays looking.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "你沒有移開視線。從來沒有人……敢一直看著。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "goto",
+        "label": "tw_t_join",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "goto",
+        "label": "t_join"
+      }
+    ],
+    "t_bow": [
+      {
+        "cmd": "add",
+        "flag": "favor",
+        "value": 5
+      },
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm",
+        "pos": 0.66
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "Courtesy to the last. Your mother raised you well.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "有始有終的禮數。你母親把你教得很好。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "goto",
+        "label": "tw_t_join",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "goto",
+        "label": "t_join"
+      }
+    ],
+    "t_join": [
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "One question remains, before the pot runs cold."
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "When you leave this room... will you remember me?"
+      },
+      {
+        "cmd": "choice",
+        "options": [
+          {
+            "text": "\"I could never forget you.\"",
+            "goto": "q_sweet"
+          },
+          {
+            "text": "\"I know what the pages say.\"",
+            "goto": "q_truth",
+            "if": "pages>=2"
+          },
+          {
+            "text": "\"Honestly? I hope not.\"",
+            "goto": "q_honest"
+          }
+        ]
+      }
+    ],
+    "tw_t_join": [
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "壺涼之前，還剩最後一個問題。"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "當你離開這個房間……你會記得我嗎？"
+      },
+      {
+        "cmd": "choice",
+        "options": [
+          {
+            "text": "「我永遠不會忘記妳。」",
+            "goto": "q_sweet"
+          },
+          {
+            "text": "「我知道那些殘頁寫了什麼。」",
+            "goto": "q_truth",
+            "if": "pages>=2"
+          },
+          {
+            "text": "「老實說？我希望不會。」",
+            "goto": "q_honest"
+          }
+        ]
+      }
+    ],
+    "q_sweet": [
+      {
+        "cmd": "add",
+        "flag": "favor",
+        "value": 12
+      },
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm_pleased",
+        "pos": 0.66
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "Flatterer. I shall stitch that promise into my hem.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "嘴真甜。我會把這句承諾縫進裙襬。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "goto",
+        "label": "resolve"
+      }
+    ],
+    "q_truth": [
+      {
+        "cmd": "add",
+        "flag": "pages",
+        "value": 1
+      },
+      {
+        "cmd": "set",
+        "flag": "page3",
+        "value": true
+      },
+      {
+        "cmd": "sfx",
+        "key": "sfx_page"
+      },
+      {
+        "cmd": "say",
+        "text": "You lay the stolen pages on the table between you.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "你把偷來的殘頁，一一攤在兩人之間的桌上。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm_sad",
+        "pos": 0.66
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "...You read them. And still you stayed for tea.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "……你讀過了。卻仍然留下來喝茶。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "goto",
+        "label": "resolve"
+      }
+    ],
+    "q_honest": [
+      {
+        "cmd": "add",
+        "flag": "favor",
+        "value": -5
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "Honesty. Rude, refreshing honesty. Like cold tea.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "誠實。無禮卻清新的誠實。像冷掉的茶。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "goto",
+        "label": "resolve"
+      }
+    ],
+    "resolve": [
+      {
+        "cmd": "goto",
+        "label": "end_secret",
+        "if": "pages>=3"
+      },
+      {
+        "cmd": "goto",
+        "label": "end_woven",
+        "if": "favor>=80"
+      },
+      {
+        "cmd": "goto",
+        "label": "end_favorite",
+        "if": "favor>=60"
+      },
+      {
+        "cmd": "goto",
+        "label": "end_guest",
+        "if": "favor>=35"
+      },
+      {
+        "cmd": "goto",
+        "label": "end_fled",
+        "if": "favor>=15"
+      },
+      {
+        "cmd": "goto",
+        "label": "end_devoured"
+      }
+    ],
+    "end_secret": [
+      {
+        "cmd": "stopbgm"
+      },
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm_sad",
+        "pos": 0.66
+      },
+      {
+        "cmd": "say",
+        "text": "She reads the three pages. Her eyes close, all of them.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "她讀完三頁殘章。所有的眼睛，一同閉上。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "Twelve guests. Twelve cups. You are the thirteenth.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "十二位客人。十二個杯子。你，是第十三位。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "And the first to hand my story back to me.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "也是第一個，把我的故事還給我的人。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "She tears a fresh page from nothing, and writes YOU in.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "她從虛空撕下嶄新的一頁，將『你』寫進去。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "— ENDING 6 of 6: The Thirteenth Page (secret) —",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "— 結局 6／6：第十三頁（隱藏結局） —",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "You found every torn page. Thank you for playing.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "你集齊了所有殘頁。感謝遊玩。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "end"
+      }
+    ],
+    "end_woven": [
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm_excited",
+        "pos": 0.66
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "Stay. The tea never truly ends, for my favorites.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "留下吧。對我的心頭好而言，茶會永遠不散。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "The chair holds you gently. The door forgets its shape.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "椅子溫柔地扣住你。門忘記了自己的形狀。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "You are adored, indexed, and never leaving.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "你被寵愛著、被編進目錄，永遠不會離開。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "— ENDING 5 of 6: Woven into Her Tales —",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "— 結局 5／6：織入她的故事集 —",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "Too charming is its own trap. 6 endings exist.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "太迷人也是一種陷阱。共有六種結局。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "end"
+      }
+    ],
+    "end_favorite": [
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm_pleased",
+        "pos": 0.66
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "Go home, little guest. Wear this thread on your wrist.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "回家吧，小客人。把這根紅線戴在手腕上。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "Outside, dawn. The thread hums warm when you are afraid.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "門外已是黎明。每當你害怕，那根線就微微發暖。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "Somewhere, a godmother keeps your chapter open.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "在某個地方，一位教母為你留著未完的章節。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "— ENDING 4 of 6: The Godmother's Favorite —",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "— 結局 4／6：教母的心頭好 —",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "The good ending. 6 endings exist. Can you find them?",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "這是好結局。共有六種結局，你找得齊嗎？",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "end"
+      }
+    ],
+    "end_guest": [
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm_neutral",
+        "pos": 0.66
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "A pleasant evening. Few of them are. You may go.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "一個愉快的夜晚。這可不多見。你可以走了。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "The door opens to your own street, your own night.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "門一開，是你熟悉的街道、你自己的夜。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "You will doubt this happened. The teacup in your coat disagrees.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "你會懷疑這一切是否發生過。大衣裡的茶杯不同意。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "— ENDING 3 of 6: A Guest Remembered —",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "— 結局 3／6：被記住的客人 —",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "Try being bolder. Or kinder. 6 endings exist.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "試著更大膽，或更溫柔。共有六種結局。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "end"
+      }
+    ],
+    "end_fled": [
+      {
+        "cmd": "shake",
+        "amount": 0.5
+      },
+      {
+        "cmd": "say",
+        "text": "You run. Lace brushes your neck at the threshold.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "你拔腿就跑。跨過門檻時，蕾絲擦過你的後頸。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm_angry",
+        "pos": 0.66
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "RUDE. But quick. I do so admire quick.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "真無禮。但跑得真快。我就欣賞快的。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "You wake on your doorstep, tea still warm on your tongue.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "你在自家門前醒來，舌尖上的茶還是溫的。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "— ENDING 2 of 6: Fled into the Night —",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "— 結局 2／6：遁入黑夜 —",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "Alive, yes. Invited again? ...Also yes. 6 endings exist.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "活著？是的。還會再被邀請？……也是的。共有六種結局。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "end"
+      }
+    ],
+    "end_devoured": [
+      {
+        "cmd": "bgm",
+        "key": "bgm_tension"
+      },
+      {
+        "cmd": "shake",
+        "amount": 1
+      },
+      {
+        "cmd": "sfx",
+        "key": "sfx_sting"
+      },
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm_hollow",
+        "pos": 0.66
+      },
+      {
+        "cmd": "say",
+        "text": "The candles go out. All of them. Politely.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "燭火熄滅。全部熄滅。熄滅得很有禮貌。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "Do not be afraid. Every story needs its eaten.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "別怕。每個故事，都需要被吃掉的角色。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "The last thing you hear is a spoon, gently stirring.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "你聽見的最後聲響，是一根湯匙，正輕輕攪拌。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "— ENDING 1 of 6: Devoured —",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "— 結局 1／6：被吞噬 —",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "Mind her temper. Watch her eyes. 6 endings exist.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "當心她的脾氣。留意她的眼神。共有六種結局。",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "end"
+      }
+    ]
+  }
+}; // __GI_DATA__
+/* __GI_VN_RUNTIME__ v1 start — server-injected, do not edit */
+// ============ VN runtime v1 — command-list interpreter(RPG Maker 骨,Ren'Py label/jump)============
+// AI 淨係生成 GAME_DATA.script(data),呢個 runtime 由 server 注入。
+// 畫喺 canvas(同平台其他 game 一致、screenshot 到、可以同 Live2D 嘅 L2D 共用同一塊布)。
+(function () {
+  var D = window.GAME_DATA || {};
+  var SC = D.script || {};
+  var CH = D.characters || {};
+  // ── 外觀:AI 可以喺 GAME_DATA.theme 改,或者用 window.VN_SKIN 完全自己畫 ──
+  // 冇呢個嘅話全世界啲 VN 都一個樣,所以整個 game 一定要肯畀佢自訂。
+  var TH = Object.assign({
+    boxImage: null,          // 對白框底圖(GAME_ASSETS key)—— 有就用圖,冇就畫純色
+    boxColor: 'rgba(12,10,18,.82)', boxBorder: 'rgba(255,255,255,.16)', boxRadius: 0,
+    boxMargin: 22, boxBottom: 14, boxHeight: 0.26,   // boxHeight <1 = 佔畫面比例
+    pad: 18, textColor: '#f2eef7', textSize: 15, lineHeight: 23, maxLines: 5,
+    font: 'system-ui, "PingFang HK", sans-serif',
+    nameSize: 15, nameColor: null,                    // null = 用角色自己個 color
+    namePlate: null,                                  // 有色 = 名字後面畫個底
+    choiceColor: 'rgba(20,16,28,.9)', choiceBorder: 'rgba(143,238,255,.5)',
+    choiceText: '#eaf6ff', choiceRadius: 0, choiceW: 0.62, choiceH: 40, choiceGap: 12,
+    arrow: '▼', logLabel: '☰ 記錄 (L)',
+  }, D.theme || {});
+  function rr(x, y, w, h, r) {   // 圓角矩形(r=0 就係普通方框)
+    if (!r) { ctx.beginPath(); ctx.rect(x, y, w, h); return; }
+    r = Math.min(r, w / 2, h / 2);
+    ctx.beginPath();
+    ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
+  }
+  var cv = document.getElementById(window.VN_CANVAS || 'c') || document.querySelector('canvas');
+  if (!cv) return;
+  var ctx = cv.getContext('2d');
+
+  // ── 狀態 ──
+  var S = {
+    label: null, pc: 0, flags: {}, bg: null, bgImg: null,
+    actors: {},              // who → {key,pos,img,alpha,rig}
+    line: '', who: null, shown: 0, typing: false,
+    choices: null, waiting: 0, over: false, history: [], showLog: false,
+    fade: 0, shake: 0, auto: false, t: 0,
+  };
+  var IMG = {};
+  function img(key) {
+    if (!key) return null;
+    if (IMG[key]) return IMG[key];
+    var src = (window.GAME_ASSETS || {})[key];
+    if (!src) return null;
+    var i = new Image(); i.src = src; IMG[key] = i; return i;
+  }
+  var bgm = null;
+  function playBgm(key) {
+    var a = (window.GAME_AUDIO || {})[key]; if (!a) return;
+    try { if (bgm) bgm.pause(); bgm = new Audio(a); bgm.loop = true; bgm.volume = 0.5; bgm.play().catch(function () {}); } catch (e) {}
+  }
+  function playOne(key, vol) {
+    var a = (window.GAME_AUDIO || {})[key]; if (!a) return null;
+    try { var s = new Audio(a); s.volume = vol == null ? 0.85 : vol; s.play().catch(function () {}); return s; } catch (e) { return null; }
+  }
+  var voiceAudio = null;
+
+  // ── 條件:支援 "flag"、"!flag"、"flag>=3" ──
+  function test(cond) {
+    if (!cond) return true;
+    var m = /^\s*(!)?\s*([A-Za-z_][\w]*)\s*(?:(>=|<=|==|!=|>|<)\s*(-?\d+|true|false|'[^']*'))?\s*$/.exec(cond);
+    if (!m) return true;
+    var v = S.flags[m[2]];
+    if (!m[3]) return m[1] ? !v : !!v;
+    var r = m[4] === 'true' ? true : m[4] === 'false' ? false : /^'/.test(m[4]) ? m[4].slice(1, -1) : +m[4];
+    var out = m[3] === '>=' ? v >= r : m[3] === '<=' ? v <= r : m[3] === '==' ? v == r : m[3] === '!=' ? v != r : m[3] === '>' ? v > r : v < r;
+    return m[1] ? !out : out;
+  }
+
+  // ── 執行 ──
+  function goto(label) {
+    if (!SC[label]) { S.over = true; return; }
+    S.label = label; S.pc = 0; step();
+  }
+  function step() {
+    if (S.over) return;
+    var list = SC[S.label] || [];
+    while (S.pc < list.length) {
+      var c = list[S.pc++];
+      if (!c || !c.cmd) continue;
+      if (c.if && !test(c.if)) continue;
+      switch (c.cmd) {
+        case 'bg': S.bg = c.key; S.bgImg = img(c.key); S.fade = 1; break;
+        case 'bgm': playBgm(c.key); break;
+        case 'stopbgm': if (bgm) { try { bgm.pause(); } catch (e) {} bgm = null; } break;
+        case 'sfx': playOne(c.key); break;
+        case 'shake': S.shake = c.amount != null ? +c.amount : 1; break;
+        case 'show':
+          S.actors[c.who] = { key: c.key || (CH[c.who] && CH[c.who].sprite), pos: c.pos != null ? +c.pos : 0.5,
+            img: img(c.key || (CH[c.who] && CH[c.who].sprite)), alpha: 0, rig: !!(CH[c.who] && CH[c.who].rig) };
+          break;
+        case 'hide': delete S.actors[c.who]; break;
+        case 'set': S.flags[c.flag] = c.value === undefined ? true : c.value; break;
+        case 'add': S.flags[c.flag] = (+S.flags[c.flag] || 0) + (+c.value || 1); break;
+        case 'goto': goto(c.label); return;
+        case 'end': S.over = true; return;
+        case 'wait': S.waiting = c.seconds != null ? +c.seconds : 0.6; return;
+        case 'say':
+          S.who = c.who || null; S.line = String(c.text == null ? '' : c.text); S.shown = 0; S.typing = true;
+          S.history.push({ who: S.who, text: S.line });
+          if (S.history.length > 200) S.history.shift();
+          if (voiceAudio) { try { voiceAudio.pause(); } catch (e) {} }
+          voiceAudio = c.voice ? playOne(c.voice, 1) : null;   // TTS:有 voice key 就播
+          return;
+        case 'choice':
+          S.choices = (c.options || []).filter(function (o) { return test(o.if); });
+          if (!S.choices.length) { S.choices = null; break; }
+          return;
+        default: break;
+      }
+    }
+    S.over = true;   // 呢個 label 行完又冇 goto = 結局
+  }
+
+  // ── 輸入 ──
+  function advance() {
+    if (S.showLog) { S.showLog = false; return; }
+    if (S.choices) return;
+    if (S.waiting > 0) return;
+    if (S.typing) { S.shown = S.line.length; S.typing = false; return; }
+    if (S.over) return;
+    step();
+  }
+  function hitChoice(x, y) {
+    if (!S.choices) return -1;
+    // 一定要用返 TH(AI 改咗選項尺寸,撞區都要跟住變,否則撳唔中)
+    var W = cv.width, bw = W * TH.choiceW, bh = TH.choiceH, gap = TH.choiceGap, n = S.choices.length;
+    var y0 = cv.height * 0.42 - (n * (bh + gap)) / 2;
+    for (var i = 0; i < n; i++) {
+      var by = y0 + i * (bh + gap), bx = (W - bw) / 2;
+      if (x >= bx && x <= bx + bw && y >= by && y <= by + bh) return i;
+    }
+    return -1;
+  }
+  function onDown(e) {
+    var r = cv.getBoundingClientRect();
+    var x = ((e.touches ? e.touches[0].clientX : e.clientX) - r.left) * (cv.width / r.width);
+    var y = ((e.touches ? e.touches[0].clientY : e.clientY) - r.top) * (cv.height / r.height);
+    // log 掣(右上)
+    if (x > cv.width - 92 && y < 34) { S.showLog = !S.showLog; return; }
+    var i = hitChoice(x, y);
+    if (i >= 0) { var o = S.choices[i]; S.choices = null; if (o.set) S.flags[o.set] = o.value === undefined ? true : o.value; if (o.goto) goto(o.goto); else step(); return; }
+    advance();
+  }
+  cv.addEventListener('pointerdown', onDown);
+  window.addEventListener('keydown', function (e) {
+    var el = document.activeElement;
+    if (el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA')) return;
+    if (e.code === 'Space' || e.code === 'Enter') { e.preventDefault(); advance(); }
+    if (e.code === 'KeyL') S.showLog = !S.showLog;
+    if (e.code === 'KeyA') S.auto = !S.auto;
+  });
+
+  // ── 畫 ──
+  function drawCover(im, x, y, w, h) {   // crop-not-scale(convention §5b)
+    if (!im || !im.naturalWidth) return;
+    var s = Math.max(w / im.naturalWidth, h / im.naturalHeight);
+    var dw = im.naturalWidth * s, dh = im.naturalHeight * s;
+    ctx.drawImage(im, x + (w - dw) / 2, y + (h - dh) / 2, dw, dh);
+  }
+  function wrap(text, maxW) {
+    var out = [], line = '';
+    for (var i = 0; i < text.length; i++) {
+      var ch = text[i];
+      if (ch === '\n') { out.push(line); line = ''; continue; }
+      if (ctx.measureText(line + ch).width > maxW && line) { out.push(line); line = ch; }
+      else line += ch;
+    }
+    if (line) out.push(line);
+    return out;
+  }
+  function draw(dt) {
+    var W = cv.width, H = cv.height;
+    S.t += dt;
+    if (S.shake > 0) S.shake = Math.max(0, S.shake - dt * 2.2);
+    ctx.save();
+    if (S.shake > 0) ctx.translate((Math.random() - 0.5) * S.shake * 10, (Math.random() - 0.5) * S.shake * 7);
+
+    ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, H);
+    if (S.bgImg) drawCover(S.bgImg, 0, 0, W, H);
+    if (S.fade > 0) { S.fade = Math.max(0, S.fade - dt * 1.6); }
+
+    // 立繪(Live2D rig 角色交俾 L2D 畫)
+    for (var who in S.actors) {
+      var a = S.actors[who];
+      a.alpha = Math.min(1, a.alpha + dt * 3);
+      if (a.rig && window.L2D) {
+        var cw = W * 0.42, chh = H * 0.86;
+        window.L2D_RECT = { x: W * a.pos - cw / 2, y: H * 0.06, w: cw, h: chh };
+        if (!a._built) { L2D.rebuild(); a._built = 1; }
+        L2D.frame(dt);
+        if (S.typing && who === S.who) L2D.P.talk = 0.5 + 0.5 * Math.abs(Math.sin(S.t * 18));
+        else if (who === S.who) L2D.P.talk *= 0.9;
+      } else if (a.img && a.img.naturalWidth) {
+        var ih = H * 0.8, iw = a.img.naturalWidth * (ih / a.img.naturalHeight);
+        ctx.globalAlpha = a.alpha;
+        ctx.drawImage(a.img, W * a.pos - iw / 2, H - ih, iw, ih);
+        ctx.globalAlpha = 1;
+      }
+    }
+    if (S.fade > 0) { ctx.fillStyle = 'rgba(0,0,0,' + S.fade.toFixed(3) + ')'; ctx.fillRect(0, 0, W, H); }
+
+    // 對白框(樣由 TH 決定;window.VN_SKIN.box 可以完全接管)
+    if (S.line && !S.choices) {
+      var bh = TH.boxHeight < 1 ? Math.max(110, H * TH.boxHeight) : TH.boxHeight;
+      var by = H - bh - TH.boxBottom, bx = TH.boxMargin, bw = W - TH.boxMargin * 2;
+      var name = S.who && CH[S.who] ? (CH[S.who].name || S.who) : S.who;
+      var pad = TH.pad;
+      var box = { x: bx, y: by, w: bw, h: bh, pad: pad, name: name, who: S.who,
+                  text: S.line.slice(0, Math.floor(S.shown)), full: S.line, typing: S.typing, t: S.t, theme: TH };
+      if (window.VN_SKIN && typeof window.VN_SKIN.box === 'function') {
+        window.VN_SKIN.box(ctx, box);           // AI 自己畫成個框(想點就點)
+      } else {
+        var bimg = TH.boxImage && img(TH.boxImage);
+        if (bimg && bimg.complete && bimg.naturalWidth) {
+          ctx.drawImage(bimg, bx, by, bw, bh);   // 用生成嘅框圖 → 每隻 game 樣都唔同
+        } else {
+          ctx.fillStyle = TH.boxColor; rr(bx, by, bw, bh, TH.boxRadius); ctx.fill();
+          if (TH.boxBorder) { ctx.strokeStyle = TH.boxBorder; ctx.lineWidth = 1; ctx.stroke(); }
+        }
+        if (name) {
+          ctx.font = '700 ' + TH.nameSize + 'px ' + TH.font;
+          var nx = bx + pad, ny = by + TH.nameSize + 11;
+          if (TH.namePlate) {
+            var nw = ctx.measureText(name).width + 18;
+            ctx.fillStyle = TH.namePlate; rr(nx - 9, ny - TH.nameSize - 5, nw, TH.nameSize + 12, TH.boxRadius ? 4 : 0); ctx.fill();
+          }
+          ctx.fillStyle = TH.nameColor || (CH[S.who] && CH[S.who].color) || '#8fe';
+          ctx.fillText(name, nx, ny);
+        }
+        ctx.font = TH.textSize + 'px ' + TH.font;
+        ctx.fillStyle = TH.textColor;
+        var lines = wrap(box.text, bw - pad * 2);
+        for (var i = 0; i < lines.length && i < TH.maxLines; i++)
+          ctx.fillText(lines[i], bx + pad, by + (name ? TH.nameSize + 34 : TH.textSize + 16) + i * TH.lineHeight);
+        if (!S.typing && TH.arrow) {
+          ctx.globalAlpha = 0.45 + 0.35 * Math.sin(S.t * 4);
+          ctx.fillText(TH.arrow, bx + bw - pad - 12, by + bh - 14); ctx.globalAlpha = 1;
+        }
+      }
+    }
+
+    // 選項
+    if (S.choices) {
+      var cbw = W * TH.choiceW, cbh = TH.choiceH, gap = TH.choiceGap, n = S.choices.length;
+      var y0 = H * 0.42 - (n * (cbh + gap)) / 2;
+      ctx.font = '600 ' + TH.textSize + 'px ' + TH.font; ctx.textAlign = 'center';
+      for (var k = 0; k < n; k++) {
+        var yy = y0 + k * (cbh + gap), xx = (W - cbw) / 2;
+        var opt = { x: xx, y: yy, w: cbw, h: cbh, text: S.choices[k].text, index: k, theme: TH };
+        if (window.VN_SKIN && typeof window.VN_SKIN.choice === 'function') { window.VN_SKIN.choice(ctx, opt); continue; }
+        ctx.fillStyle = TH.choiceColor; rr(xx, yy, cbw, cbh, TH.choiceRadius); ctx.fill();
+        if (TH.choiceBorder) { ctx.strokeStyle = TH.choiceBorder; ctx.lineWidth = 1; ctx.stroke(); }
+        ctx.fillStyle = TH.choiceText; ctx.fillText(S.choices[k].text, W / 2, yy + cbh / 2 + TH.textSize * 0.36);
+      }
+      ctx.textAlign = 'left';
+    }
+
+    // 記錄掣 + backlog
+    ctx.font = '12px system-ui, sans-serif';
+    ctx.fillStyle = 'rgba(255,255,255,.5)'; ctx.fillText(TH.logLabel, W - 88, 22);
+    if (S.showLog) {
+      ctx.fillStyle = 'rgba(8,6,14,.94)'; ctx.fillRect(0, 0, W, H);
+      ctx.font = '14px system-ui, "PingFang HK", sans-serif';
+      var y2 = H - 40;
+      for (var h = S.history.length - 1; h >= 0 && y2 > 30; h--) {
+        var e2 = S.history[h];
+        var ls = wrap((e2.who && CH[e2.who] ? (CH[e2.who].name || e2.who) + '：' : '') + e2.text, W - 60);
+        for (var q = ls.length - 1; q >= 0 && y2 > 30; q--) { ctx.fillStyle = '#ddd'; ctx.fillText(ls[q], 30, y2); y2 -= 22; }
+        y2 -= 6;
+      }
+      ctx.fillStyle = 'rgba(255,255,255,.55)'; ctx.fillText('撳一下閂返', 30, 24);
+    }
+    ctx.restore();
+  }
+
+  // ── loop ──
+  var last = performance.now();
+  function loop(now) {
+    var dt = Math.min(0.033, (now - last) / 1000); last = now;
+    if (!window.__freeze) {
+      if (S.waiting > 0) { S.waiting -= dt; if (S.waiting <= 0) { S.waiting = 0; step(); } }
+      if (S.typing) {
+        S.shown += dt * (window.GAME_CONFIG && +window.GAME_CONFIG.textSpeed > 0 ? +window.GAME_CONFIG.textSpeed : 34);
+        if (S.shown >= S.line.length) { S.shown = S.line.length; S.typing = false; }
+      } else if (S.auto && !S.choices && !S.over) { S._a = (S._a || 0) + dt; if (S._a > 1.4) { S._a = 0; step(); } }
+      draw(dt);
+    }
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+
+  window.VN = {
+    S: S,
+    start: function (label) { S.over = false; goto(label || 'start'); },
+    goto: goto,
+    flags: S.flags,
+    save: function () { try { localStorage.setItem('vn_save', JSON.stringify({ label: S.label, pc: S.pc, flags: S.flags, bg: S.bg })); return true; } catch (e) { return false; } },
+    load: function () {
+      try {
+        var d = JSON.parse(localStorage.getItem('vn_save') || 'null'); if (!d) return false;
+        S.flags = d.flags || {}; S.bg = d.bg; S.bgImg = img(d.bg); S.over = false; S.label = d.label; S.pc = Math.max(0, d.pc - 1); step(); return true;
+      } catch (e) { return false; }
+    },
+  };
+  // headless 測試 hook(preview pane 收埋嗰陣 rAF 會停 → 要手動 render 先影到相)
+  window.__vnStep = function (n) { for (var i = 0; i < (n || 1); i++) { S.shown = S.line.length; S.typing = false; advance(); } };
+  window.__vnRender = function (n) { for (var i = 0; i < (n || 1); i++) draw(1 / 60); };
+  window.__vnState = function () { return { label: S.label, pc: S.pc, who: S.who, line: S.line, choices: S.choices ? S.choices.map(function (o) { return o.text; }) : null, flags: S.flags, over: S.over, bg: S.bg, actors: Object.keys(S.actors) }; };
+  if (SC.start) window.VN.start('start');
+})();
+/* __GI_VN_RUNTIME__ end */
+// Patch: top-biased cover crop (VN runtime centers square art and clips heads)
+(function () {
+  var _di = CanvasRenderingContext2D.prototype.drawImage;
+  CanvasRenderingContext2D.prototype.drawImage = function () {
+    // runtime drawCover: drawImage(im, dx, dy, dw, dh) with dw/dh >= canvas and dy < 0
+    if (arguments.length === 5 && arguments[0] && arguments[0].naturalWidth && this.canvas) {
+      var im = arguments[0], dx = +arguments[1], dy = +arguments[2], dw = +arguments[3], dh = +arguments[4];
+      var W = this.canvas.width, H = this.canvas.height;
+      var looksLikeCover = dw >= W - 1 && dh >= H - 1 && (dy < 0 || dx < 0 || dw > W + 1 || dh > H + 1);
+      if (looksLikeCover) {
+        var iw = im.naturalWidth, ih = im.naturalHeight;
+        if (iw > 0 && ih > 0) {
+          var s = Math.max(W / iw, H / ih);
+          var sw = W / s, sh = H / s;
+          var sx = Math.max(0, (iw - sw) * 0.5);
+          var sy = 0; // pin to top — keep crown / third-eye / veil
+          return _di.call(this, im, sx, sy, sw, sh, 0, 0, W, H);
+        }
+      }
+    }
+    return _di.apply(this, arguments);
+  };
+})();
+// Main-menu skin: title choices draw as a gothic menu (+ game wordmark); in-game choices keep the parchment look. Hitboxes unchanged (runtime keeps theme geometry).
+(function () {
+  var mouse = { x: -1, y: -1 };
+  function hook() {
+    var cv = document.getElementById('c') || document.querySelector('canvas');
+    if (!cv) return setTimeout(hook, 300);
+    cv.addEventListener('mousemove', function (e) { var r = cv.getBoundingClientRect(); mouse.x = (e.clientX - r.left) * cv.width / r.width; mouse.y = (e.clientY - r.top) * cv.height / r.height; });
+    cv.addEventListener('mouseleave', function () { mouse.x = -1; mouse.y = -1; });
+  }
+  hook();
+  function rr(ctx, x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
+  window.VN_SKIN = {
+    choice: function (ctx, o) {
+      var t = o.theme || {};
+      var S = (window.VN && window.VN.S) || {};
+      var title = S.label === 'start';
+      var hov = mouse.x >= o.x && mouse.x <= o.x + o.w && mouse.y >= o.y && mouse.y <= o.y + o.h;
+      ctx.save();
+      if (title) {
+        if (o.index === 0) {
+          var cx = ctx.canvas.width / 2, wy = o.y - 44;
+          var tw = window.VN && window.VN.flags && window.VN.flags.lang_tw;
+          ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+          ctx.shadowColor = 'rgba(0,0,0,0.85)'; ctx.shadowBlur = 14;
+          ctx.fillStyle = '#efe3c8';
+          ctx.font = 'bold 34px Georgia, "Times New Roman", serif';
+          ctx.fillText(tw ? '與 教 母 茶 敘' : 'TEA WITH THE GODMOTHER', cx, wy - 16);
+          ctx.font = '14px Georgia, serif';
+          ctx.fillStyle = '#c9ab6e'; ctx.shadowBlur = 8;
+          ctx.fillText(tw ? '— 格林霍洛暗黑童話 —' : '— a Grimmhollow tale —', cx, wy + 14);
+        }
+        rr(ctx, o.x, o.y, o.w, o.h, 4);
+        ctx.fillStyle = hov ? 'rgba(58,20,24,0.92)' : 'rgba(12,10,18,0.78)';
+        ctx.fill();
+        ctx.strokeStyle = hov ? '#e8c67a' : '#8a6f3c';
+        ctx.lineWidth = hov ? 2 : 1;
+        ctx.stroke();
+        ctx.fillStyle = hov ? '#e8c67a' : '#8a6f3c';
+        ctx.fillRect(o.x + 10, o.y + o.h / 2 - 0.5, 14, 1);
+        ctx.fillRect(o.x + o.w - 24, o.y + o.h / 2 - 0.5, 14, 1);
+        ctx.fillStyle = hov ? '#f5e6c4' : '#d9c69a';
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.font = '16px Georgia, "Times New Roman", serif';
+        ctx.fillText(o.text, o.x + o.w / 2, o.y + o.h / 2 + 1);
+      } else {
+        rr(ctx, o.x, o.y, o.w, o.h, t.choiceRadius || 16);
+        ctx.fillStyle = hov ? '#fdf6e6' : (t.choiceColor || 'rgba(246,238,222,0.97)');
+        ctx.fill();
+        ctx.strokeStyle = t.choiceBorder || '#b99a5e'; ctx.lineWidth = hov ? 2.5 : 1.5; ctx.stroke();
+        ctx.fillStyle = t.choiceText || '#3a2c16';
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.font = '15px ' + (t.font || 'Georgia, serif');
+        ctx.fillText(o.text, o.x + o.w / 2, o.y + o.h / 2 + 1);
+      }
+      ctx.restore();
+    }
+  };
+})();
+// ── Main menu v2 (supersedes the skin above) ──
+// The VN runtime locks choice rows to 42% of canvas height (hitbox + draw share that formula),
+// so moving the title menu means owning BOTH: we draw from GAME_CONFIG and hit-test our own rects.
+(function () {
+  var C = window.GAME_CONFIG || (window.GAME_CONFIG = {});
+  function num(k, d) { var v = C[k]; return (typeof v === 'number' && isFinite(v)) ? v : d; }
+  var M = { x: -1, y: -1 }, RECTS = [], cv = null;
+  function canv() { return (cv && cv.isConnected) ? cv : (cv = document.getElementById('c') || document.querySelector('canvas')); }
+  function pt(e) { var c = canv(); if (!c) return null; var r = c.getBoundingClientRect(); return { x: (e.clientX - r.left) * c.width / r.width, y: (e.clientY - r.top) * c.height / r.height }; }
+  function onMenu() { if (window.__VNX3) return false; var S = window.VN && window.VN.S; return !!(S && S.label === 'start' && S.choices && S.choices.length); }
+  (function bind() { var c = canv(); if (!c) return setTimeout(bind, 300); c.addEventListener('mousemove', function (e) { var p = pt(e); if (p) { M.x = p.x; M.y = p.y; } }); c.addEventListener('mouseleave', function () { M.x = -1; M.y = -1; }); })();
+  // capture on window → fires before the runtime's canvas pointerdown, so its stale 42% hitboxes never trigger
+  window.addEventListener('pointerdown', function (e) {
+    if (!onMenu()) return;
+    var c = canv(); if (!c || e.target !== c) return;
+    e.stopPropagation(); e.preventDefault();
+    var p = pt(e); if (!p) return;
+    for (var i = 0; i < RECTS.length; i++) {
+      var q = RECTS[i];
+      if (q && p.x >= q.x && p.x <= q.x + q.w && p.y >= q.y && p.y <= q.y + q.h) {
+        var o = window.VN.S.choices[i]; if (!o) return;
+        if (o.set) window.VN.flags[o.set] = (o.value === undefined ? true : o.value);
+        window.VN.S.choices = null;   // VN.goto() does NOT clear the pending menu — leave it and the runtime treats every later click as a menu pick, so dialogue can never advance
+        if (o.goto) window.VN.goto(o.goto);
+        return;
+      }
+    }
+  }, true);
+  function rr(ctx, x, y, w, h, r) { r = Math.min(r, w / 2, h / 2); ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
+  window.VN_SKIN = {
+    choice: function (ctx, o) {
+      var t = o.theme || {}, S = (window.VN && window.VN.S) || {};
+      var W = ctx.canvas.width, H = ctx.canvas.height;
+      ctx.save();
+      if (S.label !== 'start') {                                  // in-game: parchment, runtime geometry (hitboxes match)
+        var hv = M.x >= o.x && M.x <= o.x + o.w && M.y >= o.y && M.y <= o.y + o.h;
+        rr(ctx, o.x, o.y, o.w, o.h, t.choiceRadius || 16);
+        ctx.fillStyle = hv ? '#fdf6e6' : (t.choiceColor || 'rgba(246,238,222,0.97)'); ctx.fill();
+        ctx.strokeStyle = t.choiceBorder || '#b99a5e'; ctx.lineWidth = hv ? 2.5 : 1.5; ctx.stroke();
+        ctx.fillStyle = t.choiceText || '#3a2c16';
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.font = '15px ' + (t.font || 'Georgia, serif');
+        ctx.fillText(o.text, o.x + o.w / 2, o.y + o.h / 2 + 1);
+        ctx.restore(); return;
+      }
+      var n = (S.choices || []).length || 1;
+      var bw = W * num('menuWPct', 0.46), bh = num('menuRowH', 40), gap = num('menuGap', 12);
+      var y0 = H * num('menuYPct', 0.72) - (n * bh + (n - 1) * gap) / 2;
+      var bx = (W - bw) / 2, by = y0 + o.index * (bh + gap);
+      if (o.index === 0) {
+        RECTS = [];
+        if (S.line) { S.line = ''; S.shown = 0; S.who = null; }   // stale text (e.g. the last How-to-play line) would sit under the menu
+        if (C.showTitle !== false) {
+          var tw = !!(window.VN && window.VN.flags && window.VN.flags.lang_tw);
+          var ts = num('titleSize', 32), ty = H * num('titleYPct', 0.17);
+          ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+          ctx.shadowColor = 'rgba(0,0,0,0.85)'; ctx.shadowBlur = 14;
+          ctx.fillStyle = '#efe3c8'; ctx.font = 'bold ' + ts + 'px Georgia, "Times New Roman", serif';
+          ctx.fillText(tw ? '與 教 母 茶 敘' : 'TEA WITH THE GODMOTHER', W / 2, ty);
+          ctx.font = Math.round(ts * 0.42) + 'px Georgia, serif'; ctx.fillStyle = '#c9ab6e'; ctx.shadowBlur = 8;
+          ctx.fillText(tw ? '— 格林霍洛暗黑童話 —' : '— a Grimmhollow tale —', W / 2, ty + ts * 0.95);
+          ctx.shadowBlur = 0;
+        }
+      }
+      RECTS[o.index] = { x: bx, y: by, w: bw, h: bh };
+      var hov = M.x >= bx && M.x <= bx + bw && M.y >= by && M.y <= by + bh;
+      rr(ctx, bx, by, bw, bh, 4);
+      ctx.fillStyle = hov ? 'rgba(58,20,24,0.92)' : 'rgba(12,10,18,0.78)'; ctx.fill();
+      ctx.strokeStyle = hov ? '#e8c67a' : '#8a6f3c'; ctx.lineWidth = hov ? 2 : 1; ctx.stroke();
+      ctx.fillStyle = hov ? '#e8c67a' : '#8a6f3c';
+      ctx.fillRect(bx + 10, by + bh / 2 - 0.5, 14, 1);
+      ctx.fillRect(bx + bw - 24, by + bh / 2 - 0.5, 14, 1);
+      ctx.fillStyle = hov ? '#f5e6c4' : '#d9c69a';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.font = Math.round(bh * 0.4) + 'px Georgia, "Times New Roman", serif';
+      ctx.fillText(o.text, bx + bw / 2, by + bh / 2 + 1);
+      ctx.restore();
+    }
+  };
+})();
+// ── VN runtime extensions v3 ── local polyfill of three engine gaps:
+//   1) `show` gains scale / y / secs  → depth + tweened motion (engine `pos` is horizontal-only and snaps)
+//   2) choice rows get a configurable Y for BOTH draw and hit-test (engine locks y0 = H*0.42)
+//   3) bgFit "cover" | "contain"      → stop silently cropping art whose aspect differs from the canvas
+(function () {
+  window.__VNX3 = false; return;              // REVERTED — v3 extensions disabled, v2 menu handler active again
+  var C = window.GAME_CONFIG || (window.GAME_CONFIG = {});
+  var GD = window.GAME_DATA || {};
+  function num(k, d) { var v = C[k]; return (typeof v === 'number' && isFinite(v)) ? v : d; }
+  var M = { x: -1, y: -1 }, RECTS = [], cv = null;
+  function canv() { return (cv && cv.isConnected) ? cv : (cv = document.getElementById('c') || document.querySelector('canvas')); }
+  function pt(e) { var c = canv(); if (!c) return null; var r = c.getBoundingClientRect(); return { x: (e.clientX - r.left) * c.width / r.width, y: (e.clientY - r.top) * c.height / r.height }; }
+  function hasChoices() { var S = window.VN && window.VN.S; return !!(S && S.choices && S.choices.length); }
+  (function bind() { var c = canv(); if (!c) return setTimeout(bind, 300); c.addEventListener('mousemove', function (e) { var p = pt(e); if (p) { M.x = p.x; M.y = p.y; } }); c.addEventListener('mouseleave', function () { M.x = -1; M.y = -1; }); })();
+  // capture on window → runs before the runtime's canvas pointerdown, whose hitboxes are locked to 42%
+  window.addEventListener('pointerdown', function (e) {
+    if (!hasChoices()) return;
+    var c = canv(); if (!c || e.target !== c) return;
+    e.stopPropagation(); e.preventDefault();
+    var p = pt(e); if (!p) return;
+    for (var i = 0; i < RECTS.length; i++) {
+      var q = RECTS[i];
+      if (q && p.x >= q.x && p.x <= q.x + q.w && p.y >= q.y && p.y <= q.y + q.h) {
+        var o = window.VN.S.choices[i]; if (!o) return;
+        if (o.set) window.VN.flags[o.set] = (o.value === undefined ? true : o.value);
+        window.VN.S.choices = null;   // VN.goto() does NOT clear the pending menu — leave it and the runtime treats every later click as a menu pick, so dialogue can never advance
+        if (o.goto) window.VN.goto(o.goto);
+        return;
+      }
+    }
+  }, true);
+  function rr(ctx, x, y, w, h, r) { r = Math.min(r, w / 2, h / 2); ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
+  function wordmark(ctx, W, H) {
+    var tw = !!(window.VN && window.VN.flags && window.VN.flags.lang_tw);
+    var ts = num('titleSize', 32), ty = H * num('titleYPct', 0.17);
+    ctx.save(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.shadowColor = 'rgba(0,0,0,0.85)'; ctx.shadowBlur = 14;
+    ctx.fillStyle = '#efe3c8'; ctx.font = 'bold ' + ts + 'px Georgia, "Times New Roman", serif';
+    ctx.fillText(tw ? '與 教 母 茶 敘' : 'TEA WITH THE GODMOTHER', W / 2, ty);
+    ctx.font = Math.round(ts * 0.42) + 'px Georgia, serif'; ctx.fillStyle = '#c9ab6e'; ctx.shadowBlur = 8;
+    ctx.fillText(tw ? '— 格林霍洛暗黑童話 —' : '— a Grimmhollow tale —', W / 2, ty + ts * 0.95);
+    ctx.restore();
+  }
+  window.VN_SKIN = {
+    choice: function (ctx, o) {
+      var t = o.theme || {}, S = (window.VN && window.VN.S) || {};
+      var W = ctx.canvas.width, H = ctx.canvas.height;
+      var title = S.label === 'start', n = (S.choices || []).length || 1;
+      var bw, bh, gap, cy;
+      if (title) { bw = W * num('menuWPct', 0.46); bh = num('menuRowH', 40); gap = num('menuGap', 12); cy = num('menuYPct', 0.72); }
+      else { bw = W * (t.choiceW || 0.6); bh = t.choiceH || 42; gap = t.choiceGap || 12; cy = num('choiceYPct', 0.42); }
+      var y0 = H * cy - (n * bh + (n - 1) * gap) / 2;
+      var bx = (W - bw) / 2, by = y0 + o.index * (bh + gap);
+      if (o.index === 0) { RECTS = []; if (title && C.showTitle !== false) wordmark(ctx, W, H); }
+      RECTS[o.index] = { x: bx, y: by, w: bw, h: bh };
+      var hov = M.x >= bx && M.x <= bx + bw && M.y >= by && M.y <= by + bh;
+      ctx.save(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      if (title) {
+        rr(ctx, bx, by, bw, bh, 4);
+        ctx.fillStyle = hov ? 'rgba(58,20,24,0.92)' : 'rgba(12,10,18,0.78)'; ctx.fill();
+        ctx.strokeStyle = hov ? '#e8c67a' : '#8a6f3c'; ctx.lineWidth = hov ? 2 : 1; ctx.stroke();
+        ctx.fillStyle = hov ? '#e8c67a' : '#8a6f3c';
+        ctx.fillRect(bx + 10, by + bh / 2 - 0.5, 14, 1); ctx.fillRect(bx + bw - 24, by + bh / 2 - 0.5, 14, 1);
+        ctx.fillStyle = hov ? '#f5e6c4' : '#d9c69a';
+        ctx.font = Math.round(bh * 0.4) + 'px Georgia, "Times New Roman", serif';
+      } else {
+        rr(ctx, bx, by, bw, bh, t.choiceRadius || 16);
+        ctx.fillStyle = hov ? '#fdf6e6' : (t.choiceColor || 'rgba(246,238,222,0.97)'); ctx.fill();
+        ctx.strokeStyle = t.choiceBorder || '#b99a5e'; ctx.lineWidth = hov ? 2.5 : 1.5; ctx.stroke();
+        ctx.fillStyle = t.choiceText || '#3a2c16';
+        ctx.font = '15px ' + (t.font || 'Georgia, serif');
+      }
+      ctx.fillText(o.text, bx + bw / 2, by + bh / 2 + 1);
+      ctx.restore();
+    }
+  };
+  // ── motion: scale / y / tween on top of the engine's horizontal-only `pos` ──
+  var MO = {}, WROTE = {}, last = 0;
+  function findShow(who, key, pos) {                 // match on RESULTING state → no need to re-evaluate `if`
+    var S = window.VN.S, list = (GD.script || {})[S.label] || [], best = null;
+    var n = Math.min(list.length, (S.pc == null ? list.length : S.pc + 1));
+    for (var i = 0; i < n; i++) {
+      var c = list[i];
+      if (!c || c.cmd !== 'show' || c.who !== who) continue;
+      if (c.key && c.key !== key) continue;
+      if (c.pos != null && Math.abs(c.pos - pos) > 1e-6) continue;
+      best = c;
+    }
+    return best;
+  }
+  function tick(t) {
+    requestAnimationFrame(tick);
+    var S = window.VN && window.VN.S; if (!S || !S.actors) return;
+    var dt = last ? Math.min((t - last) / 1000, 0.1) : 0; last = t;
+    for (var who in S.actors) {
+      var a = S.actors[who]; if (!a || typeof a.pos !== 'number') continue;
+      var m = MO[who], w = WROTE[who];
+      if (!m || !w || a.key !== w.key || a.pos !== w.pos) {          // the runtime just ran a `show`
+        var cmd = findShow(who, a.key, a.pos) || {};
+        var to = { pos: a.pos, scale: (typeof cmd.scale === 'number' ? cmd.scale : 1), y: (typeof cmd.y === 'number' ? cmd.y : 0) };
+        var secs = (typeof cmd.secs === 'number' ? cmd.secs : num('spriteTweenSecs', 0.9));
+        if (!m) m = MO[who] = { pos: to.pos, scale: to.scale, y: to.y, from: null, to: to, k: 1, secs: 0 };
+        else { m.from = { pos: m.pos, scale: m.scale, y: m.y }; m.to = to; m.secs = secs; m.k = secs > 0 ? 0 : 1; }
+      }
+      if (m.k < 1) {
+        m.k = Math.min(1, m.k + (m.secs > 0 ? dt / m.secs : 1));
+        var e = m.k < 0.5 ? 2 * m.k * m.k : 1 - Math.pow(-2 * m.k + 2, 2) / 2;   // easeInOutQuad
+        m.pos = m.from.pos + (m.to.pos - m.from.pos) * e;
+        m.scale = m.from.scale + (m.to.scale - m.from.scale) * e;
+        m.y = m.from.y + (m.to.y - m.from.y) * e;
+      } else { m.pos = m.to.pos; m.scale = m.to.scale; m.y = m.to.y; }
+      a.pos = m.pos; a.__s = m.scale; a.__y = m.y;
+      WROTE[who] = { key: a.key, pos: a.pos };
+    }
+    for (var k2 in MO) if (!S.actors[k2]) { delete MO[k2]; delete WROTE[k2]; }
+  }
+  requestAnimationFrame(tick);
+  // ── draw hook: apply sprite scale/y (anchored bottom-centre) and bgFit ──
+  var _di = CanvasRenderingContext2D.prototype.drawImage;
+  CanvasRenderingContext2D.prototype.drawImage = function (im, dx, dy, dw, dh) {
+    if (arguments.length === 5 && im && this.canvas) {
+      var W = this.canvas.width, H = this.canvas.height, S = window.VN && window.VN.S;
+      if (S && S.actors) {
+        for (var who in S.actors) {
+          var a = S.actors[who];
+          if (a && a.img === im) {
+            var s = (typeof a.__s === 'number' ? a.__s : 1), yo = (typeof a.__y === 'number' ? a.__y : 0);
+            if (s !== 1 || yo !== 0) {
+              var nw = dw * s, nh = dh * s;
+              return _di.call(this, im, dx + (dw - nw) / 2, dy + (dh - nh) + yo * H, nw, nh);
+            }
+            return _di.apply(this, arguments);
+          }
+        }
+      }
+      if (C.bgFit === 'contain' && im.naturalWidth && dw >= W - 1 && dh >= H - 1) {
+        var sc = Math.min(W / im.naturalWidth, H / im.naturalHeight);
+        var w2 = im.naturalWidth * sc, h2 = im.naturalHeight * sc;
+        return _di.call(this, im, (W - w2) / 2, (H - h2) / 2, w2, h2);
+      }
+    }
+    return _di.apply(this, arguments);
+  };
+})();
+// ── Main menu v4 ── gothic title menu + ⚙ Settings overlay (music / sfx / language)
+// Owns menu DRAWING and INPUT: the runtime locks choice rows to 42% and `VN.goto()` does not clear
+// a pending menu, so both must be handled here.
+(function () {
+  window.__VNX3 = true;                        // disable the v2 handler above — v4 replaces it
+  var C = window.GAME_CONFIG || (window.GAME_CONFIG = {});
+  function num(k, d) { var v = C[k]; return (typeof v === 'number' && isFinite(v)) ? v : d; }
+  var M = { x: -1, y: -1 }, RECTS = [], HOT = {}, OPEN = false, DRAG = null, cv = null;
+  function canv() { return (cv && cv.isConnected) ? cv : (cv = document.getElementById('c') || document.querySelector('canvas')); }
+  function pt(e) { var c = canv(); if (!c) return null; var r = c.getBoundingClientRect(); return { x: (e.clientX - r.left) * c.width / r.width, y: (e.clientY - r.top) * c.height / r.height }; }
+  function tw() { return !!(window.VN && window.VN.flags && window.VN.flags.lang_tw); }
+  function hit(r, p) { return !!(r && p.x >= r.x && p.x <= r.x + r.w && p.y >= r.y && p.y <= r.y + r.h); }
+  function rr(ctx, x, y, w, h, r) { r = Math.min(r, w / 2, h / 2); ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
+  // audio — the runtime builds its own Audio objects, so hook play() to find them; loop = music, one-shot = sfx
+  var AUD = [], _play = HTMLMediaElement.prototype.play;
+  HTMLMediaElement.prototype.play = function () { if (AUD.indexOf(this) < 0) AUD.push(this); applyVol(); return _play.apply(this, arguments); };
+  function applyVol() { for (var i = 0; i < AUD.length; i++) { try { AUD[i].volume = AUD[i].loop ? num('musicVolume', 0.6) : num('sfxVolume', 0.8); } catch (e) {} } }
+  (function bind() { var c = canv(); if (!c) return setTimeout(bind, 300); c.addEventListener('mousemove', function (e) { var p = pt(e); if (p) { M.x = p.x; M.y = p.y; } }); c.addEventListener('mouseleave', function () { M.x = -1; M.y = -1; }); })();
+  function setVol(p) { var r = (DRAG === 'musicVolume') ? HOT.music : HOT.sfx; if (!r) return; var v = Math.max(0, Math.min(1, (p.x - r.sx) / r.sw)); C[DRAG] = Math.round(v * 100) / 100; applyVol(); }
+  function setLang(v) { window.VN.flags.lang_tw = v; window.VN.S.choices = null; window.VN.goto('start'); }
+  window.addEventListener('pointerdown', function (e) {
+    var S = window.VN && window.VN.S; if (!S) return;
+    var c = canv(); if (!c || e.target !== c) return;
+    var p = pt(e); if (!p) return;
+    if (OPEN) {                                   // overlay swallows everything while it is up
+      e.stopPropagation(); e.preventDefault();
+      if (hit(HOT.close, p)) { OPEN = false; return; }
+      if (hit(HOT.en, p)) { setLang(false); return; }
+      if (hit(HOT.tw, p)) { setLang(true); return; }
+      if (hit(HOT.music, p)) { DRAG = 'musicVolume'; setVol(p); return; }
+      if (hit(HOT.sfx, p)) { DRAG = 'sfxVolume'; setVol(p); return; }
+      return;
+    }
+    if (!S.choices || !S.choices.length) return;
+    e.stopPropagation(); e.preventDefault();
+    for (var i = 0; i < RECTS.length; i++) {
+      if (hit(RECTS[i], p)) {
+        var o = S.choices[i]; if (!o) return;
+        if (o.goto === 'settings') { OPEN = true; return; }        // open the panel, stay on the title
+        if (o.set) window.VN.flags[o.set] = (o.value === undefined ? true : o.value);
+        S.choices = null;                                          // VN.goto() does NOT clear it — without this every later click is eaten as a menu pick
+        if (o.goto) window.VN.goto(o.goto);
+        return;
+      }
+    }
+  }, true);
+  window.addEventListener('pointermove', function (e) { if (OPEN && DRAG) { var p = pt(e); if (p) setVol(p); } }, true);
+  window.addEventListener('pointerup', function () { DRAG = null; }, true);
+  window.addEventListener('keydown', function (e) {
+    if (OPEN) { if (e.key === 'Escape' || e.key === 'Esc') { OPEN = false; e.stopPropagation(); } return; }
+    var S = window.VN && window.VN.S; if (!S || !S.choices || !S.choices.length) return;
+    var i = '123456789'.indexOf(e.key);        // number keys pick a menu row (also lets a playtest bot get past the menu)
+    if (i < 0 || i >= S.choices.length) return;
+    e.stopPropagation(); e.preventDefault();
+    var o = S.choices[i];
+    if (o.goto === 'settings') { OPEN = true; return; }
+    if (o.set) window.VN.flags[o.set] = (o.value === undefined ? true : o.value);
+    S.choices = null;
+    if (o.goto) window.VN.goto(o.goto);
+  }, true);
+  function slider(ctx, x, y, w, v, label, lx) {
+    ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#c9ab6e'; ctx.font = '14px Georgia, serif'; ctx.fillText(label, lx, y);
+    var ty = y, h = 6;
+    ctx.fillStyle = 'rgba(255,255,255,0.15)'; rr(ctx, x, ty - h / 2, w, h, 3); ctx.fill();
+    ctx.fillStyle = '#c9ab6e'; rr(ctx, x, ty - h / 2, Math.max(2, w * v), h, 3); ctx.fill();
+    ctx.beginPath(); ctx.arc(x + w * v, ty, 8, 0, Math.PI * 2);
+    ctx.fillStyle = '#efe3c8'; ctx.fill(); ctx.strokeStyle = '#8a6f3c'; ctx.lineWidth = 1; ctx.stroke();
+    ctx.fillStyle = '#d9c69a'; ctx.font = '12px Georgia, serif'; ctx.textAlign = 'right';
+    ctx.fillText(Math.round(v * 100) + '%', x + w + 46, ty);
+    return { x: x - 10, y: ty - 14, w: w + 20, h: 28, sx: x, sw: w };
+  }
+  function pill(ctx, x, y, w, h, text, active) {
+    var hov = M.x >= x && M.x <= x + w && M.y >= y && M.y <= y + h;
+    rr(ctx, x, y, w, h, 4);
+    ctx.fillStyle = active ? 'rgba(58,20,24,0.95)' : (hov ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.05)'); ctx.fill();
+    ctx.strokeStyle = active ? '#e8c67a' : '#8a6f3c'; ctx.lineWidth = active ? 2 : 1; ctx.stroke();
+    ctx.fillStyle = active ? '#f5e6c4' : '#a9977a';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.font = '14px Georgia, serif';
+    ctx.fillText(text, x + w / 2, y + h / 2 + 1);
+    return { x: x, y: y, w: w, h: h };
+  }
+  function overlay(ctx, W, H) {
+    var t = tw();
+    ctx.save();
+    ctx.fillStyle = 'rgba(4,3,8,0.74)'; ctx.fillRect(0, 0, W, H);
+    var pw = Math.min(520, W * 0.7), ph = 250, px = (W - pw) / 2, py = (H - ph) / 2;
+    rr(ctx, px, py, pw, ph, 8); ctx.fillStyle = 'rgba(12,10,18,0.97)'; ctx.fill();
+    ctx.strokeStyle = '#8a6f3c'; ctx.lineWidth = 1.5; ctx.stroke();
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#efe3c8'; ctx.font = 'bold 20px Georgia, "Times New Roman", serif';
+    ctx.fillText(t ? '⚙ 設定' : '⚙ Settings', W / 2, py + 32);
+    ctx.strokeStyle = 'rgba(201,171,110,0.35)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(px + 24, py + 54); ctx.lineTo(px + pw - 24, py + 54); ctx.stroke();
+    HOT = {};
+    var lx = px + 26, sx = px + 130, sw = pw - 130 - 76, y = py + 86;
+    HOT.music = slider(ctx, sx, y, sw, num('musicVolume', 0.6), t ? '音樂' : 'Music', lx);
+    y += 44;
+    HOT.sfx = slider(ctx, sx, y, sw, num('sfxVolume', 0.8), t ? '音效' : 'Sound', lx);
+    y += 46;
+    ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillStyle = '#c9ab6e'; ctx.font = '14px Georgia, serif';
+    ctx.fillText(t ? '語言' : 'Language', lx, y + 14);
+    HOT.en = pill(ctx, sx, y, 108, 28, 'English', !t);
+    HOT.tw = pill(ctx, sx + 118, y, 108, 28, '繁體中文', t);
+    HOT.close = pill(ctx, W / 2 - 70, py + ph - 44, 140, 30, t ? '關閉' : 'Close', false);
+    ctx.restore();
+  }
+  window.VN_SKIN = {
+    choice: function (ctx, o) {
+      var t = o.theme || {}, S = (window.VN && window.VN.S) || {};
+      var W = ctx.canvas.width, H = ctx.canvas.height;
+      var title = S.label === 'start', n = (S.choices || []).length || 1;
+      var bw, bh, gap, cy;
+      if (title) { bw = W * num('menuWPct', 0.46); bh = num('menuRowH', 40); gap = num('menuGap', 12); cy = num('menuYPct', 0.72); }
+      else { bw = W * (t.choiceW || 0.6); bh = t.choiceH || 42; gap = t.choiceGap || 12; cy = 0.42; }
+      var y0 = H * cy - (n * bh + (n - 1) * gap) / 2;
+      var bx = (W - bw) / 2, by = y0 + o.index * (bh + gap);
+      if (o.index === 0) {
+        RECTS = [];
+        if (title) {
+          if (S.line) { S.line = ''; S.shown = 0; S.who = null; }   // stale text would sit under the menu
+          if (C.showTitle !== false) {
+            var lang = tw(), ts = num('titleSize', 32), ty = H * num('titleYPct', 0.17);
+            ctx.save(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+            ctx.shadowColor = 'rgba(0,0,0,0.85)'; ctx.shadowBlur = 14;
+            ctx.fillStyle = '#efe3c8'; ctx.font = 'bold ' + ts + 'px Georgia, "Times New Roman", serif';
+            ctx.fillText(lang ? '與 教 母 茶 敘' : 'TEA WITH THE GODMOTHER', W / 2, ty);
+            ctx.font = Math.round(ts * 0.42) + 'px Georgia, serif'; ctx.fillStyle = '#c9ab6e'; ctx.shadowBlur = 8;
+            ctx.fillText(lang ? '— 格林霍洛暗黑童話 —' : '— a Grimmhollow tale —', W / 2, ty + ts * 0.95);
+            ctx.restore();
+          }
+        }
+      }
+      RECTS[o.index] = { x: bx, y: by, w: bw, h: bh };
+      var hov = !OPEN && M.x >= bx && M.x <= bx + bw && M.y >= by && M.y <= by + bh;
+      ctx.save(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      if (title) {
+        rr(ctx, bx, by, bw, bh, 4);
+        ctx.fillStyle = hov ? 'rgba(58,20,24,0.92)' : 'rgba(12,10,18,0.78)'; ctx.fill();
+        ctx.strokeStyle = hov ? '#e8c67a' : '#8a6f3c'; ctx.lineWidth = hov ? 2 : 1; ctx.stroke();
+        ctx.fillStyle = hov ? '#e8c67a' : '#8a6f3c';
+        ctx.fillRect(bx + 10, by + bh / 2 - 0.5, 14, 1); ctx.fillRect(bx + bw - 24, by + bh / 2 - 0.5, 14, 1);
+        ctx.fillStyle = hov ? '#f5e6c4' : '#d9c69a';
+        ctx.font = Math.round(bh * 0.4) + 'px Georgia, "Times New Roman", serif';
+      } else {
+        rr(ctx, bx, by, bw, bh, t.choiceRadius || 16);
+        ctx.fillStyle = hov ? '#fdf6e6' : (t.choiceColor || 'rgba(246,238,222,0.97)'); ctx.fill();
+        ctx.strokeStyle = t.choiceBorder || '#b99a5e'; ctx.lineWidth = hov ? 2.5 : 1.5; ctx.stroke();
+        ctx.fillStyle = t.choiceText || '#3a2c16';
+        ctx.font = '15px ' + (t.font || 'Georgia, serif');
+      }
+      ctx.fillText(o.text, bx + bw / 2, by + bh / 2 + 1);
+      ctx.restore();
+      if (OPEN && o.index === n - 1) overlay(ctx, W, H);            // drawn last so it covers the rows
+    }
+  };
+})();
+// ── Sprite motion v5 ── gives `show` a scale / y / secs, because the engine's `pos` is
+// horizontal-only and snaps. MOTION ONLY: no input handlers, no menu drawing, so it cannot
+// collide with the menu block above.
+(function () {
+  var C = window.GAME_CONFIG || (window.GAME_CONFIG = {});
+  var GD = window.GAME_DATA || {};
+  function num(k, d) { var v = C[k]; return (typeof v === 'number' && isFinite(v)) ? v : d; }
+  var MO = {}, WROTE = {}, last = 0;
+  function findShow(who, key, pos) {            // match on the RESULTING state → no need to re-evaluate `if`
+    var S = window.VN.S, list = (GD.script || {})[S.label] || [], best = null;
+    var n = Math.min(list.length, (S.pc == null ? list.length : S.pc + 1));
+    for (var i = 0; i < n; i++) {
+      var c = list[i];
+      if (!c || c.cmd !== 'show' || c.who !== who) continue;
+      if (c.key && c.key !== key) continue;
+      if (c.pos != null && Math.abs(c.pos - pos) > 1e-6) continue;
+      best = c;
+    }
+    return best;
+  }
+  function tick(t) {
+    requestAnimationFrame(tick);
+    var S = window.VN && window.VN.S; if (!S || !S.actors) return;
+    var dt = last ? Math.min((t - last) / 1000, 0.1) : 0; last = t;
+    for (var who in S.actors) {
+      var a = S.actors[who]; if (!a || typeof a.pos !== 'number') continue;
+      var m = MO[who], w = WROTE[who];
+      if (!m || !w || a.key !== w.key || a.pos !== w.pos) {        // the runtime just ran a `show`
+        var cmd = findShow(who, a.key, a.pos) || {};
+        var to = { pos: a.pos, scale: (typeof cmd.scale === 'number' ? cmd.scale : 1), y: (typeof cmd.y === 'number' ? cmd.y : 0) };
+        var secs = (typeof cmd.secs === 'number' ? cmd.secs : num('spriteTweenSecs', 0.9));
+        if (!m) m = MO[who] = { pos: to.pos, scale: to.scale, y: to.y, from: null, to: to, k: 1, secs: 0 };
+        else { m.from = { pos: m.pos, scale: m.scale, y: m.y }; m.to = to; m.secs = secs; m.k = secs > 0 ? 0 : 1; }
+      }
+      if (m.k < 1) {
+        m.k = Math.min(1, m.k + (m.secs > 0 ? dt / m.secs : 1));
+        var e = m.k < 0.5 ? 2 * m.k * m.k : 1 - Math.pow(-2 * m.k + 2, 2) / 2;   // easeInOutQuad
+        m.pos = m.from.pos + (m.to.pos - m.from.pos) * e;
+        m.scale = m.from.scale + (m.to.scale - m.from.scale) * e;
+        m.y = m.from.y + (m.to.y - m.from.y) * e;
+      } else { m.pos = m.to.pos; m.scale = m.to.scale; m.y = m.to.y; }
+      a.pos = m.pos; a.__s = m.scale; a.__y = m.y;
+      WROTE[who] = { key: a.key, pos: a.pos };
+    }
+    for (var k2 in MO) if (!S.actors[k2]) { delete MO[k2]; delete WROTE[k2]; }
+  }
+  requestAnimationFrame(tick);
+  var _di = CanvasRenderingContext2D.prototype.drawImage;   // scale about the sprite's BOTTOM-CENTRE, so it works without knowing the runtime's rect maths
+  CanvasRenderingContext2D.prototype.drawImage = function (im, dx, dy, dw, dh) {
+    if (arguments.length === 5 && im && this.canvas) {
+      var H = this.canvas.height, S = window.VN && window.VN.S;
+      if (S && S.actors) {
+        for (var who in S.actors) {
+          var a = S.actors[who];
+          if (a && a.img === im) {
+            var s = (typeof a.__s === 'number' ? a.__s : 1), yo = (typeof a.__y === 'number' ? a.__y : 0);
+            // colour-grade the SPRITE ONLY, so the white-background art sits inside the painted room
+            var b = num('spriteBrightness', 1), sat = num('spriteSaturate', 1), con = num('spriteContrast', 1);
+            var f = (b !== 1 || sat !== 1 || con !== 1) ? ('brightness(' + b + ') saturate(' + sat + ') contrast(' + con + ')') : '';
+            var prevF = this.filter, out;
+            if (f) this.filter = f;
+            if (s !== 1 || yo !== 0) {
+              var nw = dw * s, nh = dh * s;
+              out = _di.call(this, im, dx + (dw - nw) / 2, dy + (dh - nh) + yo * H, nw, nh);
+            } else out = _di.apply(this, arguments);
+            if (f) this.filter = prevF;
+            return out;
+          }
+        }
+      }
+    }
+    return _di.apply(this, arguments);
+  };
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"e3acec4d3d8a413390aba294a7377dd5","r":1}' crossorigin="anonymous"></script>
+</body>
+</html>

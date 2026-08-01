@@ -1,0 +1,2828 @@
+﻿{
+  "characters": {
+    "her": {
+      "name": "She",
+      "color": "#8fe3dd",
+      "sprite": "gm_neutral"
+    },
+    "herw": {
+      "name": "憟?,
+      "color": "#8fe3dd",
+      "sprite": "gm_neutral"
+    }
+  },
+  "theme": {
+    "boxColor": "rgba(6,14,20,.92)",
+    "boxBorder": "#7fd4cf",
+    "boxRadius": 6,
+    "boxMargin": 54,
+    "boxBottom": 16,
+    "boxHeight": 0.3,
+    "pad": 20,
+    "textColor": "#dfe9ec",
+    "textSize": 16,
+    "lineHeight": 25,
+    "maxLines": 5,
+    "font": "Georgia, serif",
+    "nameSize": 15,
+    "nameColor": "#8fe3dd",
+    "namePlate": "rgba(10,26,32,.95)",
+    "choiceColor": "rgba(8,18,26,.94)",
+    "choiceBorder": "#5fb8b4",
+    "choiceText": "#e6f2f2",
+    "choiceRadius": 4,
+    "choiceW": 0.62,
+    "choiceH": 42,
+    "choiceGap": 11,
+    "arrow": "??,
+    "logLabel": "??Log嚗???(L)"
+  },
+  "script": {
+    "start": [
+      {
+        "cmd": "bg",
+        "key": "art_title"
+      },
+      {
+        "cmd": "bgm",
+        "key": "bgm_main"
+      },
+      {
+        "cmd": "choice",
+        "if": "!lang_tw",
+        "options": [
+          {
+            "text": "Begin",
+            "goto": "ch0_a"
+          },
+          {
+            "text": "How to play",
+            "goto": "howto"
+          },
+          {
+            "text": "??蝜?銝剜?",
+            "goto": "set_tw"
+          }
+        ]
+      },
+      {
+        "cmd": "choice",
+        "if": "lang_tw",
+        "options": [
+          {
+            "text": "??",
+            "goto": "ch0_a"
+          },
+          {
+            "text": "?拇?隤芣?",
+            "goto": "howto"
+          },
+          {
+            "text": "??English",
+            "goto": "set_en"
+          }
+        ]
+      }
+    ],
+    "set_tw": [
+      {
+        "cmd": "set",
+        "flag": "lang_tw",
+        "value": true
+      },
+      {
+        "cmd": "goto",
+        "label": "start"
+      }
+    ],
+    "set_en": [
+      {
+        "cmd": "set",
+        "flag": "lang_tw",
+        "value": false
+      },
+      {
+        "cmd": "goto",
+        "label": "start"
+      }
+    ],
+    "howto": [
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "Click or press Space to advance. L opens the log. A toggles auto-play."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "Your health is never shown to you. Watch HER instead ??how near she stands, how long she looks. She tells you everything, if you are paying attention."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "Six endings. Not all of them are survivable."
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "暺???蝛箇?菜?脯 ???質???A ?芸??剜??
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "雿??亙熒?潭偶???＊蝷箝?箄?撖旦?旦蝡?憭???雿?敺?銋閬???嚗旦?嗅祕隞暻潮?迄鈭???
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "?剖?撅?蒂??銝?瘣餃?銝???
+      },
+      {
+        "cmd": "goto",
+        "label": "start"
+      }
+    ],
+    "ch0_a": [
+      {
+        "cmd": "bg",
+        "key": "bg_deck"
+      },
+      {
+        "cmd": "bgm",
+        "key": "bgm_tension"
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "Three days out of port, the Bellwether met weather the charts had no name for."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "You were on deck because the cabin was worse. You had been coughing for a week, and down there the air sat in your chest like wet wool."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "The wave did not look like a wave. It looked like the sea standing up to see you better."
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "?Ｘ葛蝚砌?憭抬?鞎憡???銝?瘚瑕?銝???摮?憭拇除??
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "雿?脫銝???寡??湧??撌脩??喃?銝????????Ｙ?蝛箸除??蝢?銝璅???其??詨??
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "???瘚芯??答???之瘚瑞?韏瑁澈靘?憟賣?雿?敺?璆?暺?
+      },
+      {
+        "cmd": "sfx",
+        "key": "sfx_sting"
+      },
+      {
+        "cmd": "shake",
+        "amount": 0.7
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "Then the rail was gone, and the lamp was gone, and the sound was gone."
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "?嗅?甈?銝?鈭???閬?嚗?喃?銝?鈭?
+      },
+      {
+        "cmd": "choice",
+        "if": "!lang_tw",
+        "options": [
+          {
+            "text": "You are still holding your mother's locket.",
+            "goto": "ch0_b",
+            "set": "clutch_locket",
+            "value": true
+          },
+          {
+            "text": "You are still holding the gutting knife.",
+            "goto": "ch0_b",
+            "set": "clutch_knife",
+            "value": true
+          },
+          {
+            "text": "Both your hands are open.",
+            "goto": "ch0_b",
+            "set": "clutch_none",
+            "value": true
+          }
+        ]
+      },
+      {
+        "cmd": "choice",
+        "if": "lang_tw",
+        "options": [
+          {
+            "text": "雿?鋆⊿??∟?瘥扛??????,
+            "goto": "ch0_b",
+            "set": "clutch_locket",
+            "value": true
+          },
+          {
+            "text": "雿?鋆⊿??∟??????,
+            "goto": "ch0_b",
+            "set": "clutch_knife",
+            "value": true
+          },
+          {
+            "text": "雿??舐征??,
+            "goto": "ch0_b",
+            "set": "clutch_none",
+            "value": true
+          }
+        ]
+      }
+    ],
+    "ch0_b": [
+      {
+        "cmd": "bg",
+        "key": "bg_sink"
+      },
+      {
+        "cmd": "sfx",
+        "key": "sfx_bubble"
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "Down is warm. That is the first lie the sea tells you."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "The light above closes like an eye."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "You should be afraid. Instead you are tired, and the tiredness is enormous, and it is easier than anything has ever been."
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "銝?舀??憭扳絲撠?隤芰?蝚砌?????
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "銝?????餌?璅??銝?
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "雿?閰脣拿??臭??芾死敺敞嚗蝔桃敞憭批?瘝???嚗?瘥?銝遙雿??賢捆??
+      },
+      {
+        "cmd": "goto",
+        "label": "ch0_c"
+      }
+    ],
+    "ch0_c": [
+      {
+        "cmd": "bg",
+        "key": "bg_rise"
+      },
+      {
+        "cmd": "sfx",
+        "key": "sfx_whale"
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "Something below you is rising."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "It is too large to be a shape. You understand its size the way you understand a cliff ??not by seeing it, but by how small you have suddenly become."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "Two points of light open where a face would be."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "It does not hurry. It has all the water in the world."
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "雿??寞??梯正甇?銝???
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "摰之敺????耦????圾摰?擃?嚗停??閫??摨扳撏??臬??箇?閬?嚗?雿蕭?嗉?敺暻澆???
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "閰脫??雿蔭嚗????拚?敺桀???
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "摰??乓?絲?偌?賢惇?澆???
+      },
+      {
+        "cmd": "shake",
+        "amount": 0.5
+      },
+      {
+        "cmd": "sfx",
+        "key": "sfx_sting"
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "It takes you gently. Somehow that is worse."
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "摰?皞急??唳?雿雿??亦雿??見?游??
+      },
+      {
+        "cmd": "goto",
+        "label": "ch0_d"
+      }
+    ],
+    "ch0_d": [
+      {
+        "cmd": "bg",
+        "key": "bg_sick"
+      },
+      {
+        "cmd": "bgm",
+        "key": "bgm_main"
+      },
+      {
+        "cmd": "set",
+        "flag": "health",
+        "value": 25
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "You wake because you are warm, and being warm is wrong."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "Above you: rafters of curved bone, pale as old piano keys. Under you: a pallet of dried kelp that smells of salt and bitter herbs."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "Your chest still rattles. The fever has not broken. But you are dry, and you are breathing air, and neither of those should be possible."
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "雿???嚗??箔?敺?嚗??臭?撠???
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "?凋??臬??脩?撉券璈急?嚗敺???渡??萸澈銝銝撘萎嗾瘚瑕葆?芰?摨??絲靘暽賢??西??
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "雿????券???????雿銋曄?嚗?雿?澆蝛箸除?隞嗡??賭?閰脩??
+      },
+      {
+        "cmd": "sfx",
+        "key": "sfx_bowl"
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "Out of sight, something sets a heavy bowl down on wood."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "The footsteps are not quite footsteps. They are slower, and there are fewer of them than there should be."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "A shadow reaches the doorway, and has to stoop."
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "??閬??唳嚗?鈭箸?銝?餅???蝣?冽?凋???
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "??甇亥銝云?甇乓??Ｖ?鈭???甇交瘥?閰脫?????
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "銝?蔣摮粥?圈????敺?銝澈??
+      },
+      {
+        "cmd": "goto",
+        "label": "ch1_enter"
+      }
+    ],
+    "ch1_enter": [
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "??Chapter One 繚 Fever Days ??
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "??蝚砌?蝡?繚 ?潛??摮???
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "She comes through a doorway built for her, and even then she has to fold."
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "憟孵?銝?憟寡???韏圈脖?嚗雿輸璅??憟寥??臬??撌望?韏瑚???
+      },
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_far",
+        "pos": 0.62
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "Standing, she almost touches the rafters. Her hair is still moving, as though the room were full of water and only she can feel it."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "She is beautiful in a way that takes a moment to arrive ??and then does not leave."
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "憟寧???撟曆?蝣啣璈急??旦?擃桅??典?嚗末??ㄐ皛踵瘞湛???旦?死敺??
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "憟寧?蝢?Ｖ?甇交??菟??蝔栽敺停銝粥鈭?
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "if": "!lang_tw",
+        "text": "You are awake."
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "if": "lang_tw",
+        "text": "雿?鈭?
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "Her voice is low and unhurried, the way deep water is unhurried."
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "憟寧??脤雿??伐??楛瘞湧璅???乓?
+      },
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_neutral",
+        "pos": 0.68
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "if": "!lang_tw",
+        "text": "Do not sit up. Your lungs are full of the sea and it will take days to talk them into letting go."
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "if": "!lang_tw",
+        "text": "I am going to feed you. You will not enjoy it. That is not what food is for."
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "if": "lang_tw",
+        "text": "?亙?韏瑚????鋆∪?舀絲嚗?憟賢嗾憭拇??詨????暹???
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "if": "lang_tw",
+        "text": "??擗萎???銝?閬箏?憟賢????拐??舐鈭末???函???
+      },
+      {
+        "cmd": "goto",
+        "label": "ch1_a"
+      }
+    ],
+    "ch1_a": [
+      {
+        "cmd": "sfx",
+        "key": "sfx_bowl"
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "The bowl is stone, and heavier than your arms. Inside, something grey and thick turns over once, faintly luminous."
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "if": "!lang_tw",
+        "text": "Herbs, marrow, and three things you have no word for. Drink it while it is warm."
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "????舐?剖???瘥??????ㄐ?Ｘ??啗瞈??镼輻蕃鈭?銝?敺桀凝?澆???
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "if": "lang_tw",
+        "text": "?亥??爸擃???銝見雿????臭誑?怎??梯正???勗???
+      },
+      {
+        "cmd": "choice",
+        "if": "!lang_tw",
+        "options": [
+          {
+            "text": "Drink all of it.",
+            "goto": "ch1_a2",
+            "set": "drank_all",
+            "value": true
+          },
+          {
+            "text": "Take a few careful sips.",
+            "goto": "ch1_a2",
+            "set": "drank_some",
+            "value": true
+          },
+          {
+            "text": "Refuse. You do not know what is in it.",
+            "goto": "ch1_a2",
+            "set": "drank_none",
+            "value": true
+          }
+        ]
+      },
+      {
+        "cmd": "choice",
+        "if": "lang_tw",
+        "options": [
+          {
+            "text": "?券????,
+            "goto": "ch1_a2",
+            "set": "drank_all",
+            "value": true
+          },
+          {
+            "text": "撠??啣?撟曉??,
+            "goto": "ch1_a2",
+            "set": "drank_some",
+            "value": true
+          },
+          {
+            "text": "????銝?ㄐ?Ｘ隞暻潦?,
+            "goto": "ch1_a2",
+            "set": "drank_none",
+            "value": true
+          }
+        ]
+      }
+    ],
+    "ch1_a2": [
+      {
+        "cmd": "add",
+        "flag": "health",
+        "value": 12,
+        "if": "drank_all"
+      },
+      {
+        "cmd": "add",
+        "flag": "bond",
+        "value": 1,
+        "if": "drank_all"
+      },
+      {
+        "cmd": "add",
+        "flag": "health",
+        "value": 8,
+        "if": "drank_some"
+      },
+      {
+        "cmd": "add",
+        "flag": "health",
+        "value": -5,
+        "if": "drank_none"
+      },
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_gentle",
+        "pos": 0.68,
+        "if": "drank_all"
+      },
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_worried",
+        "pos": 0.68,
+        "if": "drank_none"
+      },
+      {
+        "cmd": "goto",
+        "label": "ch1_a2t",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "if": "drank_all",
+        "text": "Good. You are not stupid about being helped. That is rarer than you would think."
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "if": "drank_some",
+        "text": "Careful is not the same as safe. But it is a beginning."
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "if": "drank_none",
+        "text": "Then you will be sick longer. I can wait. Can you?"
+      },
+      {
+        "cmd": "goto",
+        "label": "ch1_b"
+      }
+    ],
+    "ch1_a2t": [
+      {
+        "cmd": "say",
+        "who": "herw",
+        "if": "drank_all",
+        "text": "敺末??銝??Ｗ???乩犖撟思???雿?葉撠???
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "if": "drank_some",
+        "text": "撠?銝??澆??具?蝮賜??臬?憪?
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "if": "drank_none",
+        "text": "???撠望???銝暺?蝑?韏瑯??ｇ?"
+      },
+      {
+        "cmd": "goto",
+        "label": "ch1_b"
+      }
+    ],
+    "ch1_b": [
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "She goes out through the low door and does not say where."
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "憟孵?????桅??箏嚗?隤芸?芾ㄐ??
+      },
+      {
+        "cmd": "hide",
+        "who": "her"
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "While she is gone, you look at??
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "憟嫣??函???雿???
+      },
+      {
+        "cmd": "choice",
+        "if": "!lang_tw",
+        "options": [
+          {
+            "text": "The far door, bound shut with rope.",
+            "goto": "ch1_b2",
+            "set": "saw_pantry",
+            "value": true
+          },
+          {
+            "text": "The charms of knotted bone above your pallet.",
+            "goto": "ch1_b2",
+            "set": "saw_charms",
+            "value": true
+          },
+          {
+            "text": "The round window, and the black water behind it.",
+            "goto": "ch1_b2",
+            "set": "saw_window",
+            "value": true
+          },
+          {
+            "text": "Nothing. You close your eyes.",
+            "goto": "ch1_b2",
+            "set": "rested1",
+            "value": true
+          }
+        ]
+      },
+      {
+        "cmd": "choice",
+        "if": "lang_tw",
+        "options": [
+          {
+            "text": "?⊿????函鼎蝬香????,
+            "goto": "ch1_b2",
+            "set": "saw_pantry",
+            "value": true
+          },
+          {
+            "text": "摨銝???撉券蝯??泵??,
+            "goto": "ch1_b2",
+            "set": "saw_charms",
+            "value": true
+          },
+          {
+            "text": "?????嚗?蝒???瘞氬?,
+            "goto": "ch1_b2",
+            "set": "saw_window",
+            "value": true
+          },
+          {
+            "text": "隞暻潮銝??????潦?,
+            "goto": "ch1_b2",
+            "set": "rested1",
+            "value": true
+          }
+        ]
+      }
+    ],
+    "ch1_b2": [
+      {
+        "cmd": "add",
+        "flag": "health",
+        "value": 4,
+        "if": "rested1"
+      },
+      {
+        "cmd": "goto",
+        "label": "ch1_b2t",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "if": "saw_pantry",
+        "text": "The rope is new. Everything else in this house is old."
+      },
+      {
+        "cmd": "say",
+        "if": "saw_charms",
+        "text": "Each charm is a knot of small bones. You count nine. Nine of something, done nine times."
+      },
+      {
+        "cmd": "say",
+        "if": "saw_window",
+        "text": "The water out there is not empty. It is only very dark, which is a different thing."
+      },
+      {
+        "cmd": "say",
+        "if": "rested1",
+        "text": "You sleep a little. It helps more than you expected it to."
+      },
+      {
+        "cmd": "goto",
+        "label": "ch1_c"
+      }
+    ],
+    "ch1_b2t": [
+      {
+        "cmd": "say",
+        "if": "saw_pantry",
+        "text": "???蝜拇?啁???鋆∪隞??镼輸?航???
+      },
+      {
+        "cmd": "say",
+        "if": "saw_charms",
+        "text": "瘥泵?賣撠爸?剜??????詨銋?璅??暻潘???銋活??
+      },
+      {
+        "cmd": "say",
+        "if": "saw_window",
+        "text": "憭?偌銝蝛箇????芣敺???臬隞嗡???鈭?
+      },
+      {
+        "cmd": "say",
+        "if": "rested1",
+        "text": "雿鈭???雿誑?箇????
+      },
+      {
+        "cmd": "goto",
+        "label": "ch1_c"
+      }
+    ],
+    "ch1_c": [
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_neutral",
+        "pos": 0.68
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "She comes back with wet hands and sits on the floor beside your pallet, which brings her face down almost level with yours."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "She waits. She is very good at waiting."
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "憟寞?????嚗雿????唬????見憟寧????撥頝?撌桐?憭???
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "憟寧??旦?虜?蝑?
+      },
+      {
+        "cmd": "choice",
+        "if": "!lang_tw",
+        "options": [
+          {
+            "text": "\"What are you?\"",
+            "goto": "ch1_c2",
+            "set": "ask_what",
+            "value": true
+          },
+          {
+            "text": "\"Why did you save me?\"",
+            "goto": "ch1_c2",
+            "set": "ask_why",
+            "value": true
+          },
+          {
+            "text": "\"Have there been others?\"",
+            "goto": "ch1_c2",
+            "set": "ask_others",
+            "value": true
+          },
+          {
+            "text": "Say nothing. Sleep.",
+            "goto": "ch1_c2",
+            "set": "rested2",
+            "value": true
+          }
+        ]
+      },
+      {
+        "cmd": "choice",
+        "if": "lang_tw",
+        "options": [
+          {
+            "text": "???臭?暻潘???,
+            "goto": "ch1_c2",
+            "set": "ask_what",
+            "value": true
+          },
+          {
+            "text": "???箔?暻潭?????,
+            "goto": "ch1_c2",
+            "set": "ask_why",
+            "value": true
+          },
+          {
+            "text": "?誑???鈭箏?嚗?,
+            "goto": "ch1_c2",
+            "set": "ask_others",
+            "value": true
+          },
+          {
+            "text": "隞暻潮銝牧???,
+            "goto": "ch1_c2",
+            "set": "rested2",
+            "value": true
+          }
+        ]
+      }
+    ],
+    "ch1_c2": [
+      {
+        "cmd": "add",
+        "flag": "know",
+        "value": 1,
+        "if": "ask_what"
+      },
+      {
+        "cmd": "add",
+        "flag": "know",
+        "value": 1,
+        "if": "ask_others"
+      },
+      {
+        "cmd": "add",
+        "flag": "bond",
+        "value": 1,
+        "if": "ask_why"
+      },
+      {
+        "cmd": "add",
+        "flag": "health",
+        "value": 6,
+        "if": "rested2"
+      },
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_gentle",
+        "pos": 0.68,
+        "if": "ask_why"
+      },
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_worried",
+        "pos": 0.68,
+        "if": "ask_others"
+      },
+      {
+        "cmd": "goto",
+        "label": "ch1_c2t",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "if": "ask_what",
+        "text": "Something that lives where the pressure would fold you in half."
+      },
+      {
+        "cmd": "say",
+        "if": "ask_what",
+        "text": "She says it the way you might say you are from a coastal town."
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "if": "ask_why",
+        "text": "Because you were sinking, and I was there."
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "if": "ask_why",
+        "text": "Not everything needs a second reason."
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "if": "ask_others",
+        "text": "Yes."
+      },
+      {
+        "cmd": "say",
+        "if": "ask_others",
+        "text": "She lets the word sit there a beat too long before she adds anything to it."
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "if": "ask_others",
+        "text": "They were all very well by the time they left."
+      },
+      {
+        "cmd": "say",
+        "if": "rested2",
+        "text": "You sleep. When you wake, the bowl has been refilled and she is gone."
+      },
+      {
+        "cmd": "goto",
+        "label": "ch1_end"
+      }
+    ],
+    "ch1_c2t": [
+      {
+        "cmd": "say",
+        "who": "herw",
+        "if": "ask_what",
+        "text": "雿??雿????瘛勗漲鋆∠??梯正??
+      },
+      {
+        "cmd": "say",
+        "if": "ask_what",
+        "text": "憟寡牧?閰梁?隤除嚗?雿牧?芸楛靘銝?絲???柴?
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "if": "ask_why",
+        "text": "?雿銝?嚗??末?券鋆～?
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "if": "ask_why",
+        "text": "銝瘥辣鈭?閬洵鈭??晞?
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "if": "ask_others",
+        "text": "??
+      },
+      {
+        "cmd": "say",
+        "if": "ask_others",
+        "text": "憟寡????憭?鈭????摰?銝??Ｙ?閰晞?
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "if": "ask_others",
+        "text": "隞????頨恍??賢?憟賬?
+      },
+      {
+        "cmd": "say",
+        "if": "rested2",
+        "text": "雿鈭?靘?蝣歇蝬溶皛選?憟嫣??具?
+      },
+      {
+        "cmd": "goto",
+        "label": "ch1_end"
+      }
+    ],
+    "ch1_end": [
+      {
+        "cmd": "add",
+        "flag": "health",
+        "value": -3
+      },
+      {
+        "cmd": "goto",
+        "label": "end_late",
+        "if": "health<=0"
+      },
+      {
+        "cmd": "goto",
+        "label": "ch1_endt",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "if": "health>=70",
+        "text": "At the door she stops, and looks back at you for a moment longer than a person would."
+      },
+      {
+        "cmd": "say",
+        "if": "health<=15",
+        "text": "The room dims at the edges. You cannot tell whether that is the lantern, or you."
+      },
+      {
+        "cmd": "say",
+        "text": "The fever keeps its own hours. Days here are measured in bowls."
+      },
+      {
+        "cmd": "goto",
+        "label": "ch2_enter"
+      }
+    ],
+    "ch1_endt": [
+      {
+        "cmd": "say",
+        "if": "health>=70",
+        "text": "憟孵????銝??????銝?犖閰脩????鈭?暺?
+      },
+      {
+        "cmd": "say",
+        "if": "health<=15",
+        "text": "?輸???蝺??銝????皜?舐?嚗??臭??芸楛??
+      },
+      {
+        "cmd": "say",
+        "text": "?潛????芸楛???ㄐ?摮?函?靘??
+      },
+      {
+        "cmd": "goto",
+        "label": "ch2_enter"
+      }
+    ],
+    "ch2_enter": [
+      {
+        "cmd": "bg",
+        "key": "bg_sick"
+      },
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_neutral",
+        "pos": 0.68
+      },
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_hungry",
+        "pos": 0.68,
+        "if": "health>=70"
+      },
+      {
+        "cmd": "sfx",
+        "key": "sfx_sting",
+        "if": "health>=70"
+      },
+      {
+        "cmd": "bgm",
+        "key": "bgm_tension",
+        "if": "health<=15"
+      },
+      {
+        "cmd": "goto",
+        "label": "ch2_entert",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "??Chapter Two 繚 Mending Days ??
+      },
+      {
+        "cmd": "say",
+        "text": "You can sit up now without the room tilting. The cough has gone loose and productive, which she seems pleased about in a way you cannot quite read."
+      },
+      {
+        "cmd": "say",
+        "if": "health>=70",
+        "text": "She has begun looking at you the way you have seen cooks look at a good cut of meat: not unkindly. Just carefully."
+      },
+      {
+        "cmd": "say",
+        "if": "health<=15",
+        "text": "Your hands will not stop shaking. She has stopped pretending she is not counting your breaths."
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "text": "Better. Not well. Better."
+      },
+      {
+        "cmd": "goto",
+        "label": "ch2_a"
+      }
+    ],
+    "ch2_entert": [
+      {
+        "cmd": "say",
+        "text": "??蝚砌?蝡?繚 敺拙??摮???
+      },
+      {
+        "cmd": "say",
+        "text": "雿?典?敺絲靘??輸?銝?甇芯???質?敺?????售旦撠迨隡潔?敺遛??雿皛踵?雿?銝云??
+      },
+      {
+        "cmd": "say",
+        "if": "health>=70",
+        "text": "憟寥?憪銝蝔桃蟡?雿?雿???摮??車?潛???憛末???臭?????臬?隞敦??
+      },
+      {
+        "cmd": "say",
+        "if": "health<=15",
+        "text": "雿???銝?靘?旦銋???鋆撌望???訾???詻?
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "text": "憟賭?暺???瘝末?憟賭?暺???
+      },
+      {
+        "cmd": "goto",
+        "label": "ch2_a"
+      }
+    ],
+    "ch2_a": [
+      {
+        "cmd": "sfx",
+        "key": "sfx_bowl"
+      },
+      {
+        "cmd": "goto",
+        "label": "ch2_at",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "She kneels and lays out what she has: steeped herbs, a flat grey paste that smells of iron, and her own enormous careful hands."
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "text": "Your chest needs work. I can do it properly, or I can do the part you will let me."
+      },
+      {
+        "cmd": "choice",
+        "options": [
+          {
+            "text": "Let her do whatever she thinks is needed.",
+            "goto": "ch2_a2",
+            "set": "treat_full",
+            "value": true
+          },
+          {
+            "text": "Take the herbs. Refuse the rest.",
+            "goto": "ch2_a2",
+            "set": "treat_half",
+            "value": true
+          },
+          {
+            "text": "Tell her you feel worse than you do.",
+            "goto": "ch2_a2",
+            "set": "treat_lie",
+            "value": true
+          }
+        ]
+      }
+    ],
+    "ch2_at": [
+      {
+        "cmd": "say",
+        "text": "憟寡楫銝?嚗????镼蹂?銝?粹?嚗部憟賜??亥?????韏瑚????脰?嚗??旦?芸楛???撌典之??敹???
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "text": "雿??詨?閬????臭誑???渡?嚗??臭誑?芸?雿???????典???
+      },
+      {
+        "cmd": "choice",
+        "options": [
+          {
+            "text": "霈旦?旦隤?閬?????,
+            "goto": "ch2_a2",
+            "set": "treat_full",
+            "value": true
+          },
+          {
+            "text": "?芾??亥?嚗擗?蝯?,
+            "goto": "ch2_a2",
+            "set": "treat_half",
+            "value": true
+          },
+          {
+            "text": "?迄憟嫣?瘥祕???湧??,
+            "goto": "ch2_a2",
+            "set": "treat_lie",
+            "value": true
+          }
+        ]
+      }
+    ],
+    "ch2_a2": [
+      {
+        "cmd": "add",
+        "flag": "health",
+        "value": 12,
+        "if": "treat_full"
+      },
+      {
+        "cmd": "add",
+        "flag": "bond",
+        "value": 1,
+        "if": "treat_full"
+      },
+      {
+        "cmd": "add",
+        "flag": "health",
+        "value": 8,
+        "if": "treat_half"
+      },
+      {
+        "cmd": "add",
+        "flag": "health",
+        "value": -5,
+        "if": "treat_lie"
+      },
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_gentle",
+        "pos": 0.68,
+        "if": "treat_full"
+      },
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_worried",
+        "pos": 0.68,
+        "if": "treat_lie"
+      },
+      {
+        "cmd": "goto",
+        "label": "ch2_a2t",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "if": "treat_full",
+        "text": "It takes a long time. She is stronger than anything you have touched and she never once uses it."
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "if": "treat_half",
+        "text": "As you like. Half a thing done well is still half a thing."
+      },
+      {
+        "cmd": "say",
+        "if": "treat_lie",
+        "text": "She goes still. Then she nods, and treats you as though you had told the truth, which is somehow much worse."
+      },
+      {
+        "cmd": "goto",
+        "label": "ch2_b"
+      }
+    ],
+    "ch2_a2t": [
+      {
+        "cmd": "say",
+        "if": "treat_full",
+        "text": "??鈭??瑟??旦瘥?蝣圈??遙雿镼輸撘瑕ㄞ嚗旦銝甈⊿瘝??其???遢?除??
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "if": "treat_half",
+        "text": "?其?????鈭?敺末嚗??臬????
+      },
+      {
+        "cmd": "say",
+        "if": "treat_lie",
+        "text": "憟寥?鈭?銝敺??哨??扯?雿牧?店?餌憿找????亦雿?????敺???
+      },
+      {
+        "cmd": "goto",
+        "label": "ch2_b"
+      }
+    ],
+    "ch2_b": [
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_neutral",
+        "pos": 0.68
+      },
+      {
+        "cmd": "goto",
+        "label": "ch2_bt",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "The next day she brings up a bundle from somewhere below the house and unwraps it on the floor like an offering."
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "text": "The sea keeps what it takes. Sometimes I take it back. Choose one."
+      },
+      {
+        "cmd": "choice",
+        "options": [
+          {
+            "text": "The dry wool shirt.",
+            "goto": "ch2_b2",
+            "set": "gift_shirt",
+            "value": true
+          },
+          {
+            "text": "The little brass music box.",
+            "goto": "ch2_b2",
+            "set": "gift_box",
+            "value": true
+          },
+          {
+            "text": "The long clean knife.",
+            "goto": "ch2_b2",
+            "set": "gift_knife",
+            "value": true
+          },
+          {
+            "text": "Refuse all of it.",
+            "goto": "ch2_b2",
+            "set": "gift_none",
+            "value": true
+          }
+        ]
+      }
+    ],
+    "ch2_bt": [
+      {
+        "cmd": "say",
+        "text": "蝚砌?憭抬?憟孵?撅?銝???砌?銝??鋆對??典銝????銝?暻潭镼踴?
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "text": "瘚瑟???摰韏啁??梯正?????踹?靘銝璅??
+      },
+      {
+        "cmd": "choice",
+        "options": [
+          {
+            "text": "??辣銋曄?蝢?銵怒?,
+            "goto": "ch2_b2",
+            "set": "gift_shirt",
+            "value": true
+          },
+          {
+            "text": "???撠?暺??單???,
+            "goto": "ch2_b2",
+            "set": "gift_box",
+            "value": true
+          },
+          {
+            "text": "?????嗾瘛函????,
+            "goto": "ch2_b2",
+            "set": "gift_knife",
+            "value": true
+          },
+          {
+            "text": "?券????,
+            "goto": "ch2_b2",
+            "set": "gift_none",
+            "value": true
+          }
+        ]
+      }
+    ],
+    "ch2_b2": [
+      {
+        "cmd": "add",
+        "flag": "bond",
+        "value": 1,
+        "if": "gift_shirt"
+      },
+      {
+        "cmd": "add",
+        "flag": "bond",
+        "value": 1,
+        "if": "gift_box"
+      },
+      {
+        "cmd": "add",
+        "flag": "know",
+        "value": 1,
+        "if": "gift_knife"
+      },
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_gentle",
+        "pos": 0.68,
+        "if": "gift_box"
+      },
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_worried",
+        "pos": 0.68,
+        "if": "gift_none"
+      },
+      {
+        "cmd": "goto",
+        "label": "ch2_b2t",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "if": "gift_shirt",
+        "text": "It fits. It fit someone else first, and it fits you now, and she watches you notice that."
+      },
+      {
+        "cmd": "say",
+        "if": "gift_box",
+        "text": "It plays four notes and gives up. She listens to all four with her eyes closed."
+      },
+      {
+        "cmd": "say",
+        "if": "gift_knife",
+        "text": "She hands it over without hesitating, handle first."
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "if": "gift_knife",
+        "text": "Everyone picks that one eventually. It has never once been the thing that saved them."
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "if": "gift_none",
+        "text": "You think taking makes you owe me. It does not work like that here."
+      },
+      {
+        "cmd": "goto",
+        "label": "ch2_c"
+      }
+    ],
+    "ch2_b2t": [
+      {
+        "cmd": "say",
+        "if": "gift_shirt",
+        "text": "敺?頨怒????鈭箇?頨恬??曉???澈?旦??雿?暸辣鈭?
+      },
+      {
+        "cmd": "say",
+        "if": "gift_box",
+        "text": "摰?鈭??撠望璉??旦???潭???質摰?
+      },
+      {
+        "cmd": "say",
+        "if": "gift_knife",
+        "text": "憟寞神銝鞊怠??靘????雿?
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "if": "gift_knife",
+        "text": "憭批振?敺?賊??銝甈⊿瘝??隤啜?
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "if": "gift_none",
+        "text": "雿誑?箸鈭停???ㄐ銝?見????
+      },
+      {
+        "cmd": "goto",
+        "label": "ch2_c"
+      }
+    ],
+    "ch2_c": [
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_neutral",
+        "pos": 0.68
+      },
+      {
+        "cmd": "goto",
+        "label": "ch2_ct",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "That night the lantern burns low and neither of you moves to fix it."
+      },
+      {
+        "cmd": "choice",
+        "options": [
+          {
+            "text": "\"What is behind the door with the rope?\"",
+            "goto": "ch2_c2",
+            "set": "ask_door",
+            "value": true
+          },
+          {
+            "text": "\"Where did the scars on your arms come from?\"",
+            "goto": "ch2_c2",
+            "set": "ask_scars",
+            "value": true
+          },
+          {
+            "text": "\"What happens when a patient is completely well?\"",
+            "goto": "ch2_c2",
+            "set": "ask_well",
+            "value": true
+          },
+          {
+            "text": "Say nothing. Let the lantern go out.",
+            "goto": "ch2_c2",
+            "set": "rested3",
+            "value": true
+          }
+        ]
+      }
+    ],
+    "ch2_ct": [
+      {
+        "cmd": "say",
+        "text": "????翰??鈭?雿?瘝????餃???
+      },
+      {
+        "cmd": "choice",
+        "options": [
+          {
+            "text": "????鼎??敺?臭?暻潘???,
+            "goto": "ch2_c2",
+            "set": "ask_door",
+            "value": true
+          },
+          {
+            "text": "????銝??斗?芾ㄐ靘?嚗?,
+            "goto": "ch2_c2",
+            "set": "ask_scars",
+            "value": true
+          },
+          {
+            "text": "??鈭箏??典末鈭?敺??見嚗?,
+            "goto": "ch2_c2",
+            "set": "ask_well",
+            "value": true
+          },
+          {
+            "text": "隞暻潮銝牧??????,
+            "goto": "ch2_c2",
+            "set": "rested3",
+            "value": true
+          }
+        ]
+      }
+    ],
+    "ch2_c2": [
+      {
+        "cmd": "add",
+        "flag": "know",
+        "value": 1,
+        "if": "ask_door"
+      },
+      {
+        "cmd": "add",
+        "flag": "know",
+        "value": 1,
+        "if": "ask_scars"
+      },
+      {
+        "cmd": "add",
+        "flag": "know",
+        "value": 2,
+        "if": "ask_well"
+      },
+      {
+        "cmd": "add",
+        "flag": "bond",
+        "value": 1,
+        "if": "ask_scars"
+      },
+      {
+        "cmd": "add",
+        "flag": "health",
+        "value": 6,
+        "if": "rested3"
+      },
+      {
+        "cmd": "bg",
+        "key": "bg_wrong",
+        "if": "ask_well"
+      },
+      {
+        "cmd": "sfx",
+        "key": "sfx_sting",
+        "if": "ask_well"
+      },
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_hungry",
+        "pos": 0.68,
+        "if": "ask_well"
+      },
+      {
+        "cmd": "goto",
+        "label": "ch2_c2t",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "if": "ask_door",
+        "text": "Food. Not the kind you are ready for."
+      },
+      {
+        "cmd": "say",
+        "if": "ask_door",
+        "text": "She does not offer to show you, and you do not ask twice."
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "if": "ask_scars",
+        "text": "Not everyone wants to be carried. Some of them fight the whole way down."
+      },
+      {
+        "cmd": "say",
+        "if": "ask_scars",
+        "text": "She turns her forearm over so you can see how many there are, and then covers it again, embarrassed for you rather than herself."
+      },
+      {
+        "cmd": "say",
+        "if": "ask_well",
+        "text": "For a moment the lantern seems to go out entirely, and there are more eyes at the window than there should be."
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "if": "ask_well",
+        "text": "Then they are ready."
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "if": "ask_well",
+        "text": "I do not lie to my patients. I only wait until the question stops being hypothetical."
+      },
+      {
+        "cmd": "say",
+        "if": "rested3",
+        "text": "The dark closes in and you let it. In the morning the bowl is full again."
+      },
+      {
+        "cmd": "goto",
+        "label": "ch2_split"
+      }
+    ],
+    "ch2_c2t": [
+      {
+        "cmd": "say",
+        "who": "herw",
+        "if": "ask_door",
+        "text": "憌???臭??曉皞?憟賡撠???車??
+      },
+      {
+        "cmd": "say",
+        "if": "ask_door",
+        "text": "憟寞???霅啣葆雿??雿?瘝??洵鈭活??
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "if": "ask_scars",
+        "text": "銝瘥犖?賣鋡急銝???鈭犖銝頝舫?冽???
+      },
+      {
+        "cmd": "say",
+        "if": "ask_scars",
+        "text": "憟寞?撠?蝧駁?靘?雿?皜?憭????嗅?????旦?蹂?撠瑕鬲嚗??舀?芸楛??
+      },
+      {
+        "cmd": "say",
+        "if": "ask_well",
+        "text": "???祇??末???函?鈭???憭??潛?瘥?閰脫?????
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "if": "ask_well",
+        "text": "????停皞?憟賭???
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "if": "ask_well",
+        "text": "??撠???鈭箄牧雓??芣蝑??憿???身??
+      },
+      {
+        "cmd": "say",
+        "if": "rested3",
+        "text": "暺???靘?雿?摰?銝銝??皛輻???
+      },
+      {
+        "cmd": "goto",
+        "label": "ch2_split"
+      }
+    ],
+    "ch2_split": [
+      {
+        "cmd": "bg",
+        "key": "bg_sick"
+      },
+      {
+        "cmd": "add",
+        "flag": "health",
+        "value": -3
+      },
+      {
+        "cmd": "goto",
+        "label": "end_late",
+        "if": "health<=0"
+      },
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_neutral",
+        "pos": 0.68
+      },
+      {
+        "cmd": "goto",
+        "label": "ch2_splitt",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "By the end of the second week you can stand without holding anything."
+      },
+      {
+        "cmd": "say",
+        "text": "In the mornings your chest is clear. Clear is a thing you can hide, or a thing you can show."
+      },
+      {
+        "cmd": "say",
+        "text": "She has begun measuring you with her eyes when she thinks you are asleep."
+      },
+      {
+        "cmd": "choice",
+        "options": [
+          {
+            "text": "Hide it. Cough when she is listening. Stay her patient.",
+            "goto": "ch3_dec",
+            "set": "route_dec",
+            "value": true
+          },
+          {
+            "text": "Let her see. Stand up in front of her.",
+            "goto": "ch3_tru",
+            "set": "route_tru",
+            "value": true
+          }
+        ]
+      }
+    ],
+    "ch2_splitt": [
+      {
+        "cmd": "say",
+        "text": "?啁洵鈭??嚗?撌脩??臭誑銝隞颱??梯正蝡絲靘?
+      },
+      {
+        "cmd": "say",
+        "text": "?拐?雿??詨?臭嗾瘛函??嗾瘛冽銝隞嗡??臭誑?絲靘??臭誑?踹靘?鈭?
+      },
+      {
+        "cmd": "say",
+        "text": "憟寥?憪隞亦雿?????函??雿?
+      },
+      {
+        "cmd": "choice",
+        "options": [
+          {
+            "text": "?絲靘憟寡敺?????匱蝥?憟寧??犖??,
+            "goto": "ch3_dec",
+            "set": "route_dec",
+            "value": true
+          },
+          {
+            "text": "霈旦????韏瑚?嚗??典旦?Ｗ???,
+            "goto": "ch3_tru",
+            "set": "route_tru",
+            "value": true
+          }
+        ]
+      }
+    ],
+    "ch3_dec": [
+      {
+        "cmd": "bgm",
+        "key": "bgm_tension"
+      },
+      {
+        "cmd": "goto",
+        "label": "ch3_dect",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "??Chapter Three 繚 The Last Supper ??
+      },
+      {
+        "cmd": "say",
+        "text": "You become good at it very quickly, which tells you something about yourself you would rather not have learned."
+      },
+      {
+        "cmd": "say",
+        "text": "You cough when she is in the room. You walk slowly when she can hear the floor. You leave a little food in the bowl."
+      },
+      {
+        "cmd": "say",
+        "text": "She brings more bowls. She sits up later. Something in her face begins to look worn thin."
+      },
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_worried",
+        "pos": 0.68
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "text": "You are not getting better. I have done everything correctly and you are not getting better."
+      },
+      {
+        "cmd": "say",
+        "text": "She says it as though the failure were hers."
+      },
+      {
+        "cmd": "choice",
+        "options": [
+          {
+            "text": "Push it further. Bite your cheek and cough blood.",
+            "goto": "ch3_dec2",
+            "set": "lie_deep",
+            "value": true
+          },
+          {
+            "text": "Keep it small. Just stay slow and quiet.",
+            "goto": "ch3_dec2",
+            "set": "lie_small",
+            "value": true
+          },
+          {
+            "text": "Tell her the truth after all.",
+            "goto": "ch3_tru",
+            "set": "confessed",
+            "value": true
+          }
+        ]
+      }
+    ],
+    "ch3_dect": [
+      {
+        "cmd": "say",
+        "text": "??蝚砌?蝡?繚 ?敺?擗???
+      },
+      {
+        "cmd": "say",
+        "text": "雿?敹怠停?毀韏瑚??辣鈭?閮港?雿?鈭??潔??芸楛??撖折?銝???梯正??
+      },
+      {
+        "cmd": "say",
+        "text": "憟孵?輯ㄐ??撠勗?旦?賢?閬?踵?雿停韏唳??鋆∠蜇??暺?
+      },
+      {
+        "cmd": "say",
+        "text": "憟寧垢靘憭??旦???湔??旦?????梯正??鋡怎ㄗ??
+      },
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_worried",
+        "pos": 0.68
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "text": "雿???憟賬?瘥?甇仿??鈭???瘝?霈末??
+      },
+      {
+        "cmd": "say",
+        "text": "憟寡牧?閰梁?璅??嚗???憟寧?憭望???
+      },
+      {
+        "cmd": "choice",
+        "options": [
+          {
+            "text": "????渲撌梁??殷??喳銵??,
+            "goto": "ch3_dec2",
+            "set": "lie_deep",
+            "value": true
+          },
+          {
+            "text": "蝬剜?撠???舐匱蝥?匱蝥???,
+            "goto": "ch3_dec2",
+            "set": "lie_small",
+            "value": true
+          },
+          {
+            "text": "??迄憟寧?閰晞?,
+            "goto": "ch3_tru",
+            "set": "confessed",
+            "value": true
+          }
+        ]
+      }
+    ],
+    "ch3_dec2": [
+      {
+        "cmd": "add",
+        "flag": "health",
+        "value": -8,
+        "if": "lie_deep"
+      },
+      {
+        "cmd": "add",
+        "flag": "health",
+        "value": -3,
+        "if": "lie_small"
+      },
+      {
+        "cmd": "goto",
+        "label": "end_late",
+        "if": "health<=0"
+      },
+      {
+        "cmd": "goto",
+        "label": "ch3_dec2t",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "if": "lie_deep",
+        "text": "The blood is real, at least. She holds your head and cleans your mouth and does not once say that the taste is wrong."
+      },
+      {
+        "cmd": "say",
+        "if": "lie_small",
+        "text": "She stops asking. That is not the same as being convinced."
+      },
+      {
+        "cmd": "say",
+        "text": "That night she sits on the floor beside you until the lantern gutters, saying nothing, the way people sit with the dying."
+      },
+      {
+        "cmd": "goto",
+        "label": "resolve"
+      }
+    ],
+    "ch3_dec2t": [
+      {
+        "cmd": "say",
+        "if": "lie_deep",
+        "text": "?喳?銵?舐??旦?嗉?雿??哨??蹂??皜嗾瘛剁?銝甈⊿瘝?隤芷?喲?銝???
+      },
+      {
+        "cmd": "say",
+        "if": "lie_small",
+        "text": "憟嫣???鈭頝◤隤芣?銝??隞嗡???
+      },
+      {
+        "cmd": "say",
+        "text": "???憟孵雿????唬?銝?游??啁?畾?隞暻潮銝牧?犖?停?舫見?芸?甇餌?鈭箏?????
+      },
+      {
+        "cmd": "goto",
+        "label": "resolve"
+      }
+    ],
+    "ch3_tru": [
+      {
+        "cmd": "set",
+        "flag": "route_dec",
+        "value": false
+      },
+      {
+        "cmd": "goto",
+        "label": "ch3_trut",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "if": "!confessed",
+        "text": "??Chapter Three 繚 The Last Supper ??
+      },
+      {
+        "cmd": "say",
+        "if": "confessed",
+        "text": "You tell her. It takes four words and they cost more than the whole shipwreck did."
+      },
+      {
+        "cmd": "say",
+        "text": "You stand up in the middle of the room, and you do not hold anything, and you breathe all the way to the bottom of your lungs where the sea used to be."
+      },
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_gentle",
+        "pos": 0.68
+      },
+      {
+        "cmd": "say",
+        "text": "She looks at you for a long time. Whatever is happening on her face is not simple."
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "text": "There. That is what I have been working for."
+      },
+      {
+        "cmd": "sfx",
+        "key": "sfx_bowl"
+      },
+      {
+        "cmd": "say",
+        "text": "Behind her, the rope-bound door is standing open. The long table beyond it has been laid for two."
+      },
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_hungry",
+        "pos": 0.68
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "text": "I told you I do not lie to my patients. I am very glad you are well. I am also very hungry. Both of those are true and I am tired of pretending they take turns."
+      },
+      {
+        "cmd": "choice",
+        "options": [
+          {
+            "text": "\"Please don't.\"",
+            "goto": "resolve",
+            "set": "begged",
+            "value": true
+          },
+          {
+            "text": "\"I would rather it was you than the sea.\"",
+            "goto": "resolve",
+            "set": "offered",
+            "value": true
+          },
+          {
+            "text": "Reach for the knife.",
+            "goto": "resolve",
+            "set": "fought",
+            "value": true
+          }
+        ]
+      }
+    ],
+    "ch3_trut": [
+      {
+        "cmd": "say",
+        "if": "!confessed",
+        "text": "??蝚砌?蝡?繚 ?敺?擗???
+      },
+      {
+        "cmd": "say",
+        "if": "confessed",
+        "text": "雿?閮游旦??其???嚗??瘥?湔??寥鞎氬?
+      },
+      {
+        "cmd": "say",
+        "text": "雿?輸?銝剖亢蝡絲靘?隞暻潮銝嚗敺???除?澆?啗??摨鋆∩誑??舀絲??
+      },
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_gentle",
+        "pos": 0.68
+      },
+      {
+        "cmd": "say",
+        "text": "憟寧?鈭?敺??旦???潛??隞嗡?銝虫??桃???
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "text": "?停?舀?銝?游??鈭?
+      },
+      {
+        "cmd": "sfx",
+        "key": "sfx_bowl"
+      },
+      {
+        "cmd": "say",
+        "text": "憟寡澈敺????蝬鼎??????敺??瑟?嚗鈭?臭?摮?
+      },
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_hungry",
+        "pos": 0.68
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "text": "?牧??銝??犖隤芾???敺???憟賭???銋?擗隞嗡??賣??嚗??剖虫???摰?頛芣??箇??
+      },
+      {
+        "cmd": "choice",
+        "options": [
+          {
+            "text": "??雿?閬?,
+            "goto": "resolve",
+            "set": "begged",
+            "value": true
+          },
+          {
+            "text": "????摰?嚗?撖折??臭?嚗??舀絲??,
+            "goto": "resolve",
+            "set": "offered",
+            "value": true
+          },
+          {
+            "text": "隡豢??餅??????,
+            "goto": "resolve",
+            "set": "fought",
+            "value": true
+          }
+        ]
+      }
+    ],
+    "resolve": [
+      {
+        "cmd": "add",
+        "flag": "bond",
+        "value": 1,
+        "if": "begged"
+      },
+      {
+        "cmd": "add",
+        "flag": "bond",
+        "value": 2,
+        "if": "offered"
+      },
+      {
+        "cmd": "add",
+        "flag": "know",
+        "value": 1,
+        "if": "fought"
+      },
+      {
+        "cmd": "goto",
+        "label": "end_hidden",
+        "if": "know>=4"
+      },
+      {
+        "cmd": "goto",
+        "label": "resolve_dec",
+        "if": "route_dec"
+      },
+      {
+        "cmd": "goto",
+        "label": "resolve_tru"
+      }
+    ],
+    "resolve_dec": [
+      {
+        "cmd": "goto",
+        "label": "end_found",
+        "if": "health>=70"
+      },
+      {
+        "cmd": "goto",
+        "label": "end_forever"
+      }
+    ],
+    "resolve_tru": [
+      {
+        "cmd": "goto",
+        "label": "end_refused",
+        "if": "bond>=4"
+      },
+      {
+        "cmd": "goto",
+        "label": "end_dinner"
+      }
+    ],
+    "end_refused": [
+      {
+        "cmd": "bg",
+        "key": "bg_sick"
+      },
+      {
+        "cmd": "bgm",
+        "key": "bgm_main"
+      },
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_gentle",
+        "pos": 0.68
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "She stands there with the door open behind her for a long, long time."
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "if": "!lang_tw",
+        "text": "?吉o."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "She closes the door. She ties the rope. She ties it badly, with shaking hands, and then she sits down on the floor and puts her enormous face in her enormous hands."
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "if": "!lang_tw",
+        "text": "You will have to go. Tonight, while I still want you to."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "??THE FIRST MEAL REFUSED"
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "She carries you up through water that should have killed you, and lets go a mile from a coast you do not recognise. She does not wave. She has never once been waved at."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "??True ending 繚 1 of 6 endings ??
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "憟寧??券鋆∴?頨怠?????嚗?銋?敺???
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "if": "lang_tw",
+        "text": "?色虫???
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "憟寞??????蝜拍????敺????嚗??冽??敺旦?典銝?銝??撘萄楊憭抒????脤?楊憭抒??ㄐ??
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "if": "lang_tw",
+        "text": "雿?韏啜??停韏堆?頞?????韏啜?
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "??蝚砌??◤?冽??ㄞ"
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "憟寞??蝛輸??祈府畾箸香雿?瘞湛??其?畾萎?銝?敺?瘚瑕硫憭??拚??旦瘝??格???靘??犖?旦?桅???
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "????撅 繚 6 ??撅銋?1 ??
+      },
+      {
+        "cmd": "end"
+      }
+    ],
+    "end_dinner": [
+      {
+        "cmd": "bg",
+        "key": "bg_wrong"
+      },
+      {
+        "cmd": "bgm",
+        "key": "bgm_tension"
+      },
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_hungry",
+        "pos": 0.68
+      },
+      {
+        "cmd": "sfx",
+        "key": "sfx_sting"
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "She is so gentle about it that for a while you keep expecting her to stop."
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "if": "!lang_tw",
+        "text": "Thank you for getting well. Most of them do not manage it."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "??WELL ENOUGH TO EAT"
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "She washes the stone bowl afterwards and sets it out to dry, because there is always another storm, and the sea always drops someone."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "??1 of 6 endings ??
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "憟孵??辣鈭??澈????嚗誑?湔?憟賭????雿??港誑?箏旦????
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "if": "lang_tw",
+        "text": "雓?雿?頨恍?擗末???之?典??賢?銝??
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "??憟賢?臭誑??"
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "鈭?憟寞??喟?瘣嗾瘛剁??箏?餅???箇蜇??銝??湧◢?湛??絲蝮賣???銝?犖??
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "??6 ??撅銋?1 ??
+      },
+      {
+        "cmd": "end"
+      }
+    ],
+    "end_forever": [
+      {
+        "cmd": "bg",
+        "key": "bg_sick"
+      },
+      {
+        "cmd": "bgm",
+        "key": "bgm_main"
+      },
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_worried",
+        "pos": 0.68
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "The seasons here are only the temperature of the bowl."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "You cough on schedule. She never stops trying. She has begun talking to you about small things, which is how you know she has stopped expecting you to leave."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "??THE FOREVER PATIENT"
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "You will be safe for exactly as long as you can keep being sick. You are not sure any more which one of you is the one being kept."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "??1 of 6 endings ??
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "?ㄐ?迤蝭?芣蝣?皞怠漲??
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "雿???賬旦敺??暹??旦??頝???鈭?撠?鈭?撠望?望迨?仿?嚗旦撌脩?銝???雿?韏啜?
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "??瘞賊???鈭?
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "雿摰憭?嚗停?捱?潔??賜匱蝥?憭???撌脩?銝云蝣箏?嚗◤??靘??啣??臭??銝??
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "??6 ??撅銋?1 ??
+      },
+      {
+        "cmd": "end"
+      }
+    ],
+    "end_found": [
+      {
+        "cmd": "bg",
+        "key": "bg_wrong"
+      },
+      {
+        "cmd": "bgm",
+        "key": "bgm_tension"
+      },
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_hungry",
+        "pos": 0.68
+      },
+      {
+        "cmd": "sfx",
+        "key": "sfx_sting"
+      },
+      {
+        "cmd": "shake",
+        "amount": 0.6
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "She comes in without the bowl, which is how you know."
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "if": "!lang_tw",
+        "text": "You smell well. You have smelled well for eleven days."
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "if": "!lang_tw",
+        "text": "I would not have minded the lie. I mind that you thought I was stupid, and I mind that you made me wait while I was hungry."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "??FOUND OUT"
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "There is no tenderness in it this time, and that turns out to have been the only thing keeping any of it bearable."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "??1 of 6 endings ??
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "憟寥脖??????蝣?雿停?仿?鈭?
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "if": "lang_tw",
+        "text": "雿?韏瑚?敺摨瑯?撌脩??絲靘??亙熒??憭拐???
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "if": "lang_tw",
+        "text": "隤芾????冽????冽??雿誑?箸??ｇ???雿??擗???????
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "??鋡怨??箔?鈭?
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "??甈∟ㄐ?Ｘ??澈??靘隞賣澈???臬銝霈?????雿??梯正??
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "??6 ??撅銋?1 ??
+      },
+      {
+        "cmd": "end"
+      }
+    ],
+    "end_hidden": [
+      {
+        "cmd": "bg",
+        "key": "bg_wrong"
+      },
+      {
+        "cmd": "bgm",
+        "key": "bgm_tension"
+      },
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_worried",
+        "pos": 0.68
+      },
+      {
+        "cmd": "sfx",
+        "key": "sfx_whale"
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "You have asked too many of the right questions, so she does the thing nobody has ever made her do: she answers."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "She unties the rope herself. Behind the door is not a pantry. It is a row of nine narrow beds, made up, dusted, empty."
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "if": "!lang_tw",
+        "text": "Nine of them kept me. One after another. Each one fed me and washed me and told me I was getting better."
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "if": "!lang_tw",
+        "text": "I was the one who got well and was not eaten. I have never understood why. I have spent a long time trying to find out by doing it correctly."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "The nine knots above your pallet are not charms. They are names."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "??THE NINE KNOTS"
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "She lets you go because she does not know what else the tenth bed is for. Neither of you says the word kindness, but it was the only thing in the room."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "??Hidden ending 繚 1 of 6 endings ??
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "雿?撠?憭芸???嚗?臬旦??銝隞嗆??犖?潮?憟孵???嚗旦????
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "憟寡扛?圾?璇鼎??敺??臬?恕?銋撐蝒?嚗憟賭?嚗銋暹楊鈭?蝛箄???
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "if": "lang_tw",
+        "text": "?????????銝??銝?擗菜??????閮湔??憟質絲靘?
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "if": "lang_tw",
+        "text": "???末鈭瘝?鋡怠?????銝?港???箔?暻潦??其?敺??嚗???辣鈭?撠?撘?璆?
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "雿??凋??寥銋?銝蝚艾????
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "??銋?"
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "憟寞雿粥嚗??箏旦銝?洵?撐摨??賜靘?隞暻潦??狐?賣??牧?箝????嚗??輸?鋆∪?璅?镼踴?
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "???梯?蝯? 繚 6 ??撅銋?1 ??
+      },
+      {
+        "cmd": "end"
+      }
+    ],
+    "end_late": [
+      {
+        "cmd": "bg",
+        "key": "bg_wrong"
+      },
+      {
+        "cmd": "bgm",
+        "key": "bgm_tension"
+      },
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_worried",
+        "pos": 0.68
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "The bowl is at your mouth and you cannot remember how swallowing works."
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "if": "!lang_tw",
+        "text": "No. No, we were doing so well. Stay. Stay and I will??
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "??TOO LATE"
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "She holds you the whole way down, and afterwards she does not eat, because you were never well, and she has rules."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "??1 of 6 endings ??
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "蝣停?其??湧?嚗??喃?韏瑯???獐????
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "if": "lang_tw",
+        "text": "銝?嚗????游?敺?憟賬?銝???銝?嚗???
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "??靘???
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "憟嫣?頝舀??敺銝???敺旦瘝????箔?敺?瘝?憟賡?嚗旦?旦???押?
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "??6 ??撅銋?1 ??
+      },
+      {
+        "cmd": "end"
+      }
+    ]
+  }
+}

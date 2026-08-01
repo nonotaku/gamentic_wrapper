@@ -1,0 +1,3199 @@
+<!doctype html>
+<html><head><script>(function(){var w=window;w.__giEntities=w.__giEntities||{};w.__giTrackEntity=w.__giTrackEntity||function(){};w.__giTrackAnims=w.__giTrackAnims||function(){};w.__giUntrack=w.__giUntrack||function(){};})();</script><meta charset="utf-8"><title>Get Well Soon</title>
+<style>html,body{margin:0;height:100%;background:#04070c;display:flex;align-items:center;justify-content:center}canvas{aspect-ratio:16/9;max-width:100%;max-height:100%;display:block}</style>
+</head><body>
+<canvas id="c" width="960" height="540"></canvas>
+<script>
+window.GAME_CONFIG={"textSpeed":34,"musicVolume":0.5,"sfxVolume":1,"showTitle":true,"titleYPct":0.075,"titleSize":34,"menuYPct":0.74,"menuWPct":0.44,"menuRowH":40,"menuGap":11}; // __GI_CONFIG__
+window.GAME_ASSETS = {
+  "gm_far": "media/gm_far.png",
+  "gm_neutral": "media/gm_neutral.png",
+  "gm_gentle": "media/gm_gentle.png",
+  "gm_worried": "media/gm_worried.png",
+  "gm_hungry": "media/gm_hungry.png",
+  "bg_sick": "media/bg_sick.jpg",
+  "bg_deck": "media/bg_deck.jpg",
+  "bg_sink": "media/bg_sink.jpg",
+  "bg_rise": "media/bg_rise.jpg",
+  "bg_wrong": "media/bg_wrong.jpg",
+  "art_title": "media/art_title.jpg",
+  "new_gentle_white2": "media/new_gentle_white2.jpg",
+  "new_worried_white2": "media/new_worried_white2.jpg",
+  "new_worried_white3": "media/new_worried_white3.jpg",
+  "new_hungry_white2": "media/new_hungry_white2.jpg",
+  "hungry_fix": "media/hungry_fix.jpg",
+  "hungry_fix2": "media/hungry_fix2.jpg",
+  "neutral_fix": "media/neutral_fix.jpg",
+  "worried_fix": "media/worried_fix.jpg",
+  "gentle_fix": "media/gentle_fix.jpg",
+  "far_fix": "media/far_fix.jpg",
+  "neutral_matte": "media/neutral_matte.jpg",
+  "regen_mid": "media/regen_mid.jpg"
+}; // __GI_ASSETS__
+window.GAME_AUDIO = {
+  "sfx_bubble": "media/sfx_bubble.mp3",
+  "sfx_bowl": "media/sfx_bowl.mp3",
+  "bgm_main": "https://gamentic.net/asset/a9387b1528b.mp3?t=1786099529.0731c27125216fe381a275d4",
+  "bgm_tension": "https://gamentic.net/asset/adfaf5c4077.mp3?t=1786099529.51d168291ec97ac85d2652a1",
+  "sfx_whale": "media/sfx_whale.mp3",
+  "sfx_sting": "media/sfx_sting.mp3"
+}; // __GI_AUDIO__
+window.GAME_DATA = {
+  "characters": {
+    "her": {
+      "name": "She",
+      "color": "#8fe3dd",
+      "sprite": "gm_neutral"
+    },
+    "herw": {
+      "name": "她",
+      "color": "#8fe3dd",
+      "sprite": "gm_neutral"
+    }
+  },
+  "theme": {
+    "boxColor": "rgba(6,14,20,.92)",
+    "boxBorder": "#7fd4cf",
+    "boxRadius": 6,
+    "boxMargin": 54,
+    "boxBottom": 16,
+    "boxHeight": 0.3,
+    "pad": 20,
+    "textColor": "#dfe9ec",
+    "textSize": 16,
+    "lineHeight": 25,
+    "maxLines": 5,
+    "font": "Georgia, serif",
+    "nameSize": 15,
+    "nameColor": "#8fe3dd",
+    "namePlate": "rgba(10,26,32,.95)",
+    "choiceColor": "rgba(8,18,26,.94)",
+    "choiceBorder": "#5fb8b4",
+    "choiceText": "#e6f2f2",
+    "choiceRadius": 4,
+    "choiceW": 0.62,
+    "choiceH": 42,
+    "choiceGap": 11,
+    "arrow": "▾",
+    "logLabel": "☰ Log／記錄 (L)"
+  },
+  "script": {
+    "start": [
+      {
+        "cmd": "bg",
+        "key": "art_title"
+      },
+      {
+        "cmd": "bgm",
+        "key": "bgm_main"
+      },
+      {
+        "cmd": "choice",
+        "if": "!lang_tw",
+        "options": [
+          {
+            "text": "Begin",
+            "goto": "ch0_a"
+          },
+          {
+            "text": "How to play",
+            "goto": "howto"
+          },
+          {
+            "text": "⚙ 繁體中文",
+            "goto": "set_tw"
+          }
+        ]
+      },
+      {
+        "cmd": "choice",
+        "if": "lang_tw",
+        "options": [
+          {
+            "text": "開始",
+            "goto": "ch0_a"
+          },
+          {
+            "text": "玩法說明",
+            "goto": "howto"
+          },
+          {
+            "text": "⚙ English",
+            "goto": "set_en"
+          }
+        ]
+      }
+    ],
+    "set_tw": [
+      {
+        "cmd": "set",
+        "flag": "lang_tw",
+        "value": true
+      },
+      {
+        "cmd": "goto",
+        "label": "start"
+      }
+    ],
+    "set_en": [
+      {
+        "cmd": "set",
+        "flag": "lang_tw",
+        "value": false
+      },
+      {
+        "cmd": "goto",
+        "label": "start"
+      }
+    ],
+    "howto": [
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "Click or press Space to advance. L opens the log. A toggles auto-play."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "Your health is never shown to you. Watch HER instead — how near she stands, how long she looks. She tells you everything, if you are paying attention."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "Six endings. Not all of them are survivable."
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "點擊或按空白鍵推進。L 開對白記錄，A 自動播放。"
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "你的健康值永遠不會顯示。改為觀察「她」——她站得多近、看你看得多久。只要你留心，她其實什麼都告訴了你。"
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "六個結局。並非每一個都活得下來。"
+      },
+      {
+        "cmd": "goto",
+        "label": "start"
+      }
+    ],
+    "ch0_a": [
+      {
+        "cmd": "bg",
+        "key": "bg_deck"
+      },
+      {
+        "cmd": "bgm",
+        "key": "bgm_tension"
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "Three days out of port, the Bellwether met weather the charts had no name for."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "You were on deck because the cabin was worse. You had been coughing for a week, and down there the air sat in your chest like wet wool."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "The wave did not look like a wave. It looked like the sea standing up to see you better."
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "離港第三天，貝爾威瑟號遇上了海圖上沒有名字的天氣。"
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "你在甲板上，因為船艙更難受。你已經咳了一個星期，那下面的空氣像濕羊毛一樣壓在你胸口。"
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "那道浪不像浪。它像大海站起身來，好把你看得清楚一點。"
+      },
+      {
+        "cmd": "sfx",
+        "key": "sfx_sting"
+      },
+      {
+        "cmd": "shake",
+        "amount": 0.7
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "Then the rail was gone, and the lamp was gone, and the sound was gone."
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "然後欄杆不見了，燈不見了，聲音也不見了。"
+      },
+      {
+        "cmd": "choice",
+        "if": "!lang_tw",
+        "options": [
+          {
+            "text": "You are still holding your mother's locket.",
+            "goto": "ch0_b",
+            "set": "clutch_locket",
+            "value": true
+          },
+          {
+            "text": "You are still holding the gutting knife.",
+            "goto": "ch0_b",
+            "set": "clutch_knife",
+            "value": true
+          },
+          {
+            "text": "Both your hands are open.",
+            "goto": "ch0_b",
+            "set": "clutch_none",
+            "value": true
+          }
+        ]
+      },
+      {
+        "cmd": "choice",
+        "if": "lang_tw",
+        "options": [
+          {
+            "text": "你手裡還握著母親的小盒墜。",
+            "goto": "ch0_b",
+            "set": "clutch_locket",
+            "value": true
+          },
+          {
+            "text": "你手裡還握著剖魚刀。",
+            "goto": "ch0_b",
+            "set": "clutch_knife",
+            "value": true
+          },
+          {
+            "text": "你兩手都是空的。",
+            "goto": "ch0_b",
+            "set": "clutch_none",
+            "value": true
+          }
+        ]
+      }
+    ],
+    "ch0_b": [
+      {
+        "cmd": "bg",
+        "key": "bg_sink"
+      },
+      {
+        "cmd": "sfx",
+        "key": "sfx_bubble"
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "Down is warm. That is the first lie the sea tells you."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "The light above closes like an eye."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "You should be afraid. Instead you are tired, and the tiredness is enormous, and it is easier than anything has ever been."
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "下面是暖的。這是大海對你說的第一個謊。"
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "上方的光像一隻眼睛那樣閉上。"
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "你應該害怕。可是你只覺得累，那種累大得沒有邊際，而且比世上任何事都容易。"
+      },
+      {
+        "cmd": "goto",
+        "label": "ch0_c"
+      }
+    ],
+    "ch0_c": [
+      {
+        "cmd": "bg",
+        "key": "bg_rise"
+      },
+      {
+        "cmd": "sfx",
+        "key": "sfx_whale"
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "Something below you is rising."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "It is too large to be a shape. You understand its size the way you understand a cliff — not by seeing it, but by how small you have suddenly become."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "Two points of light open where a face would be."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "It does not hurry. It has all the water in the world."
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "你下方有東西正在上升。"
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "它大得不像一個形狀。你理解它的體積，就像理解一座懸崖——不是因為看見了，而是因為你忽然變得那麼小。"
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "該是臉的位置，睜開了兩點微光。"
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "它不急。整片海的水都屬於它。"
+      },
+      {
+        "cmd": "shake",
+        "amount": 0.5
+      },
+      {
+        "cmd": "sfx",
+        "key": "sfx_sting"
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "It takes you gently. Somehow that is worse."
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "它很溫柔地把你接住。不知為何，這樣更可怕。"
+      },
+      {
+        "cmd": "goto",
+        "label": "ch0_d"
+      }
+    ],
+    "ch0_d": [
+      {
+        "cmd": "bg",
+        "key": "bg_sick"
+      },
+      {
+        "cmd": "bgm",
+        "key": "bgm_main"
+      },
+      {
+        "cmd": "set",
+        "flag": "health",
+        "value": 25
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "You wake because you are warm, and being warm is wrong."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "Above you: rafters of curved bone, pale as old piano keys. Under you: a pallet of dried kelp that smells of salt and bitter herbs."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "Your chest still rattles. The fever has not broken. But you are dry, and you are breathing air, and neither of those should be possible."
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "你醒過來，因為你很暖，而暖是不對的。"
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "頭上是彎曲的骨頭橫樑，白得像老鋼琴的鍵。身下是一張乾海帶鋪的床，聞起來是鹽和苦藥草。"
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "你胸口還在響。燒還沒退。但你是乾的，而且你在呼吸空氣——這兩件事都不該發生。"
+      },
+      {
+        "cmd": "sfx",
+        "key": "sfx_bowl"
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "Out of sight, something sets a heavy bowl down on wood."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "The footsteps are not quite footsteps. They are slower, and there are fewer of them than there should be."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "A shadow reaches the doorway, and has to stoop."
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "看不見的地方，有人把一隻沉重的碗放在木頭上。"
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "那腳步聲不太像腳步。它慢一些，而且步數比應該有的少。"
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "一個影子走到門口，得彎下身。"
+      },
+      {
+        "cmd": "goto",
+        "label": "ch1_enter"
+      }
+    ],
+    "ch1_enter": [
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "— Chapter One · Fever Days —"
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "—— 第一章 · 發燒的日子 ——"
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "She comes through a doorway built for her, and even then she has to fold."
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "她從一道為她而開的門走進來，而即使那樣，她還是得把自己折起來。"
+      },
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_far",
+        "pos": 0.62
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "Standing, she almost touches the rafters. Her hair is still moving, as though the room were full of water and only she can feel it."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "She is beautiful in a way that takes a moment to arrive — and then does not leave."
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "她站著，幾乎碰到橫樑。她的頭髮還在動，好像這房間裡滿是水，而只有她感覺得到。"
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "她的美是慢一步才抵達的那種——然後就不走了。"
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "if": "!lang_tw",
+        "text": "You are awake."
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "if": "lang_tw",
+        "text": "你醒了。"
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "Her voice is low and unhurried, the way deep water is unhurried."
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "她的聲音低而不急，像深水那樣不急。"
+      },
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_neutral",
+        "pos": 0.68
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "if": "!lang_tw",
+        "text": "Do not sit up. Your lungs are full of the sea and it will take days to talk them into letting go."
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "if": "!lang_tw",
+        "text": "I am going to feed you. You will not enjoy it. That is not what food is for."
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "if": "lang_tw",
+        "text": "別坐起來。你的肺裡全是海，要好幾天才勸得動它放手。"
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "if": "lang_tw",
+        "text": "我會餵你。你不會覺得好吃。食物不是為了好吃而存在的。"
+      },
+      {
+        "cmd": "goto",
+        "label": "ch1_a"
+      }
+    ],
+    "ch1_a": [
+      {
+        "cmd": "sfx",
+        "key": "sfx_bowl"
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "The bowl is stone, and heavier than your arms. Inside, something grey and thick turns over once, faintly luminous."
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "if": "!lang_tw",
+        "text": "Herbs, marrow, and three things you have no word for. Drink it while it is warm."
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "那碗是石頭做的，比你的手臂還重。裡面有灰色濃稠的東西翻了一下，微微發光。"
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "if": "lang_tw",
+        "text": "藥草、骨髓，還有三樣你沒有詞可以叫的東西。趁熱喝。"
+      },
+      {
+        "cmd": "choice",
+        "if": "!lang_tw",
+        "options": [
+          {
+            "text": "Drink all of it.",
+            "goto": "ch1_a2",
+            "set": "drank_all",
+            "value": true
+          },
+          {
+            "text": "Take a few careful sips.",
+            "goto": "ch1_a2",
+            "set": "drank_some",
+            "value": true
+          },
+          {
+            "text": "Refuse. You do not know what is in it.",
+            "goto": "ch1_a2",
+            "set": "drank_none",
+            "value": true
+          }
+        ]
+      },
+      {
+        "cmd": "choice",
+        "if": "lang_tw",
+        "options": [
+          {
+            "text": "全部喝完。",
+            "goto": "ch1_a2",
+            "set": "drank_all",
+            "value": true
+          },
+          {
+            "text": "小心地喝幾口。",
+            "goto": "ch1_a2",
+            "set": "drank_some",
+            "value": true
+          },
+          {
+            "text": "拒絕。你不知道裡面是什麼。",
+            "goto": "ch1_a2",
+            "set": "drank_none",
+            "value": true
+          }
+        ]
+      }
+    ],
+    "ch1_a2": [
+      {
+        "cmd": "add",
+        "flag": "health",
+        "value": 12,
+        "if": "drank_all"
+      },
+      {
+        "cmd": "add",
+        "flag": "bond",
+        "value": 1,
+        "if": "drank_all"
+      },
+      {
+        "cmd": "add",
+        "flag": "health",
+        "value": 8,
+        "if": "drank_some"
+      },
+      {
+        "cmd": "add",
+        "flag": "health",
+        "value": -5,
+        "if": "drank_none"
+      },
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_gentle",
+        "pos": 0.68,
+        "if": "drank_all"
+      },
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_worried",
+        "pos": 0.68,
+        "if": "drank_none"
+      },
+      {
+        "cmd": "goto",
+        "label": "ch1_a2t",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "if": "drank_all",
+        "text": "Good. You are not stupid about being helped. That is rarer than you would think."
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "if": "drank_some",
+        "text": "Careful is not the same as safe. But it is a beginning."
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "if": "drank_none",
+        "text": "Then you will be sick longer. I can wait. Can you?"
+      },
+      {
+        "cmd": "goto",
+        "label": "ch1_b"
+      }
+    ],
+    "ch1_a2t": [
+      {
+        "cmd": "say",
+        "who": "herw",
+        "if": "drank_all",
+        "text": "很好。你不會蠢到拒絕別人幫你。這比你想像中少見。"
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "if": "drank_some",
+        "text": "小心不等於安全。但總算是個開始。"
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "if": "drank_none",
+        "text": "那你就會病久一點。我等得起。你呢？"
+      },
+      {
+        "cmd": "goto",
+        "label": "ch1_b"
+      }
+    ],
+    "ch1_b": [
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "She goes out through the low door and does not say where."
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "她從那道矮門出去，沒說去哪裡。"
+      },
+      {
+        "cmd": "hide",
+        "who": "her"
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "While she is gone, you look at—"
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "她不在的時候，你看向——"
+      },
+      {
+        "cmd": "choice",
+        "if": "!lang_tw",
+        "options": [
+          {
+            "text": "The far door, bound shut with rope.",
+            "goto": "ch1_b2",
+            "set": "saw_pantry",
+            "value": true
+          },
+          {
+            "text": "The charms of knotted bone above your pallet.",
+            "goto": "ch1_b2",
+            "set": "saw_charms",
+            "value": true
+          },
+          {
+            "text": "The round window, and the black water behind it.",
+            "goto": "ch1_b2",
+            "set": "saw_window",
+            "value": true
+          },
+          {
+            "text": "Nothing. You close your eyes.",
+            "goto": "ch1_b2",
+            "set": "rested1",
+            "value": true
+          }
+        ]
+      },
+      {
+        "cmd": "choice",
+        "if": "lang_tw",
+        "options": [
+          {
+            "text": "盡頭那道用繩綁死的門。",
+            "goto": "ch1_b2",
+            "set": "saw_pantry",
+            "value": true
+          },
+          {
+            "text": "床頭上方那些骨頭結成的符。",
+            "goto": "ch1_b2",
+            "set": "saw_charms",
+            "value": true
+          },
+          {
+            "text": "那扇圓窗，和窗後的黑水。",
+            "goto": "ch1_b2",
+            "set": "saw_window",
+            "value": true
+          },
+          {
+            "text": "什麼都不看。你閉上眼。",
+            "goto": "ch1_b2",
+            "set": "rested1",
+            "value": true
+          }
+        ]
+      }
+    ],
+    "ch1_b2": [
+      {
+        "cmd": "add",
+        "flag": "health",
+        "value": 4,
+        "if": "rested1"
+      },
+      {
+        "cmd": "goto",
+        "label": "ch1_b2t",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "if": "saw_pantry",
+        "text": "The rope is new. Everything else in this house is old."
+      },
+      {
+        "cmd": "say",
+        "if": "saw_charms",
+        "text": "Each charm is a knot of small bones. You count nine. Nine of something, done nine times."
+      },
+      {
+        "cmd": "say",
+        "if": "saw_window",
+        "text": "The water out there is not empty. It is only very dark, which is a different thing."
+      },
+      {
+        "cmd": "say",
+        "if": "rested1",
+        "text": "You sleep a little. It helps more than you expected it to."
+      },
+      {
+        "cmd": "goto",
+        "label": "ch1_c"
+      }
+    ],
+    "ch1_b2t": [
+      {
+        "cmd": "say",
+        "if": "saw_pantry",
+        "text": "那條繩是新的。這屋裡其他所有東西都是舊的。"
+      },
+      {
+        "cmd": "say",
+        "if": "saw_charms",
+        "text": "每個符都是小骨頭打的結。你數到九個。九樣什麼，做了九次。"
+      },
+      {
+        "cmd": "say",
+        "if": "saw_window",
+        "text": "外面的水不是空的。它只是很黑——那是兩件不同的事。"
+      },
+      {
+        "cmd": "say",
+        "if": "rested1",
+        "text": "你睡了一會。比你以為的有用。"
+      },
+      {
+        "cmd": "goto",
+        "label": "ch1_c"
+      }
+    ],
+    "ch1_c": [
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_neutral",
+        "pos": 0.68
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "She comes back with wet hands and sits on the floor beside your pallet, which brings her face down almost level with yours."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "She waits. She is very good at waiting."
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "她濕著手回來，在你床邊的地上坐下——這樣她的臉才勉強跟你差不多高。"
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "她等著。她非常擅長等。"
+      },
+      {
+        "cmd": "choice",
+        "if": "!lang_tw",
+        "options": [
+          {
+            "text": "\"What are you?\"",
+            "goto": "ch1_c2",
+            "set": "ask_what",
+            "value": true
+          },
+          {
+            "text": "\"Why did you save me?\"",
+            "goto": "ch1_c2",
+            "set": "ask_why",
+            "value": true
+          },
+          {
+            "text": "\"Have there been others?\"",
+            "goto": "ch1_c2",
+            "set": "ask_others",
+            "value": true
+          },
+          {
+            "text": "Say nothing. Sleep.",
+            "goto": "ch1_c2",
+            "set": "rested2",
+            "value": true
+          }
+        ]
+      },
+      {
+        "cmd": "choice",
+        "if": "lang_tw",
+        "options": [
+          {
+            "text": "「你是什麼？」",
+            "goto": "ch1_c2",
+            "set": "ask_what",
+            "value": true
+          },
+          {
+            "text": "「你為什麼救我？」",
+            "goto": "ch1_c2",
+            "set": "ask_why",
+            "value": true
+          },
+          {
+            "text": "「以前有過別人嗎？」",
+            "goto": "ch1_c2",
+            "set": "ask_others",
+            "value": true
+          },
+          {
+            "text": "什麼都不說。睡。",
+            "goto": "ch1_c2",
+            "set": "rested2",
+            "value": true
+          }
+        ]
+      }
+    ],
+    "ch1_c2": [
+      {
+        "cmd": "add",
+        "flag": "know",
+        "value": 1,
+        "if": "ask_what"
+      },
+      {
+        "cmd": "add",
+        "flag": "know",
+        "value": 1,
+        "if": "ask_others"
+      },
+      {
+        "cmd": "add",
+        "flag": "bond",
+        "value": 1,
+        "if": "ask_why"
+      },
+      {
+        "cmd": "add",
+        "flag": "health",
+        "value": 6,
+        "if": "rested2"
+      },
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_gentle",
+        "pos": 0.68,
+        "if": "ask_why"
+      },
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_worried",
+        "pos": 0.68,
+        "if": "ask_others"
+      },
+      {
+        "cmd": "goto",
+        "label": "ch1_c2t",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "if": "ask_what",
+        "text": "Something that lives where the pressure would fold you in half."
+      },
+      {
+        "cmd": "say",
+        "if": "ask_what",
+        "text": "She says it the way you might say you are from a coastal town."
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "if": "ask_why",
+        "text": "Because you were sinking, and I was there."
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "if": "ask_why",
+        "text": "Not everything needs a second reason."
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "if": "ask_others",
+        "text": "Yes."
+      },
+      {
+        "cmd": "say",
+        "if": "ask_others",
+        "text": "She lets the word sit there a beat too long before she adds anything to it."
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "if": "ask_others",
+        "text": "They were all very well by the time they left."
+      },
+      {
+        "cmd": "say",
+        "if": "rested2",
+        "text": "You sleep. When you wake, the bowl has been refilled and she is gone."
+      },
+      {
+        "cmd": "goto",
+        "label": "ch1_end"
+      }
+    ],
+    "ch1_c2t": [
+      {
+        "cmd": "say",
+        "who": "herw",
+        "if": "ask_what",
+        "text": "住在會把你壓成兩半的深度裡的東西。"
+      },
+      {
+        "cmd": "say",
+        "if": "ask_what",
+        "text": "她說這句話的語氣，像你說自己來自一個海邊小鎮。"
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "if": "ask_why",
+        "text": "因為你在下沉，而我剛好在那裡。"
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "if": "ask_why",
+        "text": "不是每件事都需要第二個理由。"
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "if": "ask_others",
+        "text": "有。"
+      },
+      {
+        "cmd": "say",
+        "if": "ask_others",
+        "text": "她讓那個字多停了一拍，才替它補上後面的話。"
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "if": "ask_others",
+        "text": "他們離開的時候，身體都很好。"
+      },
+      {
+        "cmd": "say",
+        "if": "rested2",
+        "text": "你睡了。醒來時碗已經添滿，她不在。"
+      },
+      {
+        "cmd": "goto",
+        "label": "ch1_end"
+      }
+    ],
+    "ch1_end": [
+      {
+        "cmd": "add",
+        "flag": "health",
+        "value": -3
+      },
+      {
+        "cmd": "goto",
+        "label": "end_late",
+        "if": "health<=0"
+      },
+      {
+        "cmd": "goto",
+        "label": "ch1_endt",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "if": "health>=70",
+        "text": "At the door she stops, and looks back at you for a moment longer than a person would."
+      },
+      {
+        "cmd": "say",
+        "if": "health<=15",
+        "text": "The room dims at the edges. You cannot tell whether that is the lantern, or you."
+      },
+      {
+        "cmd": "say",
+        "text": "The fever keeps its own hours. Days here are measured in bowls."
+      },
+      {
+        "cmd": "goto",
+        "label": "ch2_enter"
+      }
+    ],
+    "ch1_endt": [
+      {
+        "cmd": "say",
+        "if": "health>=70",
+        "text": "她在門口停下，回頭看你——比一個人該看的時間長了一點。"
+      },
+      {
+        "cmd": "say",
+        "if": "health<=15",
+        "text": "房間的邊緣暗下去。你分不清那是燈，還是你自己。"
+      },
+      {
+        "cmd": "say",
+        "text": "發燒有它自己的時間。這裡的日子是用碗來數的。"
+      },
+      {
+        "cmd": "goto",
+        "label": "ch2_enter"
+      }
+    ],
+    "ch2_enter": [
+      {
+        "cmd": "bg",
+        "key": "bg_sick"
+      },
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_neutral",
+        "pos": 0.68
+      },
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_hungry",
+        "pos": 0.68,
+        "if": "health>=70"
+      },
+      {
+        "cmd": "sfx",
+        "key": "sfx_sting",
+        "if": "health>=70"
+      },
+      {
+        "cmd": "bgm",
+        "key": "bgm_tension",
+        "if": "health<=15"
+      },
+      {
+        "cmd": "goto",
+        "label": "ch2_entert",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "— Chapter Two · Mending Days —"
+      },
+      {
+        "cmd": "say",
+        "text": "You can sit up now without the room tilting. The cough has gone loose and productive, which she seems pleased about in a way you cannot quite read."
+      },
+      {
+        "cmd": "say",
+        "if": "health>=70",
+        "text": "She has begun looking at you the way you have seen cooks look at a good cut of meat: not unkindly. Just carefully."
+      },
+      {
+        "cmd": "say",
+        "if": "health<=15",
+        "text": "Your hands will not stop shaking. She has stopped pretending she is not counting your breaths."
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "text": "Better. Not well. Better."
+      },
+      {
+        "cmd": "goto",
+        "label": "ch2_a"
+      }
+    ],
+    "ch2_entert": [
+      {
+        "cmd": "say",
+        "text": "—— 第二章 · 復原的日子 ——"
+      },
+      {
+        "cmd": "say",
+        "text": "你現在坐得起來，房間不會歪了。咳嗽變得鬆散、有痰——她對此似乎很滿意，但那滿意你讀不太懂。"
+      },
+      {
+        "cmd": "say",
+        "if": "health>=70",
+        "text": "她開始用一種眼神看你：你見過廚子用那種眼神看一塊好肉。不是不友善。只是很仔細。"
+      },
+      {
+        "cmd": "say",
+        "if": "health<=15",
+        "text": "你的手停不下來地抖。她也不再假裝自己沒有在數你的呼吸。"
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "text": "好一點了。還沒好。是好一點了。"
+      },
+      {
+        "cmd": "goto",
+        "label": "ch2_a"
+      }
+    ],
+    "ch2_a": [
+      {
+        "cmd": "sfx",
+        "key": "sfx_bowl"
+      },
+      {
+        "cmd": "goto",
+        "label": "ch2_at",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "She kneels and lays out what she has: steeped herbs, a flat grey paste that smells of iron, and her own enormous careful hands."
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "text": "Your chest needs work. I can do it properly, or I can do the part you will let me."
+      },
+      {
+        "cmd": "choice",
+        "options": [
+          {
+            "text": "Let her do whatever she thinks is needed.",
+            "goto": "ch2_a2",
+            "set": "treat_full",
+            "value": true
+          },
+          {
+            "text": "Take the herbs. Refuse the rest.",
+            "goto": "ch2_a2",
+            "set": "treat_half",
+            "value": true
+          },
+          {
+            "text": "Tell her you feel worse than you do.",
+            "goto": "ch2_a2",
+            "set": "treat_lie",
+            "value": true
+          }
+        ]
+      }
+    ],
+    "ch2_at": [
+      {
+        "cmd": "say",
+        "text": "她跪下來，把手上的東西一一擺開：泡好的藥草、一團聞起來像鐵的灰色膏，還有她自己那雙巨大而小心的手。"
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "text": "你的胸口需要處理。我可以做完整的，也可以只做你願意讓我做的那部分。"
+      },
+      {
+        "cmd": "choice",
+        "options": [
+          {
+            "text": "讓她做她認為需要做的一切。",
+            "goto": "ch2_a2",
+            "set": "treat_full",
+            "value": true
+          },
+          {
+            "text": "只要藥草，其餘拒絕。",
+            "goto": "ch2_a2",
+            "set": "treat_half",
+            "value": true
+          },
+          {
+            "text": "告訴她你比實際上更難受。",
+            "goto": "ch2_a2",
+            "set": "treat_lie",
+            "value": true
+          }
+        ]
+      }
+    ],
+    "ch2_a2": [
+      {
+        "cmd": "add",
+        "flag": "health",
+        "value": 12,
+        "if": "treat_full"
+      },
+      {
+        "cmd": "add",
+        "flag": "bond",
+        "value": 1,
+        "if": "treat_full"
+      },
+      {
+        "cmd": "add",
+        "flag": "health",
+        "value": 8,
+        "if": "treat_half"
+      },
+      {
+        "cmd": "add",
+        "flag": "health",
+        "value": -5,
+        "if": "treat_lie"
+      },
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_gentle",
+        "pos": 0.68,
+        "if": "treat_full"
+      },
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_worried",
+        "pos": 0.68,
+        "if": "treat_lie"
+      },
+      {
+        "cmd": "goto",
+        "label": "ch2_a2t",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "if": "treat_full",
+        "text": "It takes a long time. She is stronger than anything you have touched and she never once uses it."
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "if": "treat_half",
+        "text": "As you like. Half a thing done well is still half a thing."
+      },
+      {
+        "cmd": "say",
+        "if": "treat_lie",
+        "text": "She goes still. Then she nods, and treats you as though you had told the truth, which is somehow much worse."
+      },
+      {
+        "cmd": "goto",
+        "label": "ch2_b"
+      }
+    ],
+    "ch2_a2t": [
+      {
+        "cmd": "say",
+        "if": "treat_full",
+        "text": "那花了很長時間。她比你碰過的任何東西都強壯，而她一次都沒有用上那份力氣。"
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "if": "treat_half",
+        "text": "隨你。一半的事做得好，還是只有一半。"
+      },
+      {
+        "cmd": "say",
+        "if": "treat_lie",
+        "text": "她靜了一下。然後點頭，照著你說的話去照顧你——這不知為何反而更難受得多。"
+      },
+      {
+        "cmd": "goto",
+        "label": "ch2_b"
+      }
+    ],
+    "ch2_b": [
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_neutral",
+        "pos": 0.68
+      },
+      {
+        "cmd": "goto",
+        "label": "ch2_bt",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "The next day she brings up a bundle from somewhere below the house and unwraps it on the floor like an offering."
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "text": "The sea keeps what it takes. Sometimes I take it back. Choose one."
+      },
+      {
+        "cmd": "choice",
+        "options": [
+          {
+            "text": "The dry wool shirt.",
+            "goto": "ch2_b2",
+            "set": "gift_shirt",
+            "value": true
+          },
+          {
+            "text": "The little brass music box.",
+            "goto": "ch2_b2",
+            "set": "gift_box",
+            "value": true
+          },
+          {
+            "text": "The long clean knife.",
+            "goto": "ch2_b2",
+            "set": "gift_knife",
+            "value": true
+          },
+          {
+            "text": "Refuse all of it.",
+            "goto": "ch2_b2",
+            "set": "gift_none",
+            "value": true
+          }
+        ]
+      }
+    ],
+    "ch2_bt": [
+      {
+        "cmd": "say",
+        "text": "第二天，她從屋子下面某處搬上一個包裹，在地上打開，像獻上什麼東西。"
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "text": "海會留下它拿走的東西。有時候我拿回來。選一樣。"
+      },
+      {
+        "cmd": "choice",
+        "options": [
+          {
+            "text": "那件乾的羊毛衫。",
+            "goto": "ch2_b2",
+            "set": "gift_shirt",
+            "value": true
+          },
+          {
+            "text": "那個小小的黃銅音樂盒。",
+            "goto": "ch2_b2",
+            "set": "gift_box",
+            "value": true
+          },
+          {
+            "text": "那把又長又乾淨的刀。",
+            "goto": "ch2_b2",
+            "set": "gift_knife",
+            "value": true
+          },
+          {
+            "text": "全部拒絕。",
+            "goto": "ch2_b2",
+            "set": "gift_none",
+            "value": true
+          }
+        ]
+      }
+    ],
+    "ch2_b2": [
+      {
+        "cmd": "add",
+        "flag": "bond",
+        "value": 1,
+        "if": "gift_shirt"
+      },
+      {
+        "cmd": "add",
+        "flag": "bond",
+        "value": 1,
+        "if": "gift_box"
+      },
+      {
+        "cmd": "add",
+        "flag": "know",
+        "value": 1,
+        "if": "gift_knife"
+      },
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_gentle",
+        "pos": 0.68,
+        "if": "gift_box"
+      },
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_worried",
+        "pos": 0.68,
+        "if": "gift_none"
+      },
+      {
+        "cmd": "goto",
+        "label": "ch2_b2t",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "if": "gift_shirt",
+        "text": "It fits. It fit someone else first, and it fits you now, and she watches you notice that."
+      },
+      {
+        "cmd": "say",
+        "if": "gift_box",
+        "text": "It plays four notes and gives up. She listens to all four with her eyes closed."
+      },
+      {
+        "cmd": "say",
+        "if": "gift_knife",
+        "text": "She hands it over without hesitating, handle first."
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "if": "gift_knife",
+        "text": "Everyone picks that one eventually. It has never once been the thing that saved them."
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "if": "gift_none",
+        "text": "You think taking makes you owe me. It does not work like that here."
+      },
+      {
+        "cmd": "goto",
+        "label": "ch2_c"
+      }
+    ],
+    "ch2_b2t": [
+      {
+        "cmd": "say",
+        "if": "gift_shirt",
+        "text": "很合身。它先合過別人的身，現在合你的身——而她看著你發現這件事。"
+      },
+      {
+        "cmd": "say",
+        "if": "gift_box",
+        "text": "它奏了四個音就放棄了。她閉著眼把四個音都聽完。"
+      },
+      {
+        "cmd": "say",
+        "if": "gift_knife",
+        "text": "她毫不猶豫地遞過來，刀柄朝你。"
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "if": "gift_knife",
+        "text": "大家最後都選那個。它一次都沒有救到誰。"
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "if": "gift_none",
+        "text": "你以為拿了就會欠我。這裡不是這樣運作的。"
+      },
+      {
+        "cmd": "goto",
+        "label": "ch2_c"
+      }
+    ],
+    "ch2_c": [
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_neutral",
+        "pos": 0.68
+      },
+      {
+        "cmd": "goto",
+        "label": "ch2_ct",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "That night the lantern burns low and neither of you moves to fix it."
+      },
+      {
+        "cmd": "choice",
+        "options": [
+          {
+            "text": "\"What is behind the door with the rope?\"",
+            "goto": "ch2_c2",
+            "set": "ask_door",
+            "value": true
+          },
+          {
+            "text": "\"Where did the scars on your arms come from?\"",
+            "goto": "ch2_c2",
+            "set": "ask_scars",
+            "value": true
+          },
+          {
+            "text": "\"What happens when a patient is completely well?\"",
+            "goto": "ch2_c2",
+            "set": "ask_well",
+            "value": true
+          },
+          {
+            "text": "Say nothing. Let the lantern go out.",
+            "goto": "ch2_c2",
+            "set": "rested3",
+            "value": true
+          }
+        ]
+      }
+    ],
+    "ch2_ct": [
+      {
+        "cmd": "say",
+        "text": "那晚燈快燒完了，你們兩個都沒有動手去弄。"
+      },
+      {
+        "cmd": "choice",
+        "options": [
+          {
+            "text": "「那道綁著繩的門後面是什麼？」",
+            "goto": "ch2_c2",
+            "set": "ask_door",
+            "value": true
+          },
+          {
+            "text": "「你手臂上的疤是哪裡來的？」",
+            "goto": "ch2_c2",
+            "set": "ask_scars",
+            "value": true
+          },
+          {
+            "text": "「病人完全好了之後，會怎樣？」",
+            "goto": "ch2_c2",
+            "set": "ask_well",
+            "value": true
+          },
+          {
+            "text": "什麼都不說。讓燈熄掉。",
+            "goto": "ch2_c2",
+            "set": "rested3",
+            "value": true
+          }
+        ]
+      }
+    ],
+    "ch2_c2": [
+      {
+        "cmd": "add",
+        "flag": "know",
+        "value": 1,
+        "if": "ask_door"
+      },
+      {
+        "cmd": "add",
+        "flag": "know",
+        "value": 1,
+        "if": "ask_scars"
+      },
+      {
+        "cmd": "add",
+        "flag": "know",
+        "value": 2,
+        "if": "ask_well"
+      },
+      {
+        "cmd": "add",
+        "flag": "bond",
+        "value": 1,
+        "if": "ask_scars"
+      },
+      {
+        "cmd": "add",
+        "flag": "health",
+        "value": 6,
+        "if": "rested3"
+      },
+      {
+        "cmd": "bg",
+        "key": "bg_wrong",
+        "if": "ask_well"
+      },
+      {
+        "cmd": "sfx",
+        "key": "sfx_sting",
+        "if": "ask_well"
+      },
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_hungry",
+        "pos": 0.68,
+        "if": "ask_well"
+      },
+      {
+        "cmd": "goto",
+        "label": "ch2_c2t",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "if": "ask_door",
+        "text": "Food. Not the kind you are ready for."
+      },
+      {
+        "cmd": "say",
+        "if": "ask_door",
+        "text": "She does not offer to show you, and you do not ask twice."
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "if": "ask_scars",
+        "text": "Not everyone wants to be carried. Some of them fight the whole way down."
+      },
+      {
+        "cmd": "say",
+        "if": "ask_scars",
+        "text": "She turns her forearm over so you can see how many there are, and then covers it again, embarrassed for you rather than herself."
+      },
+      {
+        "cmd": "say",
+        "if": "ask_well",
+        "text": "For a moment the lantern seems to go out entirely, and there are more eyes at the window than there should be."
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "if": "ask_well",
+        "text": "Then they are ready."
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "if": "ask_well",
+        "text": "I do not lie to my patients. I only wait until the question stops being hypothetical."
+      },
+      {
+        "cmd": "say",
+        "if": "rested3",
+        "text": "The dark closes in and you let it. In the morning the bowl is full again."
+      },
+      {
+        "cmd": "goto",
+        "label": "ch2_split"
+      }
+    ],
+    "ch2_c2t": [
+      {
+        "cmd": "say",
+        "who": "herw",
+        "if": "ask_door",
+        "text": "食物。不是你現在準備好面對的那種。"
+      },
+      {
+        "cmd": "say",
+        "if": "ask_door",
+        "text": "她沒有提議帶你去看，你也沒有問第二次。"
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "if": "ask_scars",
+        "text": "不是每個人都想被抱下來。有些人一路都在掙。"
+      },
+      {
+        "cmd": "say",
+        "if": "ask_scars",
+        "text": "她把小臂翻過來讓你看清有多少道，然後又蓋回去——她替你尷尬，而不是替自己。"
+      },
+      {
+        "cmd": "say",
+        "if": "ask_well",
+        "text": "有一瞬間燈好像完全熄了，而窗外的眼睛比應該有的多。"
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "if": "ask_well",
+        "text": "那他們就準備好了。"
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "if": "ask_well",
+        "text": "我不對我的病人說謊。我只是等到這個問題不再是假設。"
+      },
+      {
+        "cmd": "say",
+        "if": "rested3",
+        "text": "黑暗合上來，你讓它合上。早上碗又是滿的。"
+      },
+      {
+        "cmd": "goto",
+        "label": "ch2_split"
+      }
+    ],
+    "ch2_split": [
+      {
+        "cmd": "bg",
+        "key": "bg_sick"
+      },
+      {
+        "cmd": "add",
+        "flag": "health",
+        "value": -3
+      },
+      {
+        "cmd": "goto",
+        "label": "end_late",
+        "if": "health<=0"
+      },
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_neutral",
+        "pos": 0.68
+      },
+      {
+        "cmd": "goto",
+        "label": "ch2_splitt",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "By the end of the second week you can stand without holding anything."
+      },
+      {
+        "cmd": "say",
+        "text": "In the mornings your chest is clear. Clear is a thing you can hide, or a thing you can show."
+      },
+      {
+        "cmd": "say",
+        "text": "She has begun measuring you with her eyes when she thinks you are asleep."
+      },
+      {
+        "cmd": "choice",
+        "options": [
+          {
+            "text": "Hide it. Cough when she is listening. Stay her patient.",
+            "goto": "ch3_dec",
+            "set": "route_dec",
+            "value": true
+          },
+          {
+            "text": "Let her see. Stand up in front of her.",
+            "goto": "ch3_tru",
+            "set": "route_tru",
+            "value": true
+          }
+        ]
+      }
+    ],
+    "ch2_splitt": [
+      {
+        "cmd": "say",
+        "text": "到第二個星期末，你已經可以不扶任何東西站起來。"
+      },
+      {
+        "cmd": "say",
+        "text": "早上你的胸口是乾淨的。乾淨是一件你可以藏起來、也可以拿出來的事。"
+      },
+      {
+        "cmd": "say",
+        "text": "她開始在以為你睡著的時候，用眼睛量你。"
+      },
+      {
+        "cmd": "choice",
+        "options": [
+          {
+            "text": "藏起來。在她聽得見的時候咳。繼續做她的病人。",
+            "goto": "ch3_dec",
+            "set": "route_dec",
+            "value": true
+          },
+          {
+            "text": "讓她看見。站起來，站在她面前。",
+            "goto": "ch3_tru",
+            "set": "route_tru",
+            "value": true
+          }
+        ]
+      }
+    ],
+    "ch3_dec": [
+      {
+        "cmd": "bgm",
+        "key": "bgm_tension"
+      },
+      {
+        "cmd": "goto",
+        "label": "ch3_dect",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "— Chapter Three · The Last Supper —"
+      },
+      {
+        "cmd": "say",
+        "text": "You become good at it very quickly, which tells you something about yourself you would rather not have learned."
+      },
+      {
+        "cmd": "say",
+        "text": "You cough when she is in the room. You walk slowly when she can hear the floor. You leave a little food in the bowl."
+      },
+      {
+        "cmd": "say",
+        "text": "She brings more bowls. She sits up later. Something in her face begins to look worn thin."
+      },
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_worried",
+        "pos": 0.68
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "text": "You are not getting better. I have done everything correctly and you are not getting better."
+      },
+      {
+        "cmd": "say",
+        "text": "She says it as though the failure were hers."
+      },
+      {
+        "cmd": "choice",
+        "options": [
+          {
+            "text": "Push it further. Bite your cheek and cough blood.",
+            "goto": "ch3_dec2",
+            "set": "lie_deep",
+            "value": true
+          },
+          {
+            "text": "Keep it small. Just stay slow and quiet.",
+            "goto": "ch3_dec2",
+            "set": "lie_small",
+            "value": true
+          },
+          {
+            "text": "Tell her the truth after all.",
+            "goto": "ch3_tru",
+            "set": "confessed",
+            "value": true
+          }
+        ]
+      }
+    ],
+    "ch3_dect": [
+      {
+        "cmd": "say",
+        "text": "—— 第三章 · 最後一餐 ——"
+      },
+      {
+        "cmd": "say",
+        "text": "你很快就熟練起來——而這件事告訴了你一些關於你自己、你寧願不知道的東西。"
+      },
+      {
+        "cmd": "say",
+        "text": "她在房裡時你就咳。她聽得見地板時你就走慢。碗裡總留一點。"
+      },
+      {
+        "cmd": "say",
+        "text": "她端來更多碗。她坐得更晚。她臉上有些東西開始被磨薄。"
+      },
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_worried",
+        "pos": 0.68
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "text": "你沒有變好。我每一步都做對了，而你沒有變好。"
+      },
+      {
+        "cmd": "say",
+        "text": "她說這句話的樣子，像那是她的失敗。"
+      },
+      {
+        "cmd": "choice",
+        "options": [
+          {
+            "text": "再加重。咬破自己的腮，咳出血。",
+            "goto": "ch3_dec2",
+            "set": "lie_deep",
+            "value": true
+          },
+          {
+            "text": "維持小謊。只是繼續慢、繼續安靜。",
+            "goto": "ch3_dec2",
+            "set": "lie_small",
+            "value": true
+          },
+          {
+            "text": "還是告訴她真話。",
+            "goto": "ch3_tru",
+            "set": "confessed",
+            "value": true
+          }
+        ]
+      }
+    ],
+    "ch3_dec2": [
+      {
+        "cmd": "add",
+        "flag": "health",
+        "value": -8,
+        "if": "lie_deep"
+      },
+      {
+        "cmd": "add",
+        "flag": "health",
+        "value": -3,
+        "if": "lie_small"
+      },
+      {
+        "cmd": "goto",
+        "label": "end_late",
+        "if": "health<=0"
+      },
+      {
+        "cmd": "goto",
+        "label": "ch3_dec2t",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "if": "lie_deep",
+        "text": "The blood is real, at least. She holds your head and cleans your mouth and does not once say that the taste is wrong."
+      },
+      {
+        "cmd": "say",
+        "if": "lie_small",
+        "text": "She stops asking. That is not the same as being convinced."
+      },
+      {
+        "cmd": "say",
+        "text": "That night she sits on the floor beside you until the lantern gutters, saying nothing, the way people sit with the dying."
+      },
+      {
+        "cmd": "goto",
+        "label": "resolve"
+      }
+    ],
+    "ch3_dec2t": [
+      {
+        "cmd": "say",
+        "if": "lie_deep",
+        "text": "至少血是真的。她扶著你的頭，替你把嘴清乾淨，一次都沒有說那味道不對。"
+      },
+      {
+        "cmd": "say",
+        "if": "lie_small",
+        "text": "她不再問了。那跟被說服不是同一件事。"
+      },
+      {
+        "cmd": "say",
+        "text": "那晚她在你旁邊的地上一直坐到燈殘，什麼都不說——人們就是這樣陪將死的人坐著的。"
+      },
+      {
+        "cmd": "goto",
+        "label": "resolve"
+      }
+    ],
+    "ch3_tru": [
+      {
+        "cmd": "set",
+        "flag": "route_dec",
+        "value": false
+      },
+      {
+        "cmd": "goto",
+        "label": "ch3_trut",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "if": "!confessed",
+        "text": "— Chapter Three · The Last Supper —"
+      },
+      {
+        "cmd": "say",
+        "if": "confessed",
+        "text": "You tell her. It takes four words and they cost more than the whole shipwreck did."
+      },
+      {
+        "cmd": "say",
+        "text": "You stand up in the middle of the room, and you do not hold anything, and you breathe all the way to the bottom of your lungs where the sea used to be."
+      },
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_gentle",
+        "pos": 0.68
+      },
+      {
+        "cmd": "say",
+        "text": "She looks at you for a long time. Whatever is happening on her face is not simple."
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "text": "There. That is what I have been working for."
+      },
+      {
+        "cmd": "sfx",
+        "key": "sfx_bowl"
+      },
+      {
+        "cmd": "say",
+        "text": "Behind her, the rope-bound door is standing open. The long table beyond it has been laid for two."
+      },
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_hungry",
+        "pos": 0.68
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "text": "I told you I do not lie to my patients. I am very glad you are well. I am also very hungry. Both of those are true and I am tired of pretending they take turns."
+      },
+      {
+        "cmd": "choice",
+        "options": [
+          {
+            "text": "\"Please don't.\"",
+            "goto": "resolve",
+            "set": "begged",
+            "value": true
+          },
+          {
+            "text": "\"I would rather it was you than the sea.\"",
+            "goto": "resolve",
+            "set": "offered",
+            "value": true
+          },
+          {
+            "text": "Reach for the knife.",
+            "goto": "resolve",
+            "set": "fought",
+            "value": true
+          }
+        ]
+      }
+    ],
+    "ch3_trut": [
+      {
+        "cmd": "say",
+        "if": "!confessed",
+        "text": "—— 第三章 · 最後一餐 ——"
+      },
+      {
+        "cmd": "say",
+        "if": "confessed",
+        "text": "你告訴她。只用了四個字，而那四個字比整場沉船都貴。"
+      },
+      {
+        "cmd": "say",
+        "text": "你在房間中央站起來，什麼都不扶，然後一口氣呼吸到肺的最底——那裡以前全是海。"
+      },
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_gentle",
+        "pos": 0.68
+      },
+      {
+        "cmd": "say",
+        "text": "她看了你很久。她臉上發生的那件事並不單純。"
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "text": "看。這就是我一直在做的事。"
+      },
+      {
+        "cmd": "sfx",
+        "key": "sfx_bowl"
+      },
+      {
+        "cmd": "say",
+        "text": "她身後，那道綁繩的門開著。門後的長桌，擺了兩副位子。"
+      },
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_hungry",
+        "pos": 0.68
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "text": "我說過我不對病人說謊。我很高興你好了。我也很餓。這兩件事都是真的，而我厭倦了假裝它們會輪流出現。"
+      },
+      {
+        "cmd": "choice",
+        "options": [
+          {
+            "text": "「求你不要。」",
+            "goto": "resolve",
+            "set": "begged",
+            "value": true
+          },
+          {
+            "text": "「如果一定要，我寧願是你，而不是海。」",
+            "goto": "resolve",
+            "set": "offered",
+            "value": true
+          },
+          {
+            "text": "伸手去拿那把刀。",
+            "goto": "resolve",
+            "set": "fought",
+            "value": true
+          }
+        ]
+      }
+    ],
+    "resolve": [
+      {
+        "cmd": "add",
+        "flag": "bond",
+        "value": 1,
+        "if": "begged"
+      },
+      {
+        "cmd": "add",
+        "flag": "bond",
+        "value": 2,
+        "if": "offered"
+      },
+      {
+        "cmd": "add",
+        "flag": "know",
+        "value": 1,
+        "if": "fought"
+      },
+      {
+        "cmd": "goto",
+        "label": "end_hidden",
+        "if": "know>=4"
+      },
+      {
+        "cmd": "goto",
+        "label": "resolve_dec",
+        "if": "route_dec"
+      },
+      {
+        "cmd": "goto",
+        "label": "resolve_tru"
+      }
+    ],
+    "resolve_dec": [
+      {
+        "cmd": "goto",
+        "label": "end_found",
+        "if": "health>=70"
+      },
+      {
+        "cmd": "goto",
+        "label": "end_forever"
+      }
+    ],
+    "resolve_tru": [
+      {
+        "cmd": "goto",
+        "label": "end_refused",
+        "if": "bond>=4"
+      },
+      {
+        "cmd": "goto",
+        "label": "end_dinner"
+      }
+    ],
+    "end_refused": [
+      {
+        "cmd": "bg",
+        "key": "bg_sick"
+      },
+      {
+        "cmd": "bgm",
+        "key": "bgm_main"
+      },
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_gentle",
+        "pos": 0.68
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "She stands there with the door open behind her for a long, long time."
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "if": "!lang_tw",
+        "text": "…No."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "She closes the door. She ties the rope. She ties it badly, with shaking hands, and then she sits down on the floor and puts her enormous face in her enormous hands."
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "if": "!lang_tw",
+        "text": "You will have to go. Tonight, while I still want you to."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "★ THE FIRST MEAL REFUSED"
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "She carries you up through water that should have killed you, and lets go a mile from a coast you do not recognise. She does not wave. She has never once been waved at."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "— True ending · 1 of 6 endings —"
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "她站在那裡，身後的門開著，很久，很久。"
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "if": "lang_tw",
+        "text": "……不。"
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "她把門關上。把繩綁回去。綁得很難看，手在抖。然後她在地上坐下，把那張巨大的臉埋進那雙巨大的手裡。"
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "if": "lang_tw",
+        "text": "你得走。今晚就走，趁我還希望你走。"
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "★ 第一頓被推掉的飯"
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "她抱著你穿過本該殺死你的水，在一段你不認得的海岸外一哩鬆手。她沒有揮手。從來沒有人向她揮過手。"
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "—— 真結局 · 6 個結局之 1 ——"
+      },
+      {
+        "cmd": "end"
+      }
+    ],
+    "end_dinner": [
+      {
+        "cmd": "bg",
+        "key": "bg_wrong"
+      },
+      {
+        "cmd": "bgm",
+        "key": "bgm_tension"
+      },
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_hungry",
+        "pos": 0.68
+      },
+      {
+        "cmd": "sfx",
+        "key": "sfx_sting"
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "She is so gentle about it that for a while you keep expecting her to stop."
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "if": "!lang_tw",
+        "text": "Thank you for getting well. Most of them do not manage it."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "★ WELL ENOUGH TO EAT"
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "She washes the stone bowl afterwards and sets it out to dry, because there is always another storm, and the sea always drops someone."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "— 1 of 6 endings —"
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "她做這件事的時候溫柔得過分，以致有好一陣子你一直以為她會停手。"
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "if": "lang_tw",
+        "text": "謝謝你把身體養好。他們大部分都做不到。"
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "★ 好到可以吃了"
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "事後她把石碗洗乾淨，擺出去晾——因為總會有下一場風暴，而海總會掉下一個人。"
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "—— 6 個結局之 1 ——"
+      },
+      {
+        "cmd": "end"
+      }
+    ],
+    "end_forever": [
+      {
+        "cmd": "bg",
+        "key": "bg_sick"
+      },
+      {
+        "cmd": "bgm",
+        "key": "bgm_main"
+      },
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_worried",
+        "pos": 0.68
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "The seasons here are only the temperature of the bowl."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "You cough on schedule. She never stops trying. She has begun talking to you about small things, which is how you know she has stopped expecting you to leave."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "★ THE FOREVER PATIENT"
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "You will be safe for exactly as long as you can keep being sick. You are not sure any more which one of you is the one being kept."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "— 1 of 6 endings —"
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "這裡的季節只是碗的溫度。"
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "你按時咳嗽。她從不放棄。她開始跟你聊一些很小的事——你就是由此知道，她已經不再預期你會走。"
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "★ 永遠的病人"
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "你能安全多久，就取決於你能繼續病多久。你已經不太確定，被留下來的到底是你們哪一個。"
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "—— 6 個結局之 1 ——"
+      },
+      {
+        "cmd": "end"
+      }
+    ],
+    "end_found": [
+      {
+        "cmd": "bg",
+        "key": "bg_wrong"
+      },
+      {
+        "cmd": "bgm",
+        "key": "bgm_tension"
+      },
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_hungry",
+        "pos": 0.68
+      },
+      {
+        "cmd": "sfx",
+        "key": "sfx_sting"
+      },
+      {
+        "cmd": "shake",
+        "amount": 0.6
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "She comes in without the bowl, which is how you know."
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "if": "!lang_tw",
+        "text": "You smell well. You have smelled well for eleven days."
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "if": "!lang_tw",
+        "text": "I would not have minded the lie. I mind that you thought I was stupid, and I mind that you made me wait while I was hungry."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "★ FOUND OUT"
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "There is no tenderness in it this time, and that turns out to have been the only thing keeping any of it bearable."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "— 1 of 6 endings —"
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "她進來的時候沒有拿碗，你就知道了。"
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "if": "lang_tw",
+        "text": "你聞起來很健康。你已經聞起來很健康十一天了。"
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "if": "lang_tw",
+        "text": "說謊我不在意。我在意的是你以為我蠢，還有你讓我在餓著的時候等。"
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "★ 被聞出來了"
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "這一次裡面沒有溫柔——而原來那份溫柔，是唯一讓這一切還撐得住的東西。"
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "—— 6 個結局之 1 ——"
+      },
+      {
+        "cmd": "end"
+      }
+    ],
+    "end_hidden": [
+      {
+        "cmd": "bg",
+        "key": "bg_wrong"
+      },
+      {
+        "cmd": "bgm",
+        "key": "bgm_tension"
+      },
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_worried",
+        "pos": 0.68
+      },
+      {
+        "cmd": "sfx",
+        "key": "sfx_whale"
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "You have asked too many of the right questions, so she does the thing nobody has ever made her do: she answers."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "She unties the rope herself. Behind the door is not a pantry. It is a row of nine narrow beds, made up, dusted, empty."
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "if": "!lang_tw",
+        "text": "Nine of them kept me. One after another. Each one fed me and washed me and told me I was getting better."
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "if": "!lang_tw",
+        "text": "I was the one who got well and was not eaten. I have never understood why. I have spent a long time trying to find out by doing it correctly."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "The nine knots above your pallet are not charms. They are names."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "★ THE NINE KNOTS"
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "She lets you go because she does not know what else the tenth bed is for. Neither of you says the word kindness, but it was the only thing in the room."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "— Hidden ending · 1 of 6 endings —"
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "你問對了太多問題，於是她做了一件沒有人逼過她做的事：她回答。"
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "她親手解開那條繩。門後不是儲藏室。是九張窄床，鋪好了，抹乾淨了，空著。"
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "if": "lang_tw",
+        "text": "有九個養過我。一個接一個。每一個都餵我、替我洗、告訴我我在好起來。"
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "if": "lang_tw",
+        "text": "我是那個好了、卻沒有被吃掉的。我一直不明白為什麼。我用了很長時間，想靠把這件事做對來弄清楚。"
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "你床頭上方那九個結不是符。是名字。"
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "★ 九個結"
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "她放你走，因為她不知道第十張床還能用來做什麼。你們誰都沒有說出「善意」這兩個字，但房間裡只有那樣東西。"
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "—— 隱藏結局 · 6 個結局之 1 ——"
+      },
+      {
+        "cmd": "end"
+      }
+    ],
+    "end_late": [
+      {
+        "cmd": "bg",
+        "key": "bg_wrong"
+      },
+      {
+        "cmd": "bgm",
+        "key": "bgm_tension"
+      },
+      {
+        "cmd": "show",
+        "who": "her",
+        "key": "gm_worried",
+        "pos": 0.68
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "The bowl is at your mouth and you cannot remember how swallowing works."
+      },
+      {
+        "cmd": "say",
+        "who": "her",
+        "if": "!lang_tw",
+        "text": "No. No, we were doing so well. Stay. Stay and I will—"
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "★ TOO LATE"
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "She holds you the whole way down, and afterwards she does not eat, because you were never well, and she has rules."
+      },
+      {
+        "cmd": "say",
+        "if": "!lang_tw",
+        "text": "— 1 of 6 endings —"
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "碗就在你嘴邊，而你想不起「吞」是怎麼做的。"
+      },
+      {
+        "cmd": "say",
+        "who": "herw",
+        "if": "lang_tw",
+        "text": "不。不，我們一直做得很好。留下來。留下來，我會——"
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "★ 來不及"
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "她一路抱著你往下沉。之後她沒有吃——因為你從來沒有好過，而她有她的規矩。"
+      },
+      {
+        "cmd": "say",
+        "if": "lang_tw",
+        "text": "—— 6 個結局之 1 ——"
+      },
+      {
+        "cmd": "end"
+      }
+    ]
+  }
+}; // __GI_DATA__
+/* __GI_VN_RUNTIME__ v1 start — server-injected, do not edit */
+// ============ VN runtime v1 — command-list interpreter(RPG Maker 骨,Ren'Py label/jump)============
+// AI 淨係生成 GAME_DATA.script(data),呢個 runtime 由 server 注入。
+// 畫喺 canvas(同平台其他 game 一致、screenshot 到、可以同 Live2D 嘅 L2D 共用同一塊布)。
+(function () {
+  var D = window.GAME_DATA || {};
+  var SC = D.script || {};
+  var CH = D.characters || {};
+  // ── 外觀:AI 可以喺 GAME_DATA.theme 改,或者用 window.VN_SKIN 完全自己畫 ──
+  // 冇呢個嘅話全世界啲 VN 都一個樣,所以整個 game 一定要肯畀佢自訂。
+  var TH = Object.assign({
+    boxImage: null,          // 對白框底圖(GAME_ASSETS key)—— 有就用圖,冇就畫純色
+    boxColor: 'rgba(12,10,18,.82)', boxBorder: 'rgba(255,255,255,.16)', boxRadius: 0,
+    boxMargin: 22, boxBottom: 14, boxHeight: 0.26,   // boxHeight <1 = 佔畫面比例
+    pad: 18, textColor: '#f2eef7', textSize: 15, lineHeight: 23, maxLines: 5,
+    font: 'system-ui, "PingFang HK", sans-serif',
+    nameSize: 15, nameColor: null,                    // null = 用角色自己個 color
+    namePlate: null,                                  // 有色 = 名字後面畫個底
+    choiceColor: 'rgba(20,16,28,.9)', choiceBorder: 'rgba(143,238,255,.5)',
+    choiceText: '#eaf6ff', choiceRadius: 0, choiceW: 0.62, choiceH: 40, choiceGap: 12,
+    arrow: '▼', logLabel: '☰ 記錄 (L)',
+  }, D.theme || {});
+  function rr(x, y, w, h, r) {   // 圓角矩形(r=0 就係普通方框)
+    if (!r) { ctx.beginPath(); ctx.rect(x, y, w, h); return; }
+    r = Math.min(r, w / 2, h / 2);
+    ctx.beginPath();
+    ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
+  }
+  var cv = document.getElementById(window.VN_CANVAS || 'c') || document.querySelector('canvas');
+  if (!cv) return;
+  var ctx = cv.getContext('2d');
+
+  // ── 狀態 ──
+  var S = {
+    label: null, pc: 0, flags: {}, bg: null, bgImg: null,
+    actors: {},              // who → {key,pos,img,alpha,rig}
+    line: '', who: null, shown: 0, typing: false,
+    choices: null, waiting: 0, over: false, history: [], showLog: false,
+    fade: 0, shake: 0, auto: false, t: 0,
+  };
+  var IMG = {};
+  function img(key) {
+    if (!key) return null;
+    if (IMG[key]) return IMG[key];
+    var src = (window.GAME_ASSETS || {})[key];
+    if (!src) return null;
+    var i = new Image(); i.src = src; IMG[key] = i; return i;
+  }
+  var bgm = null;
+  function playBgm(key) {
+    var a = (window.GAME_AUDIO || {})[key]; if (!a) return;
+    try { if (bgm) bgm.pause(); bgm = new Audio(a); bgm.loop = true; bgm.volume = 0.5; bgm.play().catch(function () {}); } catch (e) {}
+  }
+  function playOne(key, vol) {
+    var a = (window.GAME_AUDIO || {})[key]; if (!a) return null;
+    try { var s = new Audio(a); s.volume = vol == null ? 0.85 : vol; s.play().catch(function () {}); return s; } catch (e) { return null; }
+  }
+  var voiceAudio = null;
+
+  // ── 條件:支援 "flag"、"!flag"、"flag>=3" ──
+  function test(cond) {
+    if (!cond) return true;
+    var m = /^\s*(!)?\s*([A-Za-z_][\w]*)\s*(?:(>=|<=|==|!=|>|<)\s*(-?\d+|true|false|'[^']*'))?\s*$/.exec(cond);
+    if (!m) return true;
+    var v = S.flags[m[2]];
+    if (!m[3]) return m[1] ? !v : !!v;
+    var r = m[4] === 'true' ? true : m[4] === 'false' ? false : /^'/.test(m[4]) ? m[4].slice(1, -1) : +m[4];
+    var out = m[3] === '>=' ? v >= r : m[3] === '<=' ? v <= r : m[3] === '==' ? v == r : m[3] === '!=' ? v != r : m[3] === '>' ? v > r : v < r;
+    return m[1] ? !out : out;
+  }
+
+  // ── 執行 ──
+  function goto(label) {
+    if (!SC[label]) { S.over = true; return; }
+    S.label = label; S.pc = 0; step();
+  }
+  function step() {
+    if (S.over) return;
+    var list = SC[S.label] || [];
+    while (S.pc < list.length) {
+      var c = list[S.pc++];
+      if (!c || !c.cmd) continue;
+      if (c.if && !test(c.if)) continue;
+      switch (c.cmd) {
+        case 'bg': S.bg = c.key; S.bgImg = img(c.key); S.fade = 1; break;
+        case 'bgm': playBgm(c.key); break;
+        case 'stopbgm': if (bgm) { try { bgm.pause(); } catch (e) {} bgm = null; } break;
+        case 'sfx': playOne(c.key); break;
+        case 'shake': S.shake = c.amount != null ? +c.amount : 1; break;
+        case 'show':
+          S.actors[c.who] = { key: c.key || (CH[c.who] && CH[c.who].sprite), pos: c.pos != null ? +c.pos : 0.5,
+            img: img(c.key || (CH[c.who] && CH[c.who].sprite)), alpha: 0, rig: !!(CH[c.who] && CH[c.who].rig) };
+          break;
+        case 'hide': delete S.actors[c.who]; break;
+        case 'set': S.flags[c.flag] = c.value === undefined ? true : c.value; break;
+        case 'add': S.flags[c.flag] = (+S.flags[c.flag] || 0) + (+c.value || 1); break;
+        case 'goto': goto(c.label); return;
+        case 'end': S.over = true; return;
+        case 'wait': S.waiting = c.seconds != null ? +c.seconds : 0.6; return;
+        case 'say':
+          S.who = c.who || null; S.line = String(c.text == null ? '' : c.text); S.shown = 0; S.typing = true;
+          S.history.push({ who: S.who, text: S.line });
+          if (S.history.length > 200) S.history.shift();
+          if (voiceAudio) { try { voiceAudio.pause(); } catch (e) {} }
+          voiceAudio = c.voice ? playOne(c.voice, 1) : null;   // TTS:有 voice key 就播
+          return;
+        case 'choice':
+          S.choices = (c.options || []).filter(function (o) { return test(o.if); });
+          if (!S.choices.length) { S.choices = null; break; }
+          return;
+        default: break;
+      }
+    }
+    S.over = true;   // 呢個 label 行完又冇 goto = 結局
+  }
+
+  // ── 輸入 ──
+  function advance() {
+    if (S.showLog) { S.showLog = false; return; }
+    if (S.choices) return;
+    if (S.waiting > 0) return;
+    if (S.typing) { S.shown = S.line.length; S.typing = false; return; }
+    if (S.over) return;
+    step();
+  }
+  function hitChoice(x, y) {
+    if (!S.choices) return -1;
+    // 一定要用返 TH(AI 改咗選項尺寸,撞區都要跟住變,否則撳唔中)
+    var W = cv.width, bw = W * TH.choiceW, bh = TH.choiceH, gap = TH.choiceGap, n = S.choices.length;
+    var y0 = cv.height * 0.42 - (n * (bh + gap)) / 2;
+    for (var i = 0; i < n; i++) {
+      var by = y0 + i * (bh + gap), bx = (W - bw) / 2;
+      if (x >= bx && x <= bx + bw && y >= by && y <= by + bh) return i;
+    }
+    return -1;
+  }
+  function onDown(e) {
+    var r = cv.getBoundingClientRect();
+    var x = ((e.touches ? e.touches[0].clientX : e.clientX) - r.left) * (cv.width / r.width);
+    var y = ((e.touches ? e.touches[0].clientY : e.clientY) - r.top) * (cv.height / r.height);
+    // log 掣(右上)
+    if (x > cv.width - 92 && y < 34) { S.showLog = !S.showLog; return; }
+    var i = hitChoice(x, y);
+    if (i >= 0) { var o = S.choices[i]; S.choices = null; if (o.set) S.flags[o.set] = o.value === undefined ? true : o.value; if (o.goto) goto(o.goto); else step(); return; }
+    advance();
+  }
+  cv.addEventListener('pointerdown', onDown);
+  window.addEventListener('keydown', function (e) {
+    var el = document.activeElement;
+    if (el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA')) return;
+    if (e.code === 'Space' || e.code === 'Enter') { e.preventDefault(); advance(); }
+    if (e.code === 'KeyL') S.showLog = !S.showLog;
+    if (e.code === 'KeyA') S.auto = !S.auto;
+  });
+
+  // ── 畫 ──
+  function drawCover(im, x, y, w, h) {   // crop-not-scale(convention §5b)
+    if (!im || !im.naturalWidth) return;
+    var s = Math.max(w / im.naturalWidth, h / im.naturalHeight);
+    var dw = im.naturalWidth * s, dh = im.naturalHeight * s;
+    ctx.drawImage(im, x + (w - dw) / 2, y + (h - dh) / 2, dw, dh);
+  }
+  function wrap(text, maxW) {
+    var out = [], line = '';
+    for (var i = 0; i < text.length; i++) {
+      var ch = text[i];
+      if (ch === '\n') { out.push(line); line = ''; continue; }
+      if (ctx.measureText(line + ch).width > maxW && line) { out.push(line); line = ch; }
+      else line += ch;
+    }
+    if (line) out.push(line);
+    return out;
+  }
+  function draw(dt) {
+    var W = cv.width, H = cv.height;
+    S.t += dt;
+    if (S.shake > 0) S.shake = Math.max(0, S.shake - dt * 2.2);
+    ctx.save();
+    if (S.shake > 0) ctx.translate((Math.random() - 0.5) * S.shake * 10, (Math.random() - 0.5) * S.shake * 7);
+
+    ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, H);
+    if (S.bgImg) drawCover(S.bgImg, 0, 0, W, H);
+    if (S.fade > 0) { S.fade = Math.max(0, S.fade - dt * 1.6); }
+
+    // 立繪(Live2D rig 角色交俾 L2D 畫)
+    for (var who in S.actors) {
+      var a = S.actors[who];
+      a.alpha = Math.min(1, a.alpha + dt * 3);
+      if (a.rig && window.L2D) {
+        var cw = W * 0.42, chh = H * 0.86;
+        window.L2D_RECT = { x: W * a.pos - cw / 2, y: H * 0.06, w: cw, h: chh };
+        if (!a._built) { L2D.rebuild(); a._built = 1; }
+        L2D.frame(dt);
+        if (S.typing && who === S.who) L2D.P.talk = 0.5 + 0.5 * Math.abs(Math.sin(S.t * 18));
+        else if (who === S.who) L2D.P.talk *= 0.9;
+      } else if (a.img && a.img.naturalWidth) {
+        var ih = H * 0.8, iw = a.img.naturalWidth * (ih / a.img.naturalHeight);
+        ctx.globalAlpha = a.alpha;
+        ctx.drawImage(a.img, W * a.pos - iw / 2, H - ih, iw, ih);
+        ctx.globalAlpha = 1;
+      }
+    }
+    if (S.fade > 0) { ctx.fillStyle = 'rgba(0,0,0,' + S.fade.toFixed(3) + ')'; ctx.fillRect(0, 0, W, H); }
+
+    // 對白框(樣由 TH 決定;window.VN_SKIN.box 可以完全接管)
+    if (S.line && !S.choices) {
+      var bh = TH.boxHeight < 1 ? Math.max(110, H * TH.boxHeight) : TH.boxHeight;
+      var by = H - bh - TH.boxBottom, bx = TH.boxMargin, bw = W - TH.boxMargin * 2;
+      var name = S.who && CH[S.who] ? (CH[S.who].name || S.who) : S.who;
+      var pad = TH.pad;
+      var box = { x: bx, y: by, w: bw, h: bh, pad: pad, name: name, who: S.who,
+                  text: S.line.slice(0, Math.floor(S.shown)), full: S.line, typing: S.typing, t: S.t, theme: TH };
+      if (window.VN_SKIN && typeof window.VN_SKIN.box === 'function') {
+        window.VN_SKIN.box(ctx, box);           // AI 自己畫成個框(想點就點)
+      } else {
+        var bimg = TH.boxImage && img(TH.boxImage);
+        if (bimg && bimg.complete && bimg.naturalWidth) {
+          ctx.drawImage(bimg, bx, by, bw, bh);   // 用生成嘅框圖 → 每隻 game 樣都唔同
+        } else {
+          ctx.fillStyle = TH.boxColor; rr(bx, by, bw, bh, TH.boxRadius); ctx.fill();
+          if (TH.boxBorder) { ctx.strokeStyle = TH.boxBorder; ctx.lineWidth = 1; ctx.stroke(); }
+        }
+        if (name) {
+          ctx.font = '700 ' + TH.nameSize + 'px ' + TH.font;
+          var nx = bx + pad, ny = by + TH.nameSize + 11;
+          if (TH.namePlate) {
+            var nw = ctx.measureText(name).width + 18;
+            ctx.fillStyle = TH.namePlate; rr(nx - 9, ny - TH.nameSize - 5, nw, TH.nameSize + 12, TH.boxRadius ? 4 : 0); ctx.fill();
+          }
+          ctx.fillStyle = TH.nameColor || (CH[S.who] && CH[S.who].color) || '#8fe';
+          ctx.fillText(name, nx, ny);
+        }
+        ctx.font = TH.textSize + 'px ' + TH.font;
+        ctx.fillStyle = TH.textColor;
+        var lines = wrap(box.text, bw - pad * 2);
+        for (var i = 0; i < lines.length && i < TH.maxLines; i++)
+          ctx.fillText(lines[i], bx + pad, by + (name ? TH.nameSize + 34 : TH.textSize + 16) + i * TH.lineHeight);
+        if (!S.typing && TH.arrow) {
+          ctx.globalAlpha = 0.45 + 0.35 * Math.sin(S.t * 4);
+          ctx.fillText(TH.arrow, bx + bw - pad - 12, by + bh - 14); ctx.globalAlpha = 1;
+        }
+      }
+    }
+
+    // 選項
+    if (S.choices) {
+      var cbw = W * TH.choiceW, cbh = TH.choiceH, gap = TH.choiceGap, n = S.choices.length;
+      var y0 = H * 0.42 - (n * (cbh + gap)) / 2;
+      ctx.font = '600 ' + TH.textSize + 'px ' + TH.font; ctx.textAlign = 'center';
+      for (var k = 0; k < n; k++) {
+        var yy = y0 + k * (cbh + gap), xx = (W - cbw) / 2;
+        var opt = { x: xx, y: yy, w: cbw, h: cbh, text: S.choices[k].text, index: k, theme: TH };
+        if (window.VN_SKIN && typeof window.VN_SKIN.choice === 'function') { window.VN_SKIN.choice(ctx, opt); continue; }
+        ctx.fillStyle = TH.choiceColor; rr(xx, yy, cbw, cbh, TH.choiceRadius); ctx.fill();
+        if (TH.choiceBorder) { ctx.strokeStyle = TH.choiceBorder; ctx.lineWidth = 1; ctx.stroke(); }
+        ctx.fillStyle = TH.choiceText; ctx.fillText(S.choices[k].text, W / 2, yy + cbh / 2 + TH.textSize * 0.36);
+      }
+      ctx.textAlign = 'left';
+    }
+
+    // 記錄掣 + backlog
+    ctx.font = '12px system-ui, sans-serif';
+    ctx.fillStyle = 'rgba(255,255,255,.5)'; ctx.fillText(TH.logLabel, W - 88, 22);
+    if (S.showLog) {
+      ctx.fillStyle = 'rgba(8,6,14,.94)'; ctx.fillRect(0, 0, W, H);
+      ctx.font = '14px system-ui, "PingFang HK", sans-serif';
+      var y2 = H - 40;
+      for (var h = S.history.length - 1; h >= 0 && y2 > 30; h--) {
+        var e2 = S.history[h];
+        var ls = wrap((e2.who && CH[e2.who] ? (CH[e2.who].name || e2.who) + '：' : '') + e2.text, W - 60);
+        for (var q = ls.length - 1; q >= 0 && y2 > 30; q--) { ctx.fillStyle = '#ddd'; ctx.fillText(ls[q], 30, y2); y2 -= 22; }
+        y2 -= 6;
+      }
+      ctx.fillStyle = 'rgba(255,255,255,.55)'; ctx.fillText('撳一下閂返', 30, 24);
+    }
+    ctx.restore();
+  }
+
+  // ── loop ──
+  var last = performance.now();
+  function loop(now) {
+    var dt = Math.min(0.033, (now - last) / 1000); last = now;
+    if (!window.__freeze) {
+      if (S.waiting > 0) { S.waiting -= dt; if (S.waiting <= 0) { S.waiting = 0; step(); } }
+      if (S.typing) {
+        S.shown += dt * (window.GAME_CONFIG && +window.GAME_CONFIG.textSpeed > 0 ? +window.GAME_CONFIG.textSpeed : 34);
+        if (S.shown >= S.line.length) { S.shown = S.line.length; S.typing = false; }
+      } else if (S.auto && !S.choices && !S.over) { S._a = (S._a || 0) + dt; if (S._a > 1.4) { S._a = 0; step(); } }
+      draw(dt);
+    }
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+
+  window.VN = {
+    S: S,
+    start: function (label) { S.over = false; goto(label || 'start'); },
+    goto: goto,
+    flags: S.flags,
+    save: function () { try { localStorage.setItem('vn_save', JSON.stringify({ label: S.label, pc: S.pc, flags: S.flags, bg: S.bg })); return true; } catch (e) { return false; } },
+    load: function () {
+      try {
+        var d = JSON.parse(localStorage.getItem('vn_save') || 'null'); if (!d) return false;
+        S.flags = d.flags || {}; S.bg = d.bg; S.bgImg = img(d.bg); S.over = false; S.label = d.label; S.pc = Math.max(0, d.pc - 1); step(); return true;
+      } catch (e) { return false; }
+    },
+  };
+  // headless 測試 hook(preview pane 收埋嗰陣 rAF 會停 → 要手動 render 先影到相)
+  window.__vnStep = function (n) { for (var i = 0; i < (n || 1); i++) { S.shown = S.line.length; S.typing = false; advance(); } };
+  window.__vnRender = function (n) { for (var i = 0; i < (n || 1); i++) draw(1 / 60); };
+  window.__vnState = function () { return { label: S.label, pc: S.pc, who: S.who, line: S.line, choices: S.choices ? S.choices.map(function (o) { return o.text; }) : null, flags: S.flags, over: S.over, bg: S.bg, actors: Object.keys(S.actors) }; };
+  if (SC.start) window.VN.start('start');
+})();
+/* __GI_VN_RUNTIME__ end */
+function __gwsRR(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();}
+window.VN_SKIN={choice:function(ctx,o){var C=window.GAME_CONFIG||{},t=(o&&o.theme)||{},W=ctx.canvas.width,H=ctx.canvas.height;try{var S=window.VN&&window.VN.S;if(o.index===0&&S&&S.label==='start'&&C.showTitle!==false){var tw=!!(window.VN.flags&&window.VN.flags.lang_tw);var ts=C.titleSize||34,ty=H*(C.titleYPct||0.17);ctx.save();ctx.textAlign='center';ctx.textBaseline='middle';ctx.shadowColor='rgba(0,0,0,.95)';ctx.shadowBlur=20;ctx.fillStyle='#eaf8f6';ctx.font='700 '+ts+'px Georgia, serif';ctx.fillText(tw?'快點好起來':'GET WELL SOON',W/2,ty);ctx.font='400 '+Math.round(ts*0.4)+'px Georgia, serif';ctx.fillStyle='#8fe3dd';ctx.fillText(tw?'深海的照顧者':'a deep-sea bedside story',W/2,ty+ts*0.95);ctx.restore();}}catch(e){}
+var x=o.x,y=o.y,w=o.w,h=o.h,r=t.choiceRadius||4;ctx.save();ctx.fillStyle=t.choiceColor||'rgba(8,18,26,.94)';ctx.strokeStyle=t.choiceBorder||'#5fb8b4';ctx.lineWidth=1;__gwsRR(ctx,x,y,w,h,r);ctx.fill();ctx.stroke();ctx.fillStyle=t.choiceText||'#e6f2f2';ctx.font='600 '+Math.round(h*0.36)+'px '+(t.font||'Georgia, serif');ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(o.text,x+w/2,y+h/2);ctx.restore();}};
+window.__GWS_REST={o:3};
+window.__GWS_HS={ch1_b:[{o:2,x:.505,y:.21,w:.145,h:.27,en:'The round window',tw:'圓窗'},{o:1,x:.26,y:.10,w:.17,h:.41,en:'The bone charms',tw:'骨符'},{o:0,x:.685,y:.10,w:.27,h:.72,en:'The roped door',tw:'綁繩的門'}]};
+function __gwsHS(){var S=window.VN&&window.VN.S;return S&&window.__GWS_HS?window.__GWS_HS[S.label]:null;}
+function __gwsPt(e){var c=document.querySelector('canvas');if(!c)return null;var r=c.getBoundingClientRect();if(!r.width||!r.height)return null;return{x:(e.clientX-r.left)/r.width,y:(e.clientY-r.top)/r.height};}
+function __gwsPick(p){var HS=__gwsHS();if(!HS||!p)return null;for(var i=0;i<HS.length;i++){var h=HS[i];if(p.x>=h.x&&p.x<=h.x+h.w&&p.y>=h.y&&p.y<=h.y+h.h)return h;}if(p.x>=.36&&p.x<=.64&&p.y>=.87&&p.y<=.95)return window.__GWS_REST;return null;}
+window.addEventListener('pointermove',function(e){if(!__gwsHS())return;window.__GWS_HOVER=__gwsPick(__gwsPt(e));},true);
+window.addEventListener('pointerdown',function(e){var S=window.VN&&window.VN.S;if(!S||!S.choices||!S.choices.length)return;if(!__gwsHS())return;var h=__gwsPick(__gwsPt(e));e.stopPropagation();e.preventDefault();if(!h)return;var opt=S.choices[h.o];if(!opt)return;if(opt.set!==undefined&&opt.set!==null)window.VN.flags[opt.set]=opt.value;S.choices=null;S.line=null;S.shown=null;S.who=null;window.__GWS_HOVER=null;if(opt.goto)window.VN.goto(opt.goto);},true);
+(function(){var prev=window.VN_SKIN.choice;window.VN_SKIN.choice=function(ctx,o){var S=window.VN&&window.VN.S;var HS=__gwsHS();if(!HS)return prev(ctx,o);if(o.index!==0)return;var W=ctx.canvas.width,H=ctx.canvas.height,tw=!!(window.VN.flags&&window.VN.flags.lang_tw),hv=window.__GWS_HOVER;ctx.save();ctx.font='600 15px Georgia, serif';ctx.textAlign='center';ctx.textBaseline='middle';for(var i=0;i<HS.length;i++){var h=HS[i],X=h.x*W,Y=h.y*H,Wd=h.w*W,Ht=h.h*H,on=(hv===h);ctx.setLineDash([7,7]);ctx.lineWidth=on?3:2;ctx.strokeStyle=on?'rgba(205,255,250,1)':'rgba(150,235,228,.9)';ctx.shadowColor='rgba(0,0,0,.95)';ctx.shadowBlur=7;ctx.fillStyle=on?'rgba(150,235,228,.18)':'rgba(6,16,22,.34)';ctx.fillRect(X,Y,Wd,Ht);ctx.strokeRect(X,Y,Wd,Ht);ctx.setLineDash([]);if(1){var t=tw?h.tw:h.en,m=ctx.measureText(t).width;ctx.fillStyle='rgba(6,14,20,.92)';ctx.fillRect(X+Wd/2-m/2-10,Y-28,m+20,22);ctx.fillStyle='#eaf8f6';ctx.fillText(t,X+Wd/2,Y-17);}}var rt=tw?'閉上眼休息':'Just close your eyes',rOn=(hv===window.__GWS_REST);ctx.fillStyle=rOn?'rgba(12,30,38,.95)':'rgba(8,18,26,.85)';ctx.strokeStyle=rOn?'rgba(190,255,248,.9)':'rgba(95,184,180,.5)';ctx.lineWidth=1;ctx.fillRect(W*.36,H*.87,W*.28,H*.08);ctx.strokeRect(W*.36,H*.87,W*.28,H*.08);ctx.fillStyle='#e6f2f2';ctx.fillText(rt,W*.5,H*.91);ctx.restore();};})();
+window.__GI_SET=function(p){Object.assign(window.GAME_CONFIG,p);};
+console.log('__GI__'+JSON.stringify({type:'ready',config:window.GAME_CONFIG}));
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"e3acec4d3d8a413390aba294a7377dd5","r":1}' crossorigin="anonymous"></script>
+</body></html>

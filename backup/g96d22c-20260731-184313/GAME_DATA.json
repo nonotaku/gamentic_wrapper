@@ -1,0 +1,2002 @@
+﻿{
+  "characters": {
+    "gm": {
+      "name": "The Godmother",
+      "color": "#d4b46a",
+      "sprite": "char_gm_neutral"
+    },
+    "you": {
+      "name": "You",
+      "color": "#9fb4d8"
+    },
+    "gmt": {
+      "name": "??",
+      "color": "#d4b46a",
+      "sprite": "char_gm_neutral"
+    }
+  },
+  "theme": {
+    "boxColor": "rgba(242,232,214,0.96)",
+    "boxBorder": "#b99a5e",
+    "boxRadius": 14,
+    "boxMargin": 56,
+    "boxBottom": 12,
+    "boxHeight": 0.3,
+    "pad": 20,
+    "textColor": "#2e2418",
+    "textSize": 16,
+    "lineHeight": 24,
+    "maxLines": 4,
+    "font": "Georgia, 'Times New Roman', serif",
+    "nameSize": 15,
+    "nameColor": "#6e4f24",
+    "namePlate": "#e9dcc2",
+    "choiceColor": "rgba(246,238,222,0.97)",
+    "choiceBorder": "#b99a5e",
+    "choiceText": "#3a2c16",
+    "choiceRadius": 16,
+    "choiceW": 0.6,
+    "choiceH": 42,
+    "choiceGap": 12,
+    "arrow": "??,
+    "logLabel": "??Log嚗???(L)"
+  },
+  "script": {
+    "start": [
+      {
+        "cmd": "bg",
+        "key": "bg_parlor"
+      },
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm",
+        "pos": 0.5
+      },
+      {
+        "cmd": "bgm",
+        "key": "bgm_main"
+      },
+      {
+        "cmd": "choice",
+        "options": [
+          {
+            "text": "??Begin the tea",
+            "goto": "prologue",
+            "if": "!lang_tw"
+          },
+          {
+            "text": "How to play",
+            "goto": "howto",
+            "if": "!lang_tw"
+          },
+          {
+            "text": "??Settings",
+            "goto": "settings",
+            "if": "!lang_tw"
+          },
+          {
+            "text": "?????嗆?",
+            "goto": "prologue",
+            "if": "lang_tw"
+          },
+          {
+            "text": "?拇?隤芣?",
+            "goto": "howto",
+            "if": "lang_tw"
+          },
+          {
+            "text": "??閮剖?",
+            "goto": "settings",
+            "if": "lang_tw"
+          }
+        ]
+      }
+    ],
+    "settings": [
+      {
+        "cmd": "goto",
+        "label": "start"
+      }
+    ],
+    "set_tw": [
+      {
+        "cmd": "set",
+        "flag": "lang_tw",
+        "value": true
+      },
+      {
+        "cmd": "goto",
+        "label": "start"
+      }
+    ],
+    "set_en": [
+      {
+        "cmd": "set",
+        "flag": "lang_tw",
+        "value": false
+      },
+      {
+        "cmd": "goto",
+        "label": "start"
+      }
+    ],
+    "howto": [
+      {
+        "cmd": "say",
+        "text": "Click or press Space to continue. L opens the log.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "暺??恍??蝛箇?萇匱蝥? L ??撠店閮???,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "Your choices move her hidden Interest in you.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "雿?瘥???賜??憟孵?雿?????,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "She never shows a number. Watch her eyes instead.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "憟嫣??＊蝷箸摮??旦?蟡停憟賬?,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "There are 6 endings. Survive at least one of them.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "?望??剔車蝯??撠色行暑???啣銝凋?蝔桀??,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "goto",
+        "label": "start"
+      }
+    ],
+    "prologue": [
+      {
+        "cmd": "hide",
+        "who": "gm"
+      },
+      {
+        "cmd": "bg",
+        "key": "cg_forest"
+      },
+      {
+        "cmd": "say",
+        "text": "Hours of walking. The path stopped matching the map long ago.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "韏唬?撟曉???頝舀撠勗?銝??啣?鈭?,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "Then, between the pines ??one lit window.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "?嗅?嚗?暹?銋????漁??????,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "bg",
+        "key": "cg_door_closed"
+      },
+      {
+        "cmd": "say",
+        "text": "No name on the door. You knock. Nothing answers.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "?銝???摮??脖?????遙雿???,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "But the gap beneath it is warm. Someone has lit the lamps.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "雿?蝮怠?銝?????鈭粹?鈭???,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "choice",
+        "options": [
+          {
+            "text": "Knock again, and wait.",
+            "goto": "pro_knock",
+            "if": "!lang_tw"
+          },
+          {
+            "text": "Push the door open.",
+            "goto": "pro_push",
+            "if": "!lang_tw"
+          },
+          {
+            "text": "Step back into the trees.",
+            "goto": "pro_back",
+            "if": "!lang_tw"
+          },
+          {
+            "text": "?銝甈∴?蝑?蝑?,
+            "goto": "pro_knock",
+            "if": "lang_tw"
+          },
+          {
+            "text": "?湔?券??脣??,
+            "goto": "pro_push",
+            "if": "lang_tw"
+          },
+          {
+            "text": "??邦?ㄐ??,
+            "goto": "pro_back",
+            "if": "lang_tw"
+          }
+        ]
+      }
+    ],
+    "pro_knock": [
+      {
+        "cmd": "set",
+        "flag": "via_knock",
+        "value": true
+      },
+      {
+        "cmd": "say",
+        "text": "You knock again. The sound goes in ??and does not come back.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "雿??脖?甈～?喲脣鈭??餅???靘?,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "goto",
+        "label": "pro_enter"
+      }
+    ],
+    "pro_push": [
+      {
+        "cmd": "set",
+        "flag": "via_push",
+        "value": true
+      },
+      {
+        "cmd": "say",
+        "text": "You do not knock twice. Your palm finds the wood.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "雿??蝚砌?甈～?敹票銝???踴?,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "goto",
+        "label": "pro_enter"
+      }
+    ],
+    "pro_back": [
+      {
+        "cmd": "set",
+        "flag": "via_back",
+        "value": true
+      },
+      {
+        "cmd": "say",
+        "text": "You turn to leave. Behind you the path is gone ??only trees.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "雿?頨怨?韏啜澈敺?頝臭?閬???拐?璅嫘?,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "goto",
+        "label": "pro_enter"
+      }
+    ],
+    "pro_enter": [
+      {
+        "cmd": "bg",
+        "key": "cg_door_push"
+      },
+      {
+        "cmd": "say",
+        "text": "The door is not locked. It never was.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "?瘝???靘瘝???,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "goto",
+        "label": "ch1"
+      }
+    ],
+    "ch1": [
+      {
+        "cmd": "set",
+        "flag": "favor",
+        "value": 50
+      },
+      {
+        "cmd": "set",
+        "flag": "pages",
+        "value": 0
+      },
+      {
+        "cmd": "bg",
+        "key": "cg_door"
+      },
+      {
+        "cmd": "hide",
+        "who": "gm"
+      },
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm_far",
+        "pos": 0.72,
+        "secs": 0
+      },
+      {
+        "cmd": "say",
+        "text": "You push the door open. A veiled figure is already waiting.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "雿????敺?銝??蝝?頨怠蔣撌脩??函???,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "hide",
+        "who": "gm"
+      },
+      {
+        "cmd": "bg",
+        "key": "cg_parlor_up"
+      },
+      {
+        "cmd": "say",
+        "text": "You step inside and look up. This ceiling is far higher than that little house could hold.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "雿??脣嚗?准予?望嚗?瘥??撅?敺?????,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "bg",
+        "key": "bg_parlor"
+      },
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm_seated_v3",
+        "pos": 0.58,
+        "scale": 1,
+        "secs": 0.8
+      },
+      {
+        "cmd": "sfx",
+        "key": "sfx_teacup"
+      },
+      {
+        "cmd": "say",
+        "text": "She sits, and pours. The seat across is yours.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "憟寡摨扳??嗚??Ｙ?雿?嚗雿???,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm_invite",
+        "pos": 0.58,
+        "scale": 1,
+        "secs": 0.6
+      },
+      {
+        "cmd": "say",
+        "text": "The parlor smells of bergamot and old paper.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "?嗅恕鋆∠唳憤??????蝝??除?喋?,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "There you are. Sit, little guest. The tea is patient.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "雿?鈭??改?撠恥鈭箝嚗????,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "hide",
+        "who": "gm"
+      },
+      {
+        "cmd": "bg",
+        "key": "cg_parlor_right"
+      },
+      {
+        "cmd": "say",
+        "text": "Across the table, a chair has already been pulled out for you.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "獢?撠嚗?撘菜?摮撠望雿?????,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "bg",
+        "key": "bg_parlor"
+      },
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm_neutral",
+        "pos": 0.66
+      },
+      {
+        "cmd": "say",
+        "text": "Beneath her veil, many amber eyes settle on you.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "?Ｙ?摨?嚗?貊??脩??潛????賢雿澈銝?,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "choice",
+        "options": [
+          {
+            "text": "\"Good evening, madam.\"",
+            "goto": "c1_polite",
+            "if": "!lang_tw"
+          },
+          {
+            "text": "\"Who... what are you?\"",
+            "goto": "c1_blunt",
+            "if": "!lang_tw"
+          },
+          {
+            "text": "(Say nothing. Sit.)",
+            "goto": "c1_quiet",
+            "if": "!lang_tw"
+          },
+          {
+            "text": "??摰?憭思犖??,
+            "goto": "c1_polite",
+            "if": "lang_tw"
+          },
+          {
+            "text": "?有?色血有?啣??臭?暻潘???,
+            "goto": "c1_blunt",
+            "if": "lang_tw"
+          },
+          {
+            "text": "嚗?暻潮銝牧嚗?銝?",
+            "goto": "c1_quiet",
+            "if": "lang_tw"
+          }
+        ]
+      },
+      {
+        "cmd": "goto",
+        "label": "c1_join"
+      }
+    ],
+    "c1_polite": [
+      {
+        "cmd": "add",
+        "flag": "favor",
+        "value": 5
+      },
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm",
+        "pos": 0.66
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "Manners! How rare in this century. I am delighted.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "?旨?賂??僑?剖??????敺派??,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "goto",
+        "label": "c1_join"
+      }
+    ],
+    "c1_blunt": [
+      {
+        "cmd": "add",
+        "flag": "favor",
+        "value": -5
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "A question with teeth. Careful where you point it.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "憟賭??葆?箇?????敹??????,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "goto",
+        "label": "c1_join"
+      }
+    ],
+    "c1_quiet": [
+      {
+        "cmd": "set",
+        "flag": "quiet",
+        "value": true
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "Silent. Like the good children in my stories.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "瘝??停????鋆⊿鈭?摮拙?銝璅??,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "goto",
+        "label": "c1_join"
+      }
+    ],
+    "c1_join": [
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "Drink. It is a small courtesy, between friends.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "???????撠??旨撠?靘?,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "The cup steams. Something golden coils in it.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "?臭葉?豢除鋆???蝔桅??脩??梯正?刻ㄐ?剔蝜?,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "choice",
+        "options": [
+          {
+            "text": "Drink deeply.",
+            "goto": "c2_deep",
+            "if": "!lang_tw"
+          },
+          {
+            "text": "A polite sip.",
+            "goto": "c2_sip",
+            "if": "!lang_tw"
+          },
+          {
+            "text": "Refuse the cup.",
+            "goto": "c2_refuse",
+            "if": "!lang_tw"
+          },
+          {
+            "text": "銝憌脰??,
+            "goto": "c2_deep",
+            "if": "lang_tw"
+          },
+          {
+            "text": "蝳株??啣?銝???,
+            "goto": "c2_sip",
+            "if": "lang_tw"
+          },
+          {
+            "text": "????嗚?,
+            "goto": "c2_refuse",
+            "if": "lang_tw"
+          }
+        ]
+      }
+    ],
+    "c2_deep": [
+      {
+        "cmd": "add",
+        "flag": "favor",
+        "value": 12
+      },
+      {
+        "cmd": "set",
+        "flag": "drank",
+        "value": true
+      },
+      {
+        "cmd": "say",
+        "text": "Warmth spreads to your fingertips. The room hums.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "???辣?唳?撠???其?曈氬?,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm_excited",
+        "pos": 0.66
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "Oh, I LIKE you. Bold guests make the best chapters.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "?ｇ???甇∩??之?賜?摰Ｖ犖嚗蜇?賢神??憟賜?蝡???,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "goto",
+        "label": "c2_join"
+      }
+    ],
+    "c2_sip": [
+      {
+        "cmd": "add",
+        "flag": "favor",
+        "value": 5
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "Cautious courtesy. Sensible. A little dull. Sensible.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "雓寞??旨鞎??箝?暺頞?????,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "goto",
+        "label": "c2_join"
+      }
+    ],
+    "c2_refuse": [
+      {
+        "cmd": "add",
+        "flag": "favor",
+        "value": -12
+      },
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm_angry",
+        "pos": 0.66
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "...The cup will not forget that. Neither shall I.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "?色阡?嗡???閮???銋???,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "sfx",
+        "key": "sfx_sting"
+      },
+      {
+        "cmd": "goto",
+        "label": "c2_join"
+      }
+    ],
+    "c2_join": [
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm_neutral",
+        "pos": 0.66
+      },
+      {
+        "cmd": "say",
+        "text": "A torn page peeks from beneath your saucer.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "銝??銝?畾?嚗?雿??嗥?摨??脣銝閫?,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "choice",
+        "options": [
+          {
+            "text": "(Palm it quietly.)",
+            "goto": "p1_take",
+            "if": "!lang_tw"
+          },
+          {
+            "text": "(Leave it be.)",
+            "goto": "ch1_out",
+            "if": "!lang_tw"
+          },
+          {
+            "text": "嚗???脫?敹?",
+            "goto": "p1_take",
+            "if": "lang_tw"
+          },
+          {
+            "text": "嚗?餃?摰?",
+            "goto": "ch1_out",
+            "if": "lang_tw"
+          }
+        ]
+      }
+    ],
+    "p1_take": [
+      {
+        "cmd": "add",
+        "flag": "pages",
+        "value": 1
+      },
+      {
+        "cmd": "set",
+        "flag": "page1",
+        "value": true
+      },
+      {
+        "cmd": "sfx",
+        "key": "sfx_page"
+      },
+      {
+        "cmd": "say",
+        "text": "The page whispers as it folds into your sleeve.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "畾?皛脖?鋡???澆?唾??祉?蝒貊炒?脯?,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "\"...she was not always the Godmother...\"",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "?色血旦銝阡?銝?湧?舀?瘥色艾?,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "goto",
+        "label": "ch1_out"
+      }
+    ],
+    "ch1_out": [
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm_pleased",
+        "if": "favor>=65"
+      },
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm_hollow",
+        "if": "favor<=30"
+      },
+      {
+        "cmd": "bgm",
+        "key": "bgm_tension",
+        "if": "favor<=30"
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "Now then. To business, as the mortals say.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "??獐??∩犖?牧瘜?閰脰?甇??鈭?,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "goto",
+        "label": "ch2"
+      }
+    ],
+    "ch2": [
+      {
+        "cmd": "bg",
+        "key": "bg_parlor"
+      },
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm_back_b",
+        "pos": 0.66
+      },
+      {
+        "cmd": "say",
+        "text": "She rises and turns to the shelves. She does not look at you while she speaks.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "憟寡絲頨怨粥??嗚銝??店嚗旦?賣????剔?雿?,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "I grant wishes, little guest. For a fair trade.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "?撖衣憿?嚗?摰Ｖ犖?閬漱???,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "A wish for a memory. Any memory. You may choose.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "銝??????畾菔??嗚遙雿??嗚雿??詻?,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "bg",
+        "key": "bg_parlor"
+      },
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm_neutral",
+        "pos": 0.66
+      },
+      {
+        "cmd": "choice",
+        "options": [
+          {
+            "text": "\"Take my worst memory.\"",
+            "goto": "b_worst",
+            "if": "!lang_tw"
+          },
+          {
+            "text": "\"Take my happiest one.\"",
+            "goto": "b_happy",
+            "if": "!lang_tw"
+          },
+          {
+            "text": "\"I make no bargains.\"",
+            "goto": "b_none",
+            "if": "!lang_tw"
+          },
+          {
+            "text": "?韏唳??蝟?閮??,
+            "goto": "b_worst",
+            "if": "lang_tw"
+          },
+          {
+            "text": "?韏唳??敹急??畾萸?,
+            "goto": "b_happy",
+            "if": "lang_tw"
+          },
+          {
+            "text": "??銝?隞颱?鈭斗???,
+            "goto": "b_none",
+            "if": "lang_tw"
+          }
+        ]
+      }
+    ],
+    "b_worst": [
+      {
+        "cmd": "add",
+        "flag": "favor",
+        "value": -12
+      },
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm_angry",
+        "pos": 0.66
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "Clever. And insulting. Scraps are not payment.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "?唳???敺蝳柴?皜??萎?鈭董??,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "goto",
+        "label": "b_join"
+      }
+    ],
+    "b_happy": [
+      {
+        "cmd": "add",
+        "flag": "favor",
+        "value": 12
+      },
+      {
+        "cmd": "set",
+        "flag": "paid",
+        "value": true
+      },
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm_pleased",
+        "pos": 0.66
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "A true price. You honor the old ways, dear one.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "???舐?甇??隞??扛??嚗????方?閬??,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "Something bright leaves you. You cannot say what.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "?車?漁?镼輸雿??隤芯?銝??臭?暻潦?,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "goto",
+        "label": "b_join"
+      }
+    ],
+    "b_none": [
+      {
+        "cmd": "add",
+        "flag": "favor",
+        "value": 5
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "Wise, perhaps. The unbargained keep their names.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "?迂?舀??箇???鈭斗??犖嚗?敺??芸楛??摮?,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "goto",
+        "label": "b_join"
+      }
+    ],
+    "b_join": [
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm_neutral",
+        "pos": 0.66
+      },
+      {
+        "cmd": "say",
+        "text": "She opens a ledger. Its pages turn by themselves.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "憟寞???砍董???Ｚ撌梁蕃????,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "One page is loose. She is not looking at it.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "?????思??旦??蝺蒂銝????准?,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "choice",
+        "options": [
+          {
+            "text": "(Slip the loose page free.)",
+            "goto": "p2_take",
+            "if": "!lang_tw"
+          },
+          {
+            "text": "(Touch nothing of hers.)",
+            "goto": "ch2_out",
+            "if": "!lang_tw"
+          },
+          {
+            "text": "嚗???????質粥??",
+            "goto": "p2_take",
+            "if": "lang_tw"
+          },
+          {
+            "text": "嚗旦?镼選?銝璁?蝣啜?",
+            "goto": "ch2_out",
+            "if": "lang_tw"
+          }
+        ]
+      }
+    ],
+    "p2_take": [
+      {
+        "cmd": "add",
+        "flag": "pages",
+        "value": 1
+      },
+      {
+        "cmd": "set",
+        "flag": "page2",
+        "value": true
+      },
+      {
+        "cmd": "sfx",
+        "key": "sfx_page"
+      },
+      {
+        "cmd": "say",
+        "text": "\"...twelve guests came before you. Twelve cups...\"",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "?色血雿???靘???雿恥鈭箝?鈭摮色艾?,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "goto",
+        "label": "ch2_out"
+      }
+    ],
+    "ch2_out": [
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm_pleased",
+        "if": "favor>=65"
+      },
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm_hollow",
+        "if": "favor<=30"
+      },
+      {
+        "cmd": "say",
+        "text": "The candles gutter. The shadows lean closer to hear.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "?剔?撠???敶勗頨恬?皝????,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "goto",
+        "label": "ch3"
+      }
+    ],
+    "ch3": [
+      {
+        "cmd": "bg",
+        "key": "bg_wrong"
+      },
+      {
+        "cmd": "say",
+        "text": "The room is the same. The room is not the same.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "?輸???見??歇銝?見??,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "Last course, little guest. Look at me as I am.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "?敺??暺?撠恥鈭箝???甇?????,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "Her veil stirs, though there is no wind at all.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "??瘝?銝蝯脤◢嚗旦?蝝?刻?頛‵??,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "choice",
+        "options": [
+          {
+            "text": "(Lift her veil.)",
+            "goto": "t_veil",
+            "if": "!lang_tw"
+          },
+          {
+            "text": "(Hold her gaze. All of them.)",
+            "goto": "t_gaze",
+            "if": "!lang_tw"
+          },
+          {
+            "text": "(Lower your eyes politely.)",
+            "goto": "t_bow",
+            "if": "!lang_tw"
+          },
+          {
+            "text": "嚗??旦?蝝?",
+            "goto": "t_veil",
+            "if": "lang_tw"
+          },
+          {
+            "text": "嚗?銝旦??????桀???",
+            "goto": "t_gaze",
+            "if": "lang_tw"
+          },
+          {
+            "text": "嚗旨鞎???潦?",
+            "goto": "t_bow",
+            "if": "lang_tw"
+          }
+        ]
+      }
+    ],
+    "t_veil": [
+      {
+        "cmd": "add",
+        "flag": "favor",
+        "value": -25
+      },
+      {
+        "cmd": "shake",
+        "amount": 0.7
+      },
+      {
+        "cmd": "sfx",
+        "key": "sfx_sting"
+      },
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm_angry",
+        "pos": 0.66
+      },
+      {
+        "cmd": "say",
+        "text": "Your hand passes through cold lace and colder light.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "雿??忽??瑞??曄結嚗??游?瑞???,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "THAT WAS NOT YOURS TO LIFT.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "????臭??賣????梯正??,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm_neutral",
+        "pos": 0.66
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "...Forgive me. The tea has gone bitter, hasn't it.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "?色血?隢???質??虫?嚗銝嚗?,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "goto",
+        "label": "tw_t_join",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "goto",
+        "label": "t_join"
+      }
+    ],
+    "t_gaze": [
+      {
+        "cmd": "add",
+        "flag": "favor",
+        "value": 12
+      },
+      {
+        "cmd": "say",
+        "text": "You count her eyes until counting loses meaning.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "雿?旦????游?詨?憭勗鈭?蝢押?,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm_pleased",
+        "pos": 0.66
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "You did not look away. No one ever... stays looking.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "雿??宏??蝺?靘??犖?色行銝?渡???,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "goto",
+        "label": "tw_t_join",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "goto",
+        "label": "t_join"
+      }
+    ],
+    "t_bow": [
+      {
+        "cmd": "add",
+        "flag": "favor",
+        "value": 5
+      },
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm",
+        "pos": 0.66
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "Courtesy to the last. Your mother raised you well.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "?????旨?詻?瘥扛????敺末??,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "goto",
+        "label": "tw_t_join",
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "goto",
+        "label": "t_join"
+      }
+    ],
+    "t_join": [
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "One question remains, before the pot runs cold."
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "When you leave this room... will you remember me?"
+      },
+      {
+        "cmd": "choice",
+        "options": [
+          {
+            "text": "\"I could never forget you.\"",
+            "goto": "q_sweet"
+          },
+          {
+            "text": "\"I know what the pages say.\"",
+            "goto": "q_truth",
+            "if": "pages>=2"
+          },
+          {
+            "text": "\"Honestly? I hope not.\"",
+            "goto": "q_honest"
+          }
+        ]
+      }
+    ],
+    "tw_t_join": [
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "憯箸飲銋?嚗??拇?敺???憿?
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "?嗡??ａ???色虫???敺???"
+      },
+      {
+        "cmd": "choice",
+        "options": [
+          {
+            "text": "??瘞賊?銝?敹?憒喋?,
+            "goto": "q_sweet"
+          },
+          {
+            "text": "???仿????畾?撖思?隞暻潦?,
+            "goto": "q_truth",
+            "if": "pages>=2"
+          },
+          {
+            "text": "?祕隤迎???????,
+            "goto": "q_honest"
+          }
+        ]
+      }
+    ],
+    "q_sweet": [
+      {
+        "cmd": "add",
+        "flag": "favor",
+        "value": 12
+      },
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm_pleased",
+        "pos": 0.66
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "Flatterer. I shall stitch that promise into my hem.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "?渡???????輯姥蝮恍脰?镼研?,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "goto",
+        "label": "resolve"
+      }
+    ],
+    "q_truth": [
+      {
+        "cmd": "add",
+        "flag": "pages",
+        "value": 1
+      },
+      {
+        "cmd": "set",
+        "flag": "page3",
+        "value": true
+      },
+      {
+        "cmd": "sfx",
+        "key": "sfx_page"
+      },
+      {
+        "cmd": "say",
+        "text": "You lay the stolen pages on the table between you.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "雿??瑚?????銝銝?文?拐犖銋???銝?,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm_sad",
+        "pos": 0.66
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "...You read them. And still you stayed for tea.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "?色虫?霈???隞??靘??嗚?,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "goto",
+        "label": "resolve"
+      }
+    ],
+    "q_honest": [
+      {
+        "cmd": "add",
+        "flag": "favor",
+        "value": -5
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "Honesty. Rude, refreshing honesty. Like cold tea.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "隤祕?蝳桀皜??撖艾??瑟????,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "goto",
+        "label": "resolve"
+      }
+    ],
+    "resolve": [
+      {
+        "cmd": "goto",
+        "label": "end_secret",
+        "if": "pages>=3"
+      },
+      {
+        "cmd": "goto",
+        "label": "end_woven",
+        "if": "favor>=80"
+      },
+      {
+        "cmd": "goto",
+        "label": "end_favorite",
+        "if": "favor>=60"
+      },
+      {
+        "cmd": "goto",
+        "label": "end_guest",
+        "if": "favor>=35"
+      },
+      {
+        "cmd": "goto",
+        "label": "end_fled",
+        "if": "favor>=15"
+      },
+      {
+        "cmd": "goto",
+        "label": "end_devoured"
+      }
+    ],
+    "end_secret": [
+      {
+        "cmd": "stopbgm"
+      },
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm_sad",
+        "pos": 0.66
+      },
+      {
+        "cmd": "say",
+        "text": "She reads the three pages. Her eyes close, all of them.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "憟寡?摰???蝡????潛?嚗???銝?,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "Twelve guests. Twelve cups. You are the thirteenth.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "??雿恥鈭箝?鈭摮?嚗蝚砍?銝???,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "And the first to hand my story back to me.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "銋蝚砌???????鈭?蝯行??犖??,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "She tears a fresh page from nothing, and writes YOU in.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "憟孵??征??撊????撠??神?脣??,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "??ENDING 6 of 6: The Thirteenth Page (secret) ??,
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "??蝯? 6嚗?嚗洵?????梯?蝯?嚗???,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "You found every torn page. Thank you for playing.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "雿?朣??????雓??押?,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "end"
+      }
+    ],
+    "end_woven": [
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm_excited",
+        "pos": 0.66
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "Stay. The tea never truly ends, for my favorites.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "???扼???敹憟質?嚗?偶?????,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "The chair holds you gently. The door forgets its shape.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "璊?皞急??唳雿???敹?鈭撌梁?敶Ｙ???,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "You are adored, indexed, and never leaving.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "雿◤撖菜??◤蝺券脩??瘞賊?銝??ａ???,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "??ENDING 5 of 6: Woven into Her Tales ??,
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "??蝯? 5嚗?嚗??亙旦??鈭? ??,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "Too charming is its own trap. 6 endings exist.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "憭芾蕙鈭箔??臭?蝔桅?晞?蝔桃?撅??,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "end"
+      }
+    ],
+    "end_favorite": [
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm_pleased",
+        "pos": 0.66
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "Go home, little guest. Wear this thread on your wrist.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "?振?改?撠恥鈭箝??蝝??游??銝?,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "Outside, dawn. The thread hums warm when you are afraid.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "?憭歇?舫????嗡?摰單???蝺停敺桀凝?潭???,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "Somewhere, a godmother keeps your chapter open.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "?冽???對?銝雿?瘥雿??摰?蝡???,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "??ENDING 4 of 6: The Godmother's Favorite ??,
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "??蝯? 4嚗?嚗?瘥?敹憟???,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "The good ending. 6 endings exist. Can you find them?",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "?憟賜?撅??蝔桃?撅嚗??曉?朣?嚗?,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "end"
+      }
+    ],
+    "end_guest": [
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm_neutral",
+        "pos": 0.66
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "A pleasant evening. Few of them are. You may go.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "銝??敹怎?憭??銝?閬??臭誑韏唬???,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "The door opens to your own street, your own night.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "?銝???臭????????芸楛????,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "You will doubt this happened. The teacup in your coat disagrees.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "雿??瑞?????衣???之銵?ㄐ??臭?????,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "??ENDING 3 of 6: A Guest Remembered ??,
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "??蝯? 3嚗?嚗◤閮??恥鈭???,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "Try being bolder. Or kinder. 6 endings exist.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "閰西??游之?踝??皞急???蝔桃?撅??,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "end"
+      }
+    ],
+    "end_fled": [
+      {
+        "cmd": "shake",
+        "amount": 0.5
+      },
+      {
+        "cmd": "say",
+        "text": "You run. Lace brushes your neck at the threshold.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "雿??踹停頝楊??瑼餅?嚗蝯脫?????詻?,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm_angry",
+        "pos": 0.66
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "RUDE. But quick. I do so admire quick.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "?蝳柴?頝??翰??撠望派鞈翰??,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "You wake on your doorstep, tea still warm on your tongue.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "雿?芸振???靘???銝??園??舀澈??,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "??ENDING 2 of 6: Fled into the Night ??,
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "??蝯? 2嚗?嚗??仿?憭???,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "Alive, yes. Invited again? ...Also yes. 6 endings exist.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "瘣餉?嚗????鋡恍?隢??色虫??舐???蝔桃?撅??,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "end"
+      }
+    ],
+    "end_devoured": [
+      {
+        "cmd": "bgm",
+        "key": "bgm_tension"
+      },
+      {
+        "cmd": "shake",
+        "amount": 1
+      },
+      {
+        "cmd": "sfx",
+        "key": "sfx_sting"
+      },
+      {
+        "cmd": "show",
+        "who": "gm",
+        "key": "char_gm_hollow",
+        "pos": 0.66
+      },
+      {
+        "cmd": "say",
+        "text": "The candles go out. All of them. Politely.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "?剔????函?皛?皛?敺?蝳株???,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gm",
+        "text": "Do not be afraid. Every story needs its eaten.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "who": "gmt",
+        "text": "?交???鈭??賡?閬◤?????脯?,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "The last thing you hear is a spoon, gently stirring.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "雿閬??敺?選??臭??寞僖??甇??頛??,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "??ENDING 1 of 6: Devoured ??,
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "??蝯? 1嚗?嚗◤? ??,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "Mind her temper. Watch her eyes. 6 endings exist.",
+        "if": "!lang_tw"
+      },
+      {
+        "cmd": "say",
+        "text": "?嗅?憟寧??暹除???旦?蟡?蝔桃?撅??,
+        "if": "lang_tw"
+      },
+      {
+        "cmd": "end"
+      }
+    ]
+  }
+}

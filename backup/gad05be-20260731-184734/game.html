@@ -1,0 +1,845 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head><script>(function(){var w=window;w.__giEntities=w.__giEntities||{};w.__giTrackEntity=w.__giTrackEntity||function(){};w.__giTrackAnims=w.__giTrackAnims||function(){};w.__giUntrack=w.__giUntrack||function(){};})();</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>未讀 UNREAD</title>
+<style>
+html,body{margin:0;height:100%;background:#000;display:flex;align-items:center;justify-content:center;overflow:hidden}
+canvas{max-width:100%;max-height:100%;display:block}
+</style>
+</head>
+<body>
+<canvas id="c" width="960" height="540"></canvas>
+<script>
+window.GAME_CONFIG={"textSpeed":34,"batteryStart":58,"costReply":1,"costRead":4,"suspectWrong":15,"suspectVeryWrong":25,"suspectRight":-5,"exposeAt":100,"musicVolume":0.5,"sfxVolume":1}; // __GI_CONFIG__
+window.GAME_ASSETS = {
+  "chit_anime_cel": "media/chit_anime_cel.png",
+  "chit_anime_soft": "media/chit_anime_soft.png",
+  "yan_anime": "media/yan_anime.png",
+  "ma_anime": "media/ma_anime.png",
+  "keung_photo": "media/keung_photo.jpg",
+  "keung_anime": "media/keung_anime.png",
+  "bg_desk_day": "media/bg_desk_day.jpg",
+  "bg_bed": "media/bg_bed.jpg",
+  "tv_news": "media/tv_news.jpg",
+  "bg_desk_night": "media/bg_desk_night.jpg",
+  "cg_selfie": "media/cg_selfie.png",
+  "tv_news_chit": "media/tv_news_chit.png",
+  "cg_couple": "media/cg_couple.png",
+  "cg_family": "media/cg_family.png",
+  "cg_receipt": "media/cg_receipt.jpg",
+  "cg_bridge": "media/cg_bridge.jpg",
+  "phone_body": "media/phone_body.png"
+}; // __GI_ASSETS__
+window.GAME_AUDIO = {
+  "sfx_recv": "media/sfx_recv.mp3",
+  "sfx_send": "media/sfx_send.mp3",
+  "sfx_boot": "media/sfx_boot.mp3",
+  "sfx_cash": "media/sfx_cash.mp3",
+  "bgm_day": "https://gamentic.net/asset/a4f2b98a77c.mp3?t=1786099881.381c8f08bbef2f8b77166b1a",
+  "bgm_night": "https://gamentic.net/asset/a23429bfb99.mp3?t=1786099881.efcf06809968972cb7d8344a",
+  "bgm_dread": "https://gamentic.net/asset/a0060f2e147.mp3?t=1786099881.41e22413928cb63411ec7a20",
+  "sfx_typing": "media/sfx_typing.mp3",
+  "sfx_lowbat": "media/sfx_lowbat.mp3",
+  "sfx_off": "media/sfx_off.mp3"
+}; // __GI_AUDIO__
+window.GAME_DATA={"characters":{"chit":{"name":"阿哲","color":"#8ab4d8"},"yan":{"name":"欣","color":"#e0b0b8"},"ma":{"name":"媽","color":"#d8c89a"},"keung":{"name":"強","color":"#b9b2a4"},"m":{"name":"M","color":"#9aa0a8"},"typing":{"name":""},"read":{"name":""},"stamp":{"name":""},"me":{"name":"我","color":"#b8bcc4"}},"theme":{"choiceW":0.28,"choiceH":34,"choiceGap":8},"script":{"start":[{"cmd":"set","flag":"isday","value":1},{"cmd":"set","flag":"day","value":1},{"cmd":"set","flag":"cash","value":0},{"cmd":"set","flag":"goal","value":2400},{"cmd":"set","flag":"late","value":0},{"cmd":"set","flag":"av_yan","value":1},{"cmd":"set","flag":"bat","value":58},{"cmd":"set","flag":"sus","value":0},{"cmd":"set","flag":"sus_k","value":0},{"cmd":"set","flag":"sus_m","value":0},{"cmd":"set","flag":"acts","value":0},{"cmd":"set","flag":"wipes","value":0},{"cmd":"set","flag":"slot","value":0},{"cmd":"set","flag":"wn","value":0},{"cmd":"say","text":"你的工作是清機。"},{"cmd":"say","text":"別人執到的、偷回來的手機，經你手解鎖、洗乾淨、轉出去。你不問來源，來源也不問你。"},{"cmd":"say","text":"你欠財務公司錢。三日一期，這一期兩千四。"},{"cmd":"say","text":"今朝入了四部。三部很普通。"},{"cmd":"say","text":"第四部沒有上鎖。"},{"cmd":"say","text":"屏幕還亮著——它沒有熄過機。剩八十六。"},{"cmd":"say","text":"沒有充電器。"},{"cmd":"goto","label":"hub_day"}],"hub_day":[{"cmd":"set","flag":"isday","value":1},{"cmd":"set","flag":"hub","value":1},{"cmd":"say","text":"·"},{"cmd":"goto","label":"hub_day"}],"act_lamp":[{"cmd":"say","text":"你扭暗了枱燈。牆上的影變長。"},{"cmd":"goto","label":"hub_day"}],"act_sleep":[{"cmd":"sfx","key":"sfx_off"},{"cmd":"say","text":"你躺下。鄰居的電視還在響。"},{"cmd":"say","text":"今日就到這裡。"},{"cmd":"set","flag":"slot","value":0},{"cmd":"goto","label":"night_end"}],"act_note":[{"cmd":"say","text":"簿上是你自己的字。"},{"cmd":"say","text":"日期、數目、劃掉的、沒有劃掉的。"},{"cmd":"say","text":"最後一行是這一期。你在旁邊畫了一個圈。"},{"cmd":"goto","label":"hub_day"}],"act_window":[{"cmd":"say","text":"窗外是後巷。對面的冷氣機在滴水。"},{"cmd":"say","text":"你看了一陣，什麼都沒有發生。"},{"cmd":"goto","label":"hub_day"}],"act_box":[{"cmd":"say","text":"紙箱裡是拆下來的殼和屏。"},{"cmd":"say","text":"每一部都曾經是某個人的。"},{"cmd":"say","text":"你從來沒有想過這件事。直到今日。","if":"knows_dead"},{"cmd":"goto","label":"hub_day"}],"act_phone":[{"cmd":"say","text":"你拿起那部機。屏幕還亮著。"},{"cmd":"choice","options":[{"text":"開機睇訊息","goto":"day_end"},{"text":"揭相簿","goto":"act_gallery"},{"text":"清機賣咗佢（+$1400）","goto":"act_sell"},{"text":"放低","goto":"hub_day"}]}],"wipe_none":[{"cmd":"say","text":"天黑了。今日做不到工。"},{"cmd":"goto","label":"hub_day"}],"act_wipe":[{"cmd":"goto","label":"wipe_none","if":"slot>=2"},{"cmd":"say","text":"三部普通機。清一部，出一部。"},{"cmd":"choice","options":[{"text":"開工（用一個時段，+$450）","goto":"wipe_do"},{"text":"唔做住","goto":"hub_day"}]}],"wipe_do":[{"cmd":"add","flag":"wn","value":1},{"cmd":"say","text":"你插上線，先看一眼。"},{"cmd":"goto","label":"wipe_seen","if":"knows_dead"},{"cmd":"say","text":"相簿裡全是一隻貓。同一隻，四百多張。","if":"wn==1"},{"cmd":"say","text":"最後一條訊息是「我到咗」。沒有回覆。","if":"wn==2"},{"cmd":"say","text":"桌面是一張超聲波照。","if":"wn==3"},{"cmd":"say","text":"備忘錄裡寫著三個電話號碼，其中一個劃掉了。","if":"wn==4"},{"cmd":"say","text":"相簿最後一張是一碗麵。拍得很認真。","if":"wn==5"},{"cmd":"say","text":"通話記錄裡同一個號碼打了十九次，全部十秒以內。","if":"wn==6"},{"cmd":"say","text":"鎖屏密碼是 0000。他大概沒有什麼要藏。","if":"wn==7"},{"cmd":"say","text":"有一段錄音，四十秒，全部是風聲。","if":"wn==8"},{"cmd":"say","text":"未讀訊息一千二百條，全部是同一個群組。","if":"wn==9"},{"cmd":"say","text":"相簿裡有六十張同一面牆的照片，角度全部一樣。","if":"wn==10"},{"cmd":"say","text":"備忘錄只有一行：「星期四要記得」。沒有寫要記得什麼。","if":"wn==11"},{"cmd":"say","text":"沒有相，沒有訊息，沒有聯絡人。像新的一樣。","if":"wn==12"},{"cmd":"goto","label":"wipe_pay"}],"wipe_seen":[{"cmd":"say","text":"相簿裡全是一隻貓。同一隻，四百多張。","if":"wn==1"},{"cmd":"say","text":"那隻貓現在誰在餵。","if":"wn==1"},{"cmd":"say","text":"最後一條訊息是「我到咗」。沒有回覆。","if":"wn==2"},{"cmd":"say","text":"他到了。然後呢。","if":"wn==2"},{"cmd":"say","text":"桌面是一張超聲波照。","if":"wn==3"},{"cmd":"say","text":"算日子，現在應該出生了。","if":"wn==3"},{"cmd":"say","text":"備忘錄裡寫著三個電話號碼，其中一個劃掉了。","if":"wn==4"},{"cmd":"say","text":"劃掉那個，是不用再打，還是打不通。","if":"wn==4"},{"cmd":"say","text":"相簿最後一張是一碗麵。拍得很認真。","if":"wn==5"},{"cmd":"say","text":"拍給誰看的。","if":"wn==5"},{"cmd":"say","text":"通話記錄裡同一個號碼打了十九次，全部十秒以內。","if":"wn==6"},{"cmd":"say","text":"十秒講得完的事，要講十九次。","if":"wn==6"},{"cmd":"say","text":"鎖屏密碼是 0000。","if":"wn==7"},{"cmd":"say","text":"你三秒就進來了。","if":"wn==7"},{"cmd":"say","text":"有一段錄音，四十秒，全部是風聲。","if":"wn==8"},{"cmd":"say","text":"他當時站在哪裡。","if":"wn==8"},{"cmd":"say","text":"未讀訊息一千二百條，全部是同一個群組。","if":"wn==9"},{"cmd":"say","text":"他們還在那個群組裡講話。","if":"wn==9"},{"cmd":"say","text":"相簿裡有六十張同一面牆的照片，角度全部一樣。","if":"wn==10"},{"cmd":"say","text":"他在等什麼。","if":"wn==10"},{"cmd":"say","text":"備忘錄只有一行：「星期四要記得」。","if":"wn==11"},{"cmd":"say","text":"星期四過了沒有。","if":"wn==11"},{"cmd":"say","text":"沒有相，沒有訊息，沒有聯絡人。像新的一樣。","if":"wn==12"},{"cmd":"say","text":"已經有人幫他洗過了。","if":"wn==12"},{"cmd":"say","text":"你以前不會想這些。","if":"!mused"},{"cmd":"set","flag":"mused","value":true},{"cmd":"goto","label":"wipe_pay"}],"wipe_pay":[{"cmd":"add","flag":"cash","value":450},{"cmd":"add","flag":"slot","value":1},{"cmd":"sfx","key":"sfx_cash"},{"cmd":"say","text":"你跑程式，等它跑完。四百五十。"},{"cmd":"say","text":"一日做得兩部。做足三日，啱啱夠交第一期。","if":"day==1"},{"cmd":"goto","label":"hub_day"}],"act_gallery":[{"cmd":"add","flag":"acts","value":1},{"cmd":"goto","label":"gal_d2","if":"can_reveal"},{"cmd":"say","text":"你逐張揭，找有沒有可以賣、可以用的東西。"},{"cmd":"say","text":"地盤。飯。一隻貓。"},{"cmd":"set","flag":"photo","value":2},{"cmd":"say","text":"他們兩個。她靠得很近。"},{"cmd":"say","text":"他笑得不太自然。"},{"cmd":"set","flag":"photo","value":0},{"cmd":"say","text":"沒有值錢的。"},{"cmd":"goto","label":"hub_day"}],"gal_d2":[{"cmd":"say","text":"你逐張揭。"},{"cmd":"say","text":"三日前之後，就沒有新的相。"},{"cmd":"say","text":"最後一張是他自己。"},{"cmd":"set","flag":"photo","value":1},{"cmd":"wait","seconds":1.6},{"cmd":"say","text":"你望了一陣。"},{"cmd":"wait","seconds":1.2},{"cmd":"say","text":"然後你抬頭。"},{"cmd":"set","flag":"photo","value":0},{"cmd":"set","flag":"tvon","value":1},{"cmd":"set","flag":"tvchit","value":1},{"cmd":"wait","seconds":2},{"cmd":"say","text":"電視用著同一張相。"},{"cmd":"wait","seconds":2.4},{"cmd":"say","text":"新聞繼續講下一單。"},{"cmd":"set","flag":"knows_dead","value":true},{"cmd":"set","flag":"can_reveal","value":0},{"cmd":"goto","label":"hub_day"}],"tv_off":[{"cmd":"set","flag":"tvon","value":0},{"cmd":"say","text":"你熄了電視。房裡靜下來。"},{"cmd":"goto","label":"hub_day"}],"act_tv":[{"cmd":"goto","label":"tv_off","if":"tvon"},{"cmd":"set","flag":"tvon","value":1},{"cmd":"add","flag":"acts","value":1},{"cmd":"say","text":"天氣。樓價。一單交通意外。","if":"!knows_dead"},{"cmd":"say","text":"你沒有留意。","if":"!knows_dead"},{"cmd":"say","text":"你等它重播那一節。","if":"knows_dead"},{"cmd":"say","text":"它沒有再播。","if":"knows_dead"},{"cmd":"goto","label":"hub_day"}],"act_sell":[{"cmd":"say","text":"設定　→　清除所有資料。"},{"cmd":"choice","options":[{"text":"確定清除，賣咗佢（+$1400）","goto":"sell_do"},{"text":"取消","goto":"hub_day"}]}],"sell_do":[{"cmd":"add","flag":"cash","value":1400},{"cmd":"sfx","key":"sfx_cash"},{"cmd":"say","text":"你插上線。"},{"cmd":"say","text":"「確定清除所有資料？」"},{"cmd":"say","text":"你按了確定。"},{"cmd":"say","text":"相、訊息、聯絡人，全部沒有了。機殼還是溫的。"},{"cmd":"say","text":"一千四。下午它就轉了出去。"},{"cmd":"say","text":"你沒有再想起這件事。"},{"cmd":"say","text":"—— 結局①　清機 ——"},{"cmd":"end"}],"day_end":[{"cmd":"set","flag":"acts","value":0},{"cmd":"set","flag":"wipes","value":0},{"cmd":"set","flag":"isday","value":0},{"cmd":"sfx","key":"sfx_boot"},{"cmd":"goto","label":"hub_night"}],"hub_night":[{"cmd":"set","flag":"isday","value":0},{"cmd":"set","flag":"hub","value":3},{"cmd":"say","text":"·"},{"cmd":"goto","label":"hub_night"}],"n3_m":[{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"m","text":"你部機仲喺度"},{"cmd":"say","text":"沒有稱呼。沒有問候。"},{"cmd":"say","text":"你往上滑。這個對話從三月開始，沒有一句是「你點呀」。"},{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"m","text":"你唔係佢"},{"cmd":"say","text":"你的手停在螢幕上。"},{"cmd":"choice","options":[{"text":"「你講咩」","goto":"m_deny"},{"text":"「你點知」","goto":"m_admit"},{"text":"（唔覆）","goto":"m_silent"}]}],"m_deny":[{"cmd":"add","flag":"sus_m","value":15},{"cmd":"add","flag":"bat","value":-1},{"cmd":"say","who":"chit","text":"你講咩"},{"cmd":"sfx","key":"sfx_send"},{"cmd":"say","who":"typing","text":"⋯"},{"cmd":"wait","seconds":2},{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"m","text":"佢星期二夜晚同我講過嘢"},{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"m","text":"之後就冇"},{"cmd":"say","text":"星期二。三日前。"},{"cmd":"goto","label":"m_ask"}],"m_admit":[{"cmd":"add","flag":"bat","value":-1},{"cmd":"say","who":"chit","text":"你點知"},{"cmd":"sfx","key":"sfx_send"},{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"m","text":"因為佢唔會咁快覆"},{"cmd":"say","text":"你比他快。這就是你露的餡。"},{"cmd":"goto","label":"m_ask"}],"m_silent":[{"cmd":"say","text":"你沒有回。"},{"cmd":"wait","seconds":2},{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"m","text":"你仲喺度"},{"cmd":"say","text":"他知道你在。"},{"cmd":"goto","label":"m_ask"}],"m_ask":[{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"m","text":"我問你一樣嘢"},{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"m","text":"佢個妹叫咩名"},{"cmd":"say","text":"你不知道。"},{"cmd":"say","text":"強說過他有個妹。名字沒有出現過。"},{"cmd":"say","text":"這部電話裡有他和媽的舊對話。或者那裡有。"},{"cmd":"choice","options":[{"text":"讀返媽嘅舊對話（−4）","goto":"m_read"},{"text":"照答","goto":"m_guess"}]}],"m_read":[{"cmd":"add","flag":"bat","value":-4,"if":"!know_name"},{"cmd":"say","text":"三月。媽傳過一張相過來。"},{"cmd":"set","flag":"photo","value":3},{"cmd":"say","text":"廚房。媽坐中間。他站在右邊。"},{"cmd":"say","text":"左邊那個女人你沒有見過。"},{"cmd":"set","flag":"photo","value":0},{"cmd":"say","who":"ma","text":"阿雯話聽日返嚟食飯"},{"cmd":"say","who":"chit","text":"知"},{"cmd":"say","text":"阿雯。"},{"cmd":"add","flag":"truth","value":1,"if":"!know_name"},{"cmd":"set","flag":"know_name","value":true},{"cmd":"choice","options":[{"text":"「阿雯」","goto":"m_right"},{"text":"（唔答）","goto":"m_wrong"}]}],"m_guess":[{"cmd":"choice","options":[{"text":"「阿詩」","goto":"m_wrong"},{"text":"「你自己問佢」","goto":"m_wrong"}]}],"m_right":[{"cmd":"add","flag":"bat","value":-1},{"cmd":"say","who":"chit","text":"阿雯"},{"cmd":"sfx","key":"sfx_send"},{"cmd":"say","who":"typing","text":"⋯"},{"cmd":"wait","seconds":2.4},{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"m","text":"好"},{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"m","text":"咁我當你係佢"},{"cmd":"say","text":"他知道你不是。他還是這樣說。"},{"cmd":"add","flag":"truth","value":1,"if":"!m_ok"},{"cmd":"set","flag":"m_ok","value":true},{"cmd":"goto","label":"m_end"}],"m_wrong":[{"cmd":"add","flag":"sus_m","value":30},{"cmd":"add","flag":"bat","value":-1},{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"m","text":"唔係"},{"cmd":"wait","seconds":2},{"cmd":"say","text":"之後就沒了。"},{"cmd":"say","text":"「打字中」出現過兩次，兩次都停了。"},{"cmd":"goto","label":"m_end"}],"m_end":[{"cmd":"sfx","key":"sfx_recv","if":"m_ok"},{"cmd":"say","who":"m","text":"星期二嗰晚 佢喺天橋底等緊人","if":"m_ok"},{"cmd":"set","flag":"photo","value":5,"if":"m_ok"},{"cmd":"say","text":"你在他的相簿裡找到那個地方。三月拍的。空的。","if":"m_ok"},{"cmd":"set","flag":"photo","value":0,"if":"m_ok"},{"cmd":"say","text":"他沒有說等誰。","if":"m_ok"},{"cmd":"sfx","key":"sfx_recv","if":"!m_ok"},{"cmd":"say","who":"m","text":"我唔會再搞你","if":"!m_ok"},{"cmd":"say","text":"你想再問，但他的名字旁邊由「上線」變成了「上次上線：剛剛」。"},{"cmd":"set","flag":"av_m","value":0},{"cmd":"set","flag":"av_yan","value":1},{"cmd":"set","flag":"stage4","value":1},{"cmd":"goto","label":"hub_night"}],"n4_yan":[{"cmd":"say","text":"你打開欣的對話。"},{"cmd":"say","text":"最後一句不是你打的。"},{"cmd":"say","who":"chit","text":"我喺度"},{"cmd":"say","who":"stamp","text":"03:47"},{"cmd":"say","text":"三點四十七分。那時你在瞓。"},{"cmd":"say","text":"你查了電量記錄。中間少了一格，對得上一次亮屏。"},{"cmd":"say","text":"你退出去，再入返。"},{"cmd":"wait","seconds":1.6},{"cmd":"say","text":"那句還在。"},{"cmd":"choice","options":[{"text":"「頭先嗰句唔係我」","goto":"n4_tell"},{"text":"（當冇事，繼續傾）","goto":"n4_ignore"},{"text":"（刪咗嗰句）","goto":"n4_delete"}]}],"n4_tell":[{"cmd":"add","flag":"bat","value":-1},{"cmd":"say","who":"chit","text":"頭先嗰句唔係我"},{"cmd":"sfx","key":"sfx_send"},{"cmd":"say","who":"typing","text":"⋯"},{"cmd":"wait","seconds":2.2},{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"yan","text":"咁係邊個"},{"cmd":"add","flag":"sus","value":25},{"cmd":"say","text":"你沒有答。"},{"cmd":"goto","label":"n4_end"}],"n4_ignore":[{"cmd":"say","text":"你當作沒有看見。"},{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"yan","text":"你三點幾仲未瞓"},{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"yan","text":"你以前都係咁"},{"cmd":"say","text":"「以前」。她第一次用這個詞。"},{"cmd":"goto","label":"n4_end"}],"n4_delete":[{"cmd":"add","flag":"bat","value":-1},{"cmd":"say","text":"你長按那句，刪除。"},{"cmd":"say","text":"畫面刷新。"},{"cmd":"wait","seconds":1.8},{"cmd":"say","text":"它還在。"},{"cmd":"say","text":"你再刪一次。"},{"cmd":"wait","seconds":2},{"cmd":"say","text":"這次不見了。"},{"cmd":"say","text":"但你不記得自己按過第二次。"},{"cmd":"set","flag":"d4_deleted","value":true},{"cmd":"goto","label":"n4_end"}],"n4_end":[{"cmd":"say","text":"你關了螢幕。"},{"cmd":"say","text":"房裡只剩電視的聲。","if":"tvon"},{"cmd":"say","text":"房裡很靜。","if":"!tvon"},{"cmd":"set","flag":"av_yan","value":0},{"cmd":"set","flag":"stage4","value":0},{"cmd":"set","flag":"stage5","value":1},{"cmd":"set","flag":"av_me","value":1},{"cmd":"goto","label":"hub_night"}],"n5_me":[{"cmd":"say","text":"聯絡人列表多了一個。沒有頭像。名字是「我」。"},{"cmd":"say","text":"裡面全部是這部機送出去過的句子。"},{"cmd":"say","text":"一句不漏。而你分不出哪幾句是他打的，哪幾句是你打的。"},{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"me","text":"你做得好好"},{"cmd":"say","text":"這一句不在裡面。這一句是新的。"},{"cmd":"choice","options":[{"text":"「你係邊個」","goto":"me_who"},{"text":"「我知你係邊個」","goto":"me_know","if":"truth>=4"},{"text":"（長按電源鍵）","goto":"me_off"}]}],"me_who":[{"cmd":"add","flag":"bat","value":-1},{"cmd":"say","who":"chit","text":"你係邊個"},{"cmd":"sfx","key":"sfx_send"},{"cmd":"say","who":"typing","text":"⋯"},{"cmd":"wait","seconds":2.6},{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"me","text":"你係邊個"},{"cmd":"say","text":"一模一樣的五個字。"},{"cmd":"say","text":"連你打字停了多久都一樣。"},{"cmd":"goto","label":"me_off"}],"me_off":[{"cmd":"say","text":"你長按電源鍵。"},{"cmd":"sfx","key":"sfx_off"},{"cmd":"say","text":"螢幕暗下去。"},{"cmd":"say","text":"你把它反過來，放回枱面。"},{"cmd":"say","text":"第二日你把它清了，轉了出去。"},{"cmd":"say","text":"你沒有再想起這件事。"},{"cmd":"say","text":"直到有一晚，你自己部機響。"},{"cmd":"say","text":"—— 結局⑤　熄機 ——"},{"cmd":"end"}],"me_know":[{"cmd":"add","flag":"bat","value":-1},{"cmd":"say","who":"chit","text":"我知你係邊個"},{"cmd":"sfx","key":"sfx_send"},{"cmd":"wait","seconds":2.2},{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"me","text":"講"},{"cmd":"say","text":"M：星期二嗰晚，佢喺天橋底等緊人。"},{"cmd":"say","text":"強：佢有一件事，準備了三個月要告訴他阿妹。"},{"cmd":"say","text":"媽：阿雯話聽日返嚟食飯。"},{"cmd":"wait","seconds":1.8},{"cmd":"say","text":"那晚他在等的是阿雯。"},{"cmd":"say","text":"她沒有來。"},{"cmd":"wait","seconds":2},{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"me","text":"佢到現時都唔知"},{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"me","text":"淨係你知"},{"cmd":"say","text":"對話框亮著。這部電話最後一格電，是留給你打這一句的。"},{"cmd":"choice","options":[{"text":"傳咗畀阿雯","goto":"end_truth"},{"text":"清機（+$1400）","goto":"end_sell_late"}]}],"end_truth":[{"cmd":"say","text":"你在媽那邊翻到阿雯的號碼。"},{"cmd":"say","text":"你把那晚的事打了出去。你沒有署名。"},{"cmd":"sfx","key":"sfx_send"},{"cmd":"say","text":"電量剩一格。"},{"cmd":"wait","seconds":2},{"cmd":"say","text":"「已讀」出現了。"},{"cmd":"wait","seconds":2.4},{"cmd":"say","text":"「打字中⋯」"},{"cmd":"wait","seconds":2.8},{"cmd":"say","text":"然後熄機。"},{"cmd":"say","text":"你永遠不會知道她打了什麼。"},{"cmd":"say","text":"—— 結局④　真相 ——"},{"cmd":"end"}],"end_sell_late":[{"cmd":"add","flag":"cash","value":1400},{"cmd":"sfx","key":"sfx_cash"},{"cmd":"say","text":"你按了確定。"},{"cmd":"say","text":"一千四。你夠數了。"},{"cmd":"say","text":"你知道那晚發生了什麼，而你把它一併洗掉了。"},{"cmd":"say","text":"—— 結局①　清機（知情） ——"},{"cmd":"end"}],"n_stub":[{"cmd":"say","text":"（第三日之後尚未製作。）"},{"cmd":"end"}],"n1":[{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"yan","text":"你今日都冇覆我"},{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"yan","text":"係咪嬲咗我"},{"cmd":"say","text":"訊息一直入。這部機一日響幾十次。"},{"cmd":"say","text":"你不能不理。"},{"cmd":"say","text":"有人不停找、覺得不對路，就會去報失。報了失，這部機就變磚——一千四也沒有了。"},{"cmd":"say","text":"所以你要扮他。"},{"cmd":"say","text":"你先揭了幾條舊訊息，學他的語氣。"},{"cmd":"choice","options":[{"text":"「冇呀 做緊嘢」","goto":"t_casual"},{"text":"「冇嘢」","goto":"t_cold"},{"text":"「你今日好唔好」","goto":"t_warm"},{"text":"（唔覆）","goto":"t_avoid"}]}],"t_casual":[{"cmd":"add","flag":"sus","value":-5},{"cmd":"add","flag":"bat","value":-1},{"cmd":"say","who":"chit","text":"冇呀 做緊嘢"},{"cmd":"sfx","key":"sfx_send"},{"cmd":"say","who":"typing","text":"⋯"},{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"yan","text":"哦"},{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"yan","text":"你成日都話做緊嘢"},{"cmd":"goto","label":"q2"}],"t_warm":[{"cmd":"add","flag":"sus","value":-5},{"cmd":"add","flag":"bat","value":-1},{"cmd":"say","who":"chit","text":"你今日好唔好"},{"cmd":"sfx","key":"sfx_send"},{"cmd":"say","who":"typing","text":"⋯"},{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"yan","text":"好攰"},{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"yan","text":"你呢"},{"cmd":"say","text":"這一句你答不了。你不知道他這三日過得怎樣。"},{"cmd":"goto","label":"q2"}],"t_cold":[{"cmd":"add","flag":"sus","value":25},{"cmd":"add","flag":"bat","value":-1},{"cmd":"say","who":"chit","text":"冇嘢"},{"cmd":"sfx","key":"sfx_send"},{"cmd":"say","who":"typing","text":"⋯"},{"cmd":"say","text":"「打字中」出現了。"},{"cmd":"wait","seconds":1.4},{"cmd":"say","text":"然後停了。"},{"cmd":"say","text":"過了四十秒，才有下一句。"},{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"yan","text":"你今日講嘢好怪"},{"cmd":"say","text":"你的手心是濕的。"},{"cmd":"goto","label":"q2"}],"t_avoid":[{"cmd":"add","flag":"sus","value":15},{"cmd":"say","text":"你把電話反過來，放在枱面。"},{"cmd":"say","text":"過了兩分鐘，你又反回來。"},{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"yan","text":"你已讀我"},{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"yan","text":"阿哲"},{"cmd":"say","text":"你第一次看見別人叫他的名字，而要由你來答。"},{"cmd":"goto","label":"q2"}],"q2":[{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"yan","text":"聽日你記得㗎嘛"},{"cmd":"say","text":"你不知道明天是什麼日子。"},{"cmd":"say","text":"這部電話裡有他所有舊對話。你可以往上滑。"},{"cmd":"say","text":"但螢幕亮著就在耗電，而充電器不在你這裡。"},{"cmd":"choice","options":[{"text":"讀返舊對話（−4）","goto":"read_old"},{"text":"蒙混過去","goto":"bluff"}]}],"read_old":[{"cmd":"add","flag":"bat","value":-4,"if":"!rd_yan"},{"cmd":"say","text":"你往上滑。三月的訊息。"},{"cmd":"say","who":"yan","text":"一年喇"},{"cmd":"say","who":"chit","text":"一年"},{"cmd":"say","who":"yan","text":"你講嘢真係好悶"},{"cmd":"say","who":"chit","text":"我知"},{"cmd":"say","text":"明天是他們一週年。"},{"cmd":"say","text":"你還讀到別的。四月開始，他回覆的間隔變長了。"},{"cmd":"say","text":"五月有兩個星期，他一句都沒有回過。"},{"cmd":"say","text":"你不知道那兩個星期他在做什麼。"},{"cmd":"add","flag":"truth","value":1,"if":"!rd_yan"},{"cmd":"set","flag":"rd_yan","value":true},{"cmd":"choice","options":[{"text":"「梗係記得 一年喇」","goto":"ans_good"},{"text":"「梗係記得」","goto":"ans_mid"}]}],"bluff":[{"cmd":"say","text":"你決定賭一鋪。"},{"cmd":"choice","options":[{"text":"「記得」","goto":"ans_mid"},{"text":"「你講嚟聽下」","goto":"ans_bad"}]}],"ans_good":[{"cmd":"add","flag":"sus","value":-5},{"cmd":"add","flag":"bat","value":-1},{"cmd":"say","who":"chit","text":"梗係記得 一年喇"},{"cmd":"sfx","key":"sfx_send"},{"cmd":"goto","label":"beat"}],"ans_mid":[{"cmd":"add","flag":"sus","value":15},{"cmd":"add","flag":"bat","value":-1},{"cmd":"say","who":"chit","text":"梗係記得"},{"cmd":"sfx","key":"sfx_send"},{"cmd":"say","who":"typing","text":"⋯"},{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"yan","text":"記得咩"},{"cmd":"say","text":"你沒有答。"},{"cmd":"goto","label":"beat"}],"ans_bad":[{"cmd":"add","flag":"sus","value":25},{"cmd":"add","flag":"bat","value":-1},{"cmd":"say","who":"chit","text":"你講嚟聽下"},{"cmd":"sfx","key":"sfx_send"},{"cmd":"say","who":"typing","text":"⋯"},{"cmd":"wait","seconds":1.6},{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"yan","text":"你係咪飲醉咗"},{"cmd":"goto","label":"beat"}],"beat":[{"cmd":"say","text":"訊息送出了。"},{"cmd":"say","who":"read","text":"已讀"},{"cmd":"wait","seconds":1.2},{"cmd":"say","text":"已讀。"},{"cmd":"say","who":"typing","text":"⋯"},{"cmd":"wait","seconds":1.8},{"cmd":"say","text":"然後停了。"},{"cmd":"say","text":"她沒有再說話。","if":"sus<40"},{"cmd":"say","text":"她沒有再說話。你不確定她是不是還在看著這個對話。","if":"sus>=40"},{"cmd":"say","text":"你等了十一分鐘。"},{"cmd":"goto","label":"close"}],"close":[{"cmd":"choice","options":[{"text":"開口向欣借錢（+$2000）","goto":"ask_yan","if":"!asked_yan"},{"text":"唔開口，熄機","goto":"close2"}]}],"ask_yan":[{"cmd":"set","flag":"asked_yan","value":true},{"cmd":"add","flag":"bat","value":-1},{"cmd":"say","who":"chit","text":"欣 我有啲急事 可唔可以借兩千畀我"},{"cmd":"sfx","key":"sfx_send"},{"cmd":"say","who":"typing","text":"⋯"},{"cmd":"wait","seconds":2.2},{"cmd":"goto","label":"yan_no","if":"sus>=25"},{"cmd":"add","flag":"sus","value":20},{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"yan","text":"要幾時"},{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"yan","text":"轉咗畀你"},{"cmd":"sfx","key":"sfx_cash"},{"cmd":"add","flag":"cash","value":2000},{"cmd":"say","text":"兩千。三十秒。"},{"cmd":"say","text":"她沒有問你要來做什麼。"},{"cmd":"goto","label":"close2"}],"yan_no":[{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"yan","text":"你今日好唔妥"},{"cmd":"wait","seconds":1.6},{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"yan","text":"你係邊個"},{"cmd":"add","flag":"sus","value":40},{"cmd":"say","text":"你沒有回。"},{"cmd":"say","text":"她也沒有再說。"},{"cmd":"goto","label":"close2"}],"close2":[{"cmd":"say","text":"你算了一下電量。這樣下去，撐不了幾晚。"},{"cmd":"set","flag":"av_yan","value":0},{"cmd":"set","flag":"av_keung","value":1},{"cmd":"set","flag":"av_ma","value":1},{"cmd":"set","flag":"can_reveal","value":1},{"cmd":"goto","label":"hub_night"}],"n2_boot":[{"cmd":"sfx","key":"sfx_boot"},{"cmd":"say","text":"第二晚。凌晨十二點五十一分。"},{"cmd":"say","text":"你今日返過工。你向同事說你沒事。"},{"cmd":"say","text":"回到家，你第一件事是找那部電話。"},{"cmd":"say","text":"你告訴自己，這是為了知道真相。"},{"cmd":"goto","label":"n2_keung"}],"n2_keung":[{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"keung","text":"喂"},{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"keung","text":"你死咗去邊"},{"cmd":"say","text":"強。舊對話裡出現最多的一個。"},{"cmd":"say","text":"六年，同一個地盤。這是你從相簿看出來的。"},{"cmd":"choice","options":[{"text":"「喺度」","goto":"k_cold"},{"text":"「喺屋企 做緊嘢」","goto":"k_casual"},{"text":"「呢排唔係好得閑 唔好意思」","goto":"k_warm"},{"text":"（暫時唔覆）","goto":"hub_night"}]}],"k_cold":[{"cmd":"add","flag":"sus_k","value":-5},{"cmd":"add","flag":"bat","value":-1},{"cmd":"say","who":"chit","text":"喺度"},{"cmd":"sfx","key":"sfx_send"},{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"keung","text":"哦"},{"cmd":"say","text":"對著強，短是對的。阿哲對他一向如此。"},{"cmd":"goto","label":"k_hit"}],"k_casual":[{"cmd":"add","flag":"sus_k","value":-5},{"cmd":"add","flag":"bat","value":-1},{"cmd":"say","who":"chit","text":"喺屋企 做緊嘢"},{"cmd":"sfx","key":"sfx_send"},{"cmd":"say","who":"typing","text":"⋯"},{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"keung","text":"做嘢做嘢 你成日都做嘢"},{"cmd":"goto","label":"k_hit"}],"k_warm":[{"cmd":"add","flag":"sus_k","value":25},{"cmd":"add","flag":"bat","value":-1},{"cmd":"say","who":"chit","text":"呢排唔係好得閑 唔好意思"},{"cmd":"sfx","key":"sfx_send"},{"cmd":"say","who":"typing","text":"⋯"},{"cmd":"wait","seconds":1.8},{"cmd":"say","text":"他很久沒有回。"},{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"keung","text":"你今日食錯藥"},{"cmd":"say","text":"阿哲從來不會向他說對不起。"},{"cmd":"goto","label":"k_hit"}],"k_hit":[{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"keung","text":"你阿妹知咗未"},{"cmd":"say","text":"你不知道他有阿妹。"},{"cmd":"say","text":"你更不知道他說的是什麼事。"},{"cmd":"say","text":"這部電話裡有他和強的舊對話。"},{"cmd":"choice","options":[{"text":"讀返佢同強嘅舊對話（−4）","goto":"k_read"},{"text":"直接問佢","goto":"k_ask"}]}],"k_read":[{"cmd":"add","flag":"bat","value":-4,"if":"!knew_k"},{"cmd":"say","text":"六月。強傳過一張相。"},{"cmd":"set","flag":"photo","value":4},{"cmd":"say","text":"一張相。一張紙，上面全是數字。"},{"cmd":"set","flag":"photo","value":0},{"cmd":"say","who":"chit","text":"我下個月同佢講"},{"cmd":"say","who":"keung","text":"你講咗幾多次下個月"},{"cmd":"say","who":"chit","text":"今次真"},{"cmd":"say","text":"七月。"},{"cmd":"say","who":"keung","text":"講咗未"},{"cmd":"say","text":"沒有回覆。"},{"cmd":"say","text":"再往下就是空白。八月開始，他們沒有再提過這件事。"},{"cmd":"say","text":"他有一件事，準備了三個月要告訴他阿妹。"},{"cmd":"say","text":"他沒有講成。"},{"cmd":"add","flag":"truth","value":1,"if":"!knew_k"},{"cmd":"set","flag":"knew_k","value":true},{"cmd":"goto","label":"k_end"}],"k_ask":[{"cmd":"add","flag":"sus_k","value":15},{"cmd":"add","flag":"bat","value":-1},{"cmd":"say","who":"chit","text":"咩事"},{"cmd":"sfx","key":"sfx_send"},{"cmd":"say","who":"typing","text":"⋯"},{"cmd":"wait","seconds":1.6},{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"keung","text":"你玩我"},{"cmd":"say","text":"他沒有再說。"},{"cmd":"say","text":"你錯過了。"},{"cmd":"goto","label":"k_end"}],"k_end":[{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"keung","text":"聽日返工見"},{"cmd":"say","text":"明天他會在地盤等一個不會來的人。"},{"cmd":"goto","label":"k_money"}],"k_money":[{"cmd":"choice","options":[{"text":"開口向強借錢（+$900）","goto":"ask_keung","if":"!asked_keung"},{"text":"唔開口","goto":"k_done"}]}],"k_done":[{"cmd":"set","flag":"av_keung","value":0},{"cmd":"goto","label":"hub_night"}],"n2_ma":[{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"ma","text":"阿哲"},{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"ma","text":"食咗飯未"},{"cmd":"say","text":"你往上滑。她的訊息全部一樣。"},{"cmd":"say","text":"「食咗飯未」。一日兩三次，由三月開始。"},{"cmd":"say","text":"他有時覆，有時不覆。"},{"cmd":"say","text":"她不像在等回覆。她像不記得自己問過。"},{"cmd":"choice","options":[{"text":"「食咗喇」","goto":"ma_lie"},{"text":"「我唔係阿哲」","goto":"ma_true"},{"text":"（唔覆）","goto":"ma_none"}]}],"ma_lie":[{"cmd":"add","flag":"bat","value":-1},{"cmd":"say","who":"chit","text":"食咗喇"},{"cmd":"sfx","key":"sfx_send"},{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"ma","text":"食咗就好"},{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"ma","text":"早啲瞓"},{"cmd":"say","text":"這是你今晚唯一一次冒充他，而沒有覺得自己在說謊。"},{"cmd":"goto","label":"ma_money"}],"ma_true":[{"cmd":"add","flag":"bat","value":-1},{"cmd":"say","who":"chit","text":"我唔係阿哲"},{"cmd":"sfx","key":"sfx_send"},{"cmd":"say","who":"typing","text":"⋯"},{"cmd":"wait","seconds":2},{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"ma","text":"阿哲"},{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"ma","text":"食咗飯未"},{"cmd":"say","text":"她沒有讀懂。"},{"cmd":"say","text":"或者讀懂了，然後忘了。"},{"cmd":"say","text":"明天她會再問一次。"},{"cmd":"goto","label":"ma_money"}],"ma_none":[{"cmd":"say","text":"你沒有回。"},{"cmd":"wait","seconds":1.4},{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"ma","text":"阿哲"},{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"ma","text":"食咗飯未"},{"cmd":"say","text":"同一句。她不記得自己問過。"},{"cmd":"say","text":"你把電話反過來，但你聽得見它再響。"},{"cmd":"goto","label":"ma_money"}],"ma_money":[{"cmd":"choice","options":[{"text":"開口向媽攞錢（+$3000）","goto":"ask_ma","if":"!asked_ma"},{"text":"唔開口","goto":"ma_done"}]}],"ma_done":[{"cmd":"set","flag":"av_ma","value":0},{"cmd":"set","flag":"m_due","value":1},{"cmd":"goto","label":"hub_night"}],"ask_keung":[{"cmd":"set","flag":"asked_keung","value":true},{"cmd":"add","flag":"bat","value":-1},{"cmd":"say","who":"chit","text":"強 借九百畀我 過幾日還你"},{"cmd":"sfx","key":"sfx_send"},{"cmd":"say","who":"typing","text":"⋯"},{"cmd":"wait","seconds":2.4},{"cmd":"goto","label":"keung_no","if":"sus_k>=20"},{"cmd":"add","flag":"sus_k","value":20},{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"keung","text":"又要錢"},{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"keung","text":"最後一次"},{"cmd":"sfx","key":"sfx_cash"},{"cmd":"add","flag":"cash","value":900},{"cmd":"say","text":"九百。他沒有問原因。"},{"cmd":"say","text":"「又」。即是不是第一次。"},{"cmd":"goto","label":"k_done"}],"keung_no":[{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"keung","text":"你打錯人"},{"cmd":"add","flag":"sus_k","value":40},{"cmd":"say","text":"他沒有再回。"},{"cmd":"goto","label":"k_done"}],"ask_ma":[{"cmd":"set","flag":"asked_ma","value":true},{"cmd":"add","flag":"bat","value":-1},{"cmd":"say","text":"你打了字。"},{"cmd":"say","text":"你看著那句字很久，然後才按送出。"},{"cmd":"say","who":"chit","text":"媽 我要三千 有急事"},{"cmd":"sfx","key":"sfx_send"},{"cmd":"wait","seconds":1.4},{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"ma","text":"轉咗畀你"},{"cmd":"sfx","key":"sfx_cash"},{"cmd":"add","flag":"cash","value":3000},{"cmd":"wait","seconds":1.2},{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","who":"ma","text":"夠唔夠"},{"cmd":"say","text":"十一秒。"},{"cmd":"say","text":"她沒有問你要來做什麼，也沒有問你是誰。"},{"cmd":"set","flag":"took_ma","value":true},{"cmd":"goto","label":"ma_done"}],"m_hook":[{"cmd":"say","text":"你正想關機。"},{"cmd":"sfx","key":"sfx_recv"},{"cmd":"say","text":"通知彈了出來。一個沒有存名字的號碼。"},{"cmd":"say","text":"只有一個字母。"},{"cmd":"say","text":"M"},{"cmd":"say","text":"你沒有點開。"},{"cmd":"set","flag":"m_due","value":0},{"cmd":"set","flag":"av_m","value":1},{"cmd":"goto","label":"night_end2"}],"end_delete":[{"cmd":"say","text":"你長按那個對話。"},{"cmd":"say","text":"「刪除？」"},{"cmd":"say","text":"你按了確定。"},{"cmd":"say","text":"對話沒有了。她的名字還在，但裡面是空的。"},{"cmd":"say","text":"你安全了。"},{"cmd":"say","text":"你也永遠不會知道。"},{"cmd":"say","text":"—— 結局①　刪除 ——"},{"cmd":"end"}],"night_end":[{"cmd":"goto","label":"m_hook","if":"m_due"},{"cmd":"goto","label":"night_end2"}],"night_end2":[{"cmd":"goto","label":"end_dead","if":"bat<=0"},{"cmd":"sfx","key":"sfx_off"},{"cmd":"say","text":"你把那部機反過來，放回枱面。"},{"cmd":"set","flag":"isday","value":1},{"cmd":"goto","label":"pay1","if":"day==3"},{"cmd":"goto","label":"pay2","if":"day==6"},{"cmd":"goto","label":"nextday"}],"nextday":[{"cmd":"add","flag":"day","value":1},{"cmd":"set","flag":"acts","value":0},{"cmd":"set","flag":"wipes","value":0},{"cmd":"set","flag":"slot","value":0},{"cmd":"goto","label":"hub_day"}],"pay1":[{"cmd":"say","text":"第一期到期。"},{"cmd":"goto","label":"pay1_no","if":"cash<2400"},{"cmd":"add","flag":"cash","value":-2400},{"cmd":"sfx","key":"sfx_cash"},{"cmd":"say","text":"你把兩千四交了出去。"},{"cmd":"say","text":"對方點頭，然後在紙上寫了一個新數字。"},{"cmd":"say","text":"「下一期，三千九。」"},{"cmd":"say","text":"你問為什麼。"},{"cmd":"say","text":"「重新計過。」"},{"cmd":"set","flag":"goal","value":3900},{"cmd":"goto","label":"nextday"}],"pay1_no":[{"cmd":"say","text":"你不夠。"},{"cmd":"say","text":"對方沒有動氣。他只是在紙上寫了一個更大的數字。"},{"cmd":"say","text":"「下一期，六千。」"},{"cmd":"set","flag":"goal","value":6000},{"cmd":"set","flag":"late","value":1},{"cmd":"goto","label":"nextday"}],"pay2":[{"cmd":"say","text":"第二期到期。"},{"cmd":"goto","label":"pay2_late","if":"late"},{"cmd":"goto","label":"end_paid","if":"cash>=3900"},{"cmd":"goto","label":"end_fail"}],"pay2_late":[{"cmd":"goto","label":"end_paid","if":"cash>=6000"},{"cmd":"goto","label":"end_fail"}],"settle":[{"cmd":"say","text":"第五日過去了。"},{"cmd":"goto","label":"end_paid","if":"cash>=9600"},{"cmd":"goto","label":"end_fail"}],"end_paid":[{"cmd":"say","text":"你交咗數。"},{"cmd":"say","text":"你沒有向任何人開過口。","if":"!took_ma"},{"cmd":"say","text":"你想起她問「夠唔夠」。你沒有回那一句。","if":"took_ma"},{"cmd":"say","text":"那部機你一直沒有賣。它還在枱面，電不多。"},{"cmd":"say","text":"它還在響。"},{"cmd":"say","text":"—— 結局②　清數 ——"},{"cmd":"end"}],"end_dead":[{"cmd":"sfx","key":"sfx_off"},{"cmd":"say","text":"螢幕暗了一下，然後沒有再亮起來。"},{"cmd":"say","text":"沒有充電器。這部機就到這裡。"},{"cmd":"say","text":"它裡面那些人還在等。你永遠不會知道他們等到什麼。"},{"cmd":"say","text":"—— 結局③　機變磚 ——"},{"cmd":"end"}],"end_fail":[{"cmd":"say","text":"到期了。你不夠數。"},{"cmd":"say","text":"那部機的電也用完了。"},{"cmd":"say","text":"你欠的還在，而你什麼都沒有換到。"},{"cmd":"say","text":"—— 結局③　失敗 ——"},{"cmd":"end"}]}}; // __GI_DATA__
+/* __GI_VN_RUNTIME__ v1 start — server-injected, do not edit */
+// ============ VN runtime v1 — command-list interpreter(RPG Maker 骨,Ren'Py label/jump)============
+// AI 淨係生成 GAME_DATA.script(data),呢個 runtime 由 server 注入。
+// 畫喺 canvas(同平台其他 game 一致、screenshot 到、可以同 Live2D 嘅 L2D 共用同一塊布)。
+(function () {
+  var D = window.GAME_DATA || {};
+  var SC = D.script || {};
+  var CH = D.characters || {};
+  // ── 外觀:AI 可以喺 GAME_DATA.theme 改,或者用 window.VN_SKIN 完全自己畫 ──
+  // 冇呢個嘅話全世界啲 VN 都一個樣,所以整個 game 一定要肯畀佢自訂。
+  var TH = Object.assign({
+    boxImage: null,          // 對白框底圖(GAME_ASSETS key)—— 有就用圖,冇就畫純色
+    boxColor: 'rgba(12,10,18,.82)', boxBorder: 'rgba(255,255,255,.16)', boxRadius: 0,
+    boxMargin: 22, boxBottom: 14, boxHeight: 0.26,   // boxHeight <1 = 佔畫面比例
+    pad: 18, textColor: '#f2eef7', textSize: 15, lineHeight: 23, maxLines: 5,
+    font: 'system-ui, "PingFang HK", sans-serif',
+    nameSize: 15, nameColor: null,                    // null = 用角色自己個 color
+    namePlate: null,                                  // 有色 = 名字後面畫個底
+    choiceColor: 'rgba(20,16,28,.9)', choiceBorder: 'rgba(143,238,255,.5)',
+    choiceText: '#eaf6ff', choiceRadius: 0, choiceW: 0.62, choiceH: 40, choiceGap: 12,
+    arrow: '▼', logLabel: '☰ 記錄 (L)',
+  }, D.theme || {});
+  function rr(x, y, w, h, r) {   // 圓角矩形(r=0 就係普通方框)
+    if (!r) { ctx.beginPath(); ctx.rect(x, y, w, h); return; }
+    r = Math.min(r, w / 2, h / 2);
+    ctx.beginPath();
+    ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
+  }
+  var cv = document.getElementById(window.VN_CANVAS || 'c') || document.querySelector('canvas');
+  if (!cv) return;
+  var ctx = cv.getContext('2d');
+
+  // ── 狀態 ──
+  var S = {
+    label: null, pc: 0, flags: {}, bg: null, bgImg: null,
+    actors: {},              // who → {key,pos,img,alpha,rig}
+    line: '', who: null, shown: 0, typing: false,
+    choices: null, waiting: 0, over: false, history: [], showLog: false,
+    fade: 0, shake: 0, auto: false, t: 0,
+  };
+  var IMG = {};
+  function img(key) {
+    if (!key) return null;
+    if (IMG[key]) return IMG[key];
+    var src = (window.GAME_ASSETS || {})[key];
+    if (!src) return null;
+    var i = new Image(); i.src = src; IMG[key] = i; return i;
+  }
+  var bgm = null;
+  function playBgm(key) {
+    var a = (window.GAME_AUDIO || {})[key]; if (!a) return;
+    try { if (bgm) bgm.pause(); bgm = new Audio(a); bgm.loop = true; bgm.volume = 0.5; bgm.play().catch(function () {}); } catch (e) {}
+  }
+  function playOne(key, vol) {
+    var a = (window.GAME_AUDIO || {})[key]; if (!a) return null;
+    try { var s = new Audio(a); s.volume = vol == null ? 0.85 : vol; s.play().catch(function () {}); return s; } catch (e) { return null; }
+  }
+  var voiceAudio = null;
+
+  // ── 條件:支援 "flag"、"!flag"、"flag>=3" ──
+  function test(cond) {
+    if (!cond) return true;
+    var m = /^\s*(!)?\s*([A-Za-z_][\w]*)\s*(?:(>=|<=|==|!=|>|<)\s*(-?\d+|true|false|'[^']*'))?\s*$/.exec(cond);
+    if (!m) return true;
+    var v = S.flags[m[2]];
+    if (!m[3]) return m[1] ? !v : !!v;
+    var r = m[4] === 'true' ? true : m[4] === 'false' ? false : /^'/.test(m[4]) ? m[4].slice(1, -1) : +m[4];
+    var out = m[3] === '>=' ? v >= r : m[3] === '<=' ? v <= r : m[3] === '==' ? v == r : m[3] === '!=' ? v != r : m[3] === '>' ? v > r : v < r;
+    return m[1] ? !out : out;
+  }
+
+  // ── 執行 ──
+  function goto(label) {
+    if (!SC[label]) { S.over = true; return; }
+    S.label = label; S.pc = 0; step();
+  }
+  function step() {
+    if (S.over) return;
+    var list = SC[S.label] || [];
+    while (S.pc < list.length) {
+      var c = list[S.pc++];
+      if (!c || !c.cmd) continue;
+      if (c.if && !test(c.if)) continue;
+      switch (c.cmd) {
+        case 'bg': S.bg = c.key; S.bgImg = img(c.key); S.fade = 1; break;
+        case 'bgm': playBgm(c.key); break;
+        case 'stopbgm': if (bgm) { try { bgm.pause(); } catch (e) {} bgm = null; } break;
+        case 'sfx': playOne(c.key); break;
+        case 'shake': S.shake = c.amount != null ? +c.amount : 1; break;
+        case 'show':
+          S.actors[c.who] = { key: c.key || (CH[c.who] && CH[c.who].sprite), pos: c.pos != null ? +c.pos : 0.5,
+            img: img(c.key || (CH[c.who] && CH[c.who].sprite)), alpha: 0, rig: !!(CH[c.who] && CH[c.who].rig) };
+          break;
+        case 'hide': delete S.actors[c.who]; break;
+        case 'set': S.flags[c.flag] = c.value === undefined ? true : c.value; break;
+        case 'add': S.flags[c.flag] = (+S.flags[c.flag] || 0) + (+c.value || 1); break;
+        case 'goto': goto(c.label); return;
+        case 'end': S.over = true; return;
+        case 'wait': S.waiting = c.seconds != null ? +c.seconds : 0.6; return;
+        case 'say':
+          S.who = c.who || null; S.line = String(c.text == null ? '' : c.text); S.shown = 0; S.typing = true;
+          S.history.push({ who: S.who, text: S.line });
+          if (S.history.length > 200) S.history.shift();
+          if (voiceAudio) { try { voiceAudio.pause(); } catch (e) {} }
+          voiceAudio = c.voice ? playOne(c.voice, 1) : null;   // TTS:有 voice key 就播
+          return;
+        case 'choice':
+          S.choices = (c.options || []).filter(function (o) { return test(o.if); });
+          if (!S.choices.length) { S.choices = null; break; }
+          return;
+        default: break;
+      }
+    }
+    S.over = true;   // 呢個 label 行完又冇 goto = 結局
+  }
+
+  // ── 輸入 ──
+  function advance() {
+    if (S.showLog) { S.showLog = false; return; }
+    if (S.choices) return;
+    if (S.waiting > 0) return;
+    if (S.typing) { S.shown = S.line.length; S.typing = false; return; }
+    if (S.over) return;
+    step();
+  }
+  function hitChoice(x, y) {
+    if (!S.choices) return -1;
+    // 一定要用返 TH(AI 改咗選項尺寸,撞區都要跟住變,否則撳唔中)
+    var W = cv.width, bw = W * TH.choiceW, bh = TH.choiceH, gap = TH.choiceGap, n = S.choices.length;
+    var y0 = cv.height * 0.42 - (n * (bh + gap)) / 2;
+    for (var i = 0; i < n; i++) {
+      var by = y0 + i * (bh + gap), bx = (W - bw) / 2;
+      if (x >= bx && x <= bx + bw && y >= by && y <= by + bh) return i;
+    }
+    return -1;
+  }
+  function onDown(e) {
+    var r = cv.getBoundingClientRect();
+    var x = ((e.touches ? e.touches[0].clientX : e.clientX) - r.left) * (cv.width / r.width);
+    var y = ((e.touches ? e.touches[0].clientY : e.clientY) - r.top) * (cv.height / r.height);
+    // log 掣(右上)
+    if (x > cv.width - 92 && y < 34) { S.showLog = !S.showLog; return; }
+    var i = hitChoice(x, y);
+    if (i >= 0) { var o = S.choices[i]; S.choices = null; if (o.set) S.flags[o.set] = o.value === undefined ? true : o.value; if (o.goto) goto(o.goto); else step(); return; }
+    advance();
+  }
+  cv.addEventListener('pointerdown', onDown);
+  window.addEventListener('keydown', function (e) {
+    var el = document.activeElement;
+    if (el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA')) return;
+    if (e.code === 'Space' || e.code === 'Enter') { e.preventDefault(); advance(); }
+    if (e.code === 'KeyL') S.showLog = !S.showLog;
+    if (e.code === 'KeyA') S.auto = !S.auto;
+  });
+
+  // ── 畫 ──
+  function drawCover(im, x, y, w, h) {   // crop-not-scale(convention §5b)
+    if (!im || !im.naturalWidth) return;
+    var s = Math.max(w / im.naturalWidth, h / im.naturalHeight);
+    var dw = im.naturalWidth * s, dh = im.naturalHeight * s;
+    ctx.drawImage(im, x + (w - dw) / 2, y + (h - dh) / 2, dw, dh);
+  }
+  function wrap(text, maxW) {
+    var out = [], line = '';
+    for (var i = 0; i < text.length; i++) {
+      var ch = text[i];
+      if (ch === '\n') { out.push(line); line = ''; continue; }
+      if (ctx.measureText(line + ch).width > maxW && line) { out.push(line); line = ch; }
+      else line += ch;
+    }
+    if (line) out.push(line);
+    return out;
+  }
+  function draw(dt) {
+    var W = cv.width, H = cv.height;
+    S.t += dt;
+    if (S.shake > 0) S.shake = Math.max(0, S.shake - dt * 2.2);
+    ctx.save();
+    if (S.shake > 0) ctx.translate((Math.random() - 0.5) * S.shake * 10, (Math.random() - 0.5) * S.shake * 7);
+
+    ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, H);
+    if (S.bgImg) drawCover(S.bgImg, 0, 0, W, H);
+    if (S.fade > 0) { S.fade = Math.max(0, S.fade - dt * 1.6); }
+
+    // 立繪(Live2D rig 角色交俾 L2D 畫)
+    for (var who in S.actors) {
+      var a = S.actors[who];
+      a.alpha = Math.min(1, a.alpha + dt * 3);
+      if (a.rig && window.L2D) {
+        var cw = W * 0.42, chh = H * 0.86;
+        window.L2D_RECT = { x: W * a.pos - cw / 2, y: H * 0.06, w: cw, h: chh };
+        if (!a._built) { L2D.rebuild(); a._built = 1; }
+        L2D.frame(dt);
+        if (S.typing && who === S.who) L2D.P.talk = 0.5 + 0.5 * Math.abs(Math.sin(S.t * 18));
+        else if (who === S.who) L2D.P.talk *= 0.9;
+      } else if (a.img && a.img.naturalWidth) {
+        var ih = H * 0.8, iw = a.img.naturalWidth * (ih / a.img.naturalHeight);
+        ctx.globalAlpha = a.alpha;
+        ctx.drawImage(a.img, W * a.pos - iw / 2, H - ih, iw, ih);
+        ctx.globalAlpha = 1;
+      }
+    }
+    if (S.fade > 0) { ctx.fillStyle = 'rgba(0,0,0,' + S.fade.toFixed(3) + ')'; ctx.fillRect(0, 0, W, H); }
+
+    // 對白框(樣由 TH 決定;window.VN_SKIN.box 可以完全接管)
+    if (S.line && !S.choices) {
+      var bh = TH.boxHeight < 1 ? Math.max(110, H * TH.boxHeight) : TH.boxHeight;
+      var by = H - bh - TH.boxBottom, bx = TH.boxMargin, bw = W - TH.boxMargin * 2;
+      var name = S.who && CH[S.who] ? (CH[S.who].name || S.who) : S.who;
+      var pad = TH.pad;
+      var box = { x: bx, y: by, w: bw, h: bh, pad: pad, name: name, who: S.who,
+                  text: S.line.slice(0, Math.floor(S.shown)), full: S.line, typing: S.typing, t: S.t, theme: TH };
+      if (window.VN_SKIN && typeof window.VN_SKIN.box === 'function') {
+        window.VN_SKIN.box(ctx, box);           // AI 自己畫成個框(想點就點)
+      } else {
+        var bimg = TH.boxImage && img(TH.boxImage);
+        if (bimg && bimg.complete && bimg.naturalWidth) {
+          ctx.drawImage(bimg, bx, by, bw, bh);   // 用生成嘅框圖 → 每隻 game 樣都唔同
+        } else {
+          ctx.fillStyle = TH.boxColor; rr(bx, by, bw, bh, TH.boxRadius); ctx.fill();
+          if (TH.boxBorder) { ctx.strokeStyle = TH.boxBorder; ctx.lineWidth = 1; ctx.stroke(); }
+        }
+        if (name) {
+          ctx.font = '700 ' + TH.nameSize + 'px ' + TH.font;
+          var nx = bx + pad, ny = by + TH.nameSize + 11;
+          if (TH.namePlate) {
+            var nw = ctx.measureText(name).width + 18;
+            ctx.fillStyle = TH.namePlate; rr(nx - 9, ny - TH.nameSize - 5, nw, TH.nameSize + 12, TH.boxRadius ? 4 : 0); ctx.fill();
+          }
+          ctx.fillStyle = TH.nameColor || (CH[S.who] && CH[S.who].color) || '#8fe';
+          ctx.fillText(name, nx, ny);
+        }
+        ctx.font = TH.textSize + 'px ' + TH.font;
+        ctx.fillStyle = TH.textColor;
+        var lines = wrap(box.text, bw - pad * 2);
+        for (var i = 0; i < lines.length && i < TH.maxLines; i++)
+          ctx.fillText(lines[i], bx + pad, by + (name ? TH.nameSize + 34 : TH.textSize + 16) + i * TH.lineHeight);
+        if (!S.typing && TH.arrow) {
+          ctx.globalAlpha = 0.45 + 0.35 * Math.sin(S.t * 4);
+          ctx.fillText(TH.arrow, bx + bw - pad - 12, by + bh - 14); ctx.globalAlpha = 1;
+        }
+      }
+    }
+
+    // 選項
+    if (S.choices) {
+      var cbw = W * TH.choiceW, cbh = TH.choiceH, gap = TH.choiceGap, n = S.choices.length;
+      var y0 = H * 0.42 - (n * (cbh + gap)) / 2;
+      ctx.font = '600 ' + TH.textSize + 'px ' + TH.font; ctx.textAlign = 'center';
+      for (var k = 0; k < n; k++) {
+        var yy = y0 + k * (cbh + gap), xx = (W - cbw) / 2;
+        var opt = { x: xx, y: yy, w: cbw, h: cbh, text: S.choices[k].text, index: k, theme: TH };
+        if (window.VN_SKIN && typeof window.VN_SKIN.choice === 'function') { window.VN_SKIN.choice(ctx, opt); continue; }
+        ctx.fillStyle = TH.choiceColor; rr(xx, yy, cbw, cbh, TH.choiceRadius); ctx.fill();
+        if (TH.choiceBorder) { ctx.strokeStyle = TH.choiceBorder; ctx.lineWidth = 1; ctx.stroke(); }
+        ctx.fillStyle = TH.choiceText; ctx.fillText(S.choices[k].text, W / 2, yy + cbh / 2 + TH.textSize * 0.36);
+      }
+      ctx.textAlign = 'left';
+    }
+
+    // 記錄掣 + backlog
+    ctx.font = '12px system-ui, sans-serif';
+    ctx.fillStyle = 'rgba(255,255,255,.5)'; ctx.fillText(TH.logLabel, W - 88, 22);
+    if (S.showLog) {
+      ctx.fillStyle = 'rgba(8,6,14,.94)'; ctx.fillRect(0, 0, W, H);
+      ctx.font = '14px system-ui, "PingFang HK", sans-serif';
+      var y2 = H - 40;
+      for (var h = S.history.length - 1; h >= 0 && y2 > 30; h--) {
+        var e2 = S.history[h];
+        var ls = wrap((e2.who && CH[e2.who] ? (CH[e2.who].name || e2.who) + '：' : '') + e2.text, W - 60);
+        for (var q = ls.length - 1; q >= 0 && y2 > 30; q--) { ctx.fillStyle = '#ddd'; ctx.fillText(ls[q], 30, y2); y2 -= 22; }
+        y2 -= 6;
+      }
+      ctx.fillStyle = 'rgba(255,255,255,.55)'; ctx.fillText('撳一下閂返', 30, 24);
+    }
+    ctx.restore();
+  }
+
+  // ── loop ──
+  var last = performance.now();
+  function loop(now) {
+    var dt = Math.min(0.033, (now - last) / 1000); last = now;
+    if (!window.__freeze) {
+      if (S.waiting > 0) { S.waiting -= dt; if (S.waiting <= 0) { S.waiting = 0; step(); } }
+      if (S.typing) {
+        S.shown += dt * (window.GAME_CONFIG && +window.GAME_CONFIG.textSpeed > 0 ? +window.GAME_CONFIG.textSpeed : 34);
+        if (S.shown >= S.line.length) { S.shown = S.line.length; S.typing = false; }
+      } else if (S.auto && !S.choices && !S.over) { S._a = (S._a || 0) + dt; if (S._a > 1.4) { S._a = 0; step(); } }
+      draw(dt);
+    }
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+
+  window.VN = {
+    S: S,
+    start: function (label) { S.over = false; goto(label || 'start'); },
+    goto: goto,
+    flags: S.flags,
+    save: function () { try { localStorage.setItem('vn_save', JSON.stringify({ label: S.label, pc: S.pc, flags: S.flags, bg: S.bg })); return true; } catch (e) { return false; } },
+    load: function () {
+      try {
+        var d = JSON.parse(localStorage.getItem('vn_save') || 'null'); if (!d) return false;
+        S.flags = d.flags || {}; S.bg = d.bg; S.bgImg = img(d.bg); S.over = false; S.label = d.label; S.pc = Math.max(0, d.pc - 1); step(); return true;
+      } catch (e) { return false; }
+    },
+  };
+  // headless 測試 hook(preview pane 收埋嗰陣 rAF 會停 → 要手動 render 先影到相)
+  window.__vnStep = function (n) { for (var i = 0; i < (n || 1); i++) { S.shown = S.line.length; S.typing = false; advance(); } };
+  window.__vnRender = function (n) { for (var i = 0; i < (n || 1); i++) draw(1 / 60); };
+  window.__vnState = function () { return { label: S.label, pc: S.pc, who: S.who, line: S.line, choices: S.choices ? S.choices.map(function (o) { return o.text; }) : null, flags: S.flags, over: S.over, bg: S.bg, actors: Object.keys(S.actors) }; };
+  if (SC.start) window.VN.start('start');
+})();
+/* __GI_VN_RUNTIME__ end */
+var VNU=(function(){
+var W=960,H=540,PH={x:329,y:24,w:302,h:492};
+var SC={x:362,y:31,w:237,h:478},HD=54;
+var IM={},LOGS={},LF=null,CUR='yan',TYP=false,RD=false,RDW='',RDI=-1,MX=-9,MY=-9,CHIP=[],PICK=0,FORCE=0,TOAST=0,NIGHTBG=0,RET=0,INCHAT=0,BGM=null,BGMN=null,AOK=0,LASTB=999,CFGD=0;
+function sfxp(n){if(!AOK)return;var u=(window.GAME_AUDIO||{})[n];if(!u)return;
+try{var a=new Audio(u);a.volume=(window.GAME_CONFIG&&window.GAME_CONFIG.sfxVolume!=null)?window.GAME_CONFIG.sfxVolume:1;a.play().catch(function(){});}catch(e){}}
+var SEED={yan:[{who:'yan',full:'今晚食唔食飯'},{who:'chit',full:'今晚唔得 要開工'},{who:'yan',full:'知道啦'},{who:'yan',full:'你呢排好少覆我'}],keung:[{who:'keung',full:'聽日七點'},{who:'chit',full:'知'},{who:'keung',full:'唔好再遲到'}],ma:[{who:'ma',full:'阿哲'},{who:'ma',full:'食咗飯未'},{who:'chit',full:'食咗'},{who:'ma',full:'阿哲'},{who:'ma',full:'食咗飯未'}],m:[{who:'m',full:'星期二 十一點'},{who:'chit',full:'知'}]};
+var DUG={},TMSG='',PUSHED={},SCR=0,LSTK='',TOPN=0,START={},PKEYS={},PREVAV={},RES={},LFM={};
+var CONV=[['yan','av_yan'],['keung','av_keung'],['ma','av_ma'],['m','av_m'],['me','av_me']];
+var DEEP={yan:[[{who:'yan',full:'你今日走得好急'},{who:'chit',full:'有嘢做'},{who:'yan',full:'你成日都有嘢做'}],[{who:'yan',full:'我今日見到你阿媽'},{who:'chit',full:'佢認唔認得你'},{who:'yan',full:'認得'},{who:'chit',full:'好'}],[{who:'yan',full:'你幾時得閑'},{who:'yan',full:'我等你覆咗三日'}]],keung:[[{who:'keung',full:'你星期六返唔返'},{who:'chit',full:'返'},{who:'keung',full:'唔好又走數'}],[{who:'keung',full:'你欠嗰筆點'},{who:'chit',full:'搞緊'},{who:'keung',full:'你成日都話搞緊'}],[{who:'keung',full:'你屋企知唔知'},{who:'chit',full:'唔好講'}]],ma:[[{who:'ma',full:'阿哲'},{who:'ma',full:'食咗飯未'},{who:'ma',full:'阿哲'}],[{who:'ma',full:'今日星期幾'},{who:'chit',full:'星期三'},{who:'ma',full:'哦'},{who:'ma',full:'食咗飯未'}],[{who:'ma',full:'阿哲你幾時返嚟'},{who:'ma',full:'我煮咗餸'}]],m:[[{who:'m',full:'搞掂未'},{who:'chit',full:'未'}],[{who:'m',full:'唔好拖'},{who:'m',full:'我等你'}]]};
+function buildMe(){var out=[],ks=['yan','keung','ma','m'],i,j;
+for(i=0;i<ks.length;i++){var a=LOGS[ks[i]];if(!a)continue;
+for(j=0;j<a.length;j++)if(a[j].who==='chit')out.push({who:'me',full:a[j].full});}
+if(!out.length)out.push({who:'me',full:'…'});return out;}
+function lg(k){if(!LOGS[k])LOGS[k]=(k==='me')?buildMe():((SEED[k]||[]).slice());return LOGS[k];}
+function bt(){return Math.max(0,fl('bat',0)|0);}
+function clk(){var s=fl('slot',0);return s>=2?'01:42':(s==1?'15:40':'09:12');}
+function pend(){return !!(window.VN&&window.VN.S&&window.VN.S.choices&&window.VN.S.choices.length);}
+var HS_DESK=[{x:324,y:350,w:70,h:50,t:'呢部機',go:'phone_home',ui:1},{x:190,y:29,w:183,h:163,t:'電視',go:'act_tv'},{x:672,y:383,w:190,h:116,t:'記事簿',go:'act_note'},{x:455,y:388,w:150,h:86,t:'待處理嘅機',go:'act_wipe'},{x:0,y:20,w:126,h:360,t:'窗',go:'act_window'},{x:790,y:160,w:172,h:212,t:'紙箱',go:'act_box'},{x:576,y:132,w:150,h:100,t:'枱燈',go:'act_lamp'},{x:10,y:438,w:145,h:46,t:'轉身（去床）',go:'bed',ui:1}];
+var HS_BED=[{x:280,y:215,w:470,h:240,t:'床（瞓覺，過一日）',go:'act_sleep'},{x:22,y:462,w:170,h:50,t:'返轉頭',go:'desk',ui:1}];
+var HS_PHONE=[{x:377,y:172,w:60,h:82,t:'訊息',go:'contact_list',ui:1,ic:'msg'},{x:451,y:172,w:60,h:82,t:'相簿',go:'act_gallery',ic:'pic'},{x:525,y:172,w:60,h:82,t:'設定',go:'act_sell',ic:'set'},{x:370,y:461,w:221,h:38,t:'放低部機',go:'desk',ui:1}];
+function unread(){return (fl('av_yan',0)==1?1:0)+(fl('av_keung',0)==1?1:0)+(fl('av_ma',0)==1?1:0);}
+function listSpots(){var a=[],y=SC.y+56,d=[['yan','欣','av_yan',fl('stage4',0)==1?'n4_yan':'n1'],['keung','強','av_keung','n2_keung'],['ma','媽','av_ma','n2_ma'],['m','M','av_m','n3_m'],['me','我','av_me','n5_me']];
+for(var i=0;i<d.length;i++){a.push({x:SC.x+6,y:y,w:SC.w-12,h:58,t:d[i][1],go:d[i][3],who:d[i][0],un:fl(d[i][2],0)==1});y+=60;}
+a.push({x:SC.x+6,y:SC.y+SC.h-48,w:SC.w-12,h:38,t:'返回',go:'phone_home',ui:1});return a;}
+var SUB=1,LASTL='';
+var ENDL={sell_do:1,end_paid:1,end_fail:1,end_dead:1,end_truth:1,end_sell_late:1,me_off:1};
+function isEnd(){var L=(window.VN&&window.VN.S&&window.VN.S.label)||'';return !!ENDL[L];}
+function inHubState(){var S=window.VN&&window.VN.S;if(!S)return false;var L=S.label||'';return L==='hub_day'||L==='hub_night';}
+function syncSub(){var L=(window.VN&&window.VN.S&&window.VN.S.label)||'';if(L!==LASTL){LASTL=L;if(L==='hub_day'){SUB=RET||1;RET=0;FORCE=0;PICK=0;}else if(L==='hub_night'){SUB=3;FORCE=0;PICK=0;}}}
+function mode(){syncSub();if(FORCE)return FORCE;return inHubState()?SUB:0;}
+var OPTR={},PASS=0;
+var ORD={hub_day:['act_tv','act_note','act_wipe','act_window','act_box','act_sleep','act_gallery','act_sell'],hub_night:['n1','n2_keung','n2_ma','night_end']};
+function fire(go){var _S=window.VN&&window.VN.S;if(!_S||!_S.choices||!_S.choices.length)return false;
+var L=(_S.label)||'',lst=ORD[L];
+if(!lst)return false;var i=lst.indexOf(go);if(i<0)return false;var R=OPTR[i];if(!R)return false;
+var cv=document.getElementById('c');if(!cv)return false;var r=cv.getBoundingClientRect();
+var sx=r.left+(R.x+R.w/2)*r.width/cv.width,sy=r.top+(R.y+R.h/2)*r.height/cv.height;
+PASS=1;['pointermove','pointerdown','pointerup','click'].forEach(function(t){
+var C=(t==='click')?MouseEvent:PointerEvent;
+cv.dispatchEvent(new C(t,{clientX:sx,clientY:sy,bubbles:true,cancelable:true,pointerId:1}));});
+PASS=0;return true;}
+function curSpots(){var h=mode();return h==1?HS_DESK:(h==2?HS_PHONE:(h==3?listSpots():(h==4?HS_BED:null)));}
+function frame(c){var pi=A('phone_body');
+if(pi&&pi.naturalWidth){
+var sh=c.createRadialGradient(480,300,60,480,300,300);
+sh.addColorStop(0,'rgba(0,0,0,.55)');sh.addColorStop(1,'rgba(0,0,0,0)');
+c.fillStyle=sh;c.fillRect(160,40,640,500);
+c.imageSmoothingEnabled=true;c.imageSmoothingQuality='high';c.drawImage(pi,208,-1,545,545);return;}
+c.fillStyle='#05060a';rr(c,PH.x,PH.y,PH.w,PH.h,28);c.fill();c.strokeStyle='#2b2d36';c.lineWidth=2;c.stroke();}
+function fl(n,d){try{var s=window.VN&&(window.VN.flags||window.VN.vars||window.VN.state||window.VN.f);if(s&&typeof s[n]!=='undefined')return s[n];}catch(e){}return d;}
+var AV={chit:'chit_anime_soft',yan:'yan_anime',ma:'ma_anime',keung:'keung_anime',m:'__noavatar',me:'__noavatar'};
+function A(k){if(!k)return null;if(!IM[k]){var i=new Image();i.src=(window.GAME_ASSETS||{})[k]||'';IM[k]=i;}var m=IM[k];return(m.complete&&m.naturalWidth)?m:null;}
+function rr(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath();}
+function wrap(c,t,mw){t=(t==null)?'':String(t);var o=[],l='';for(var i=0;i<t.length;i++){var n=l+t[i];if(c.measureText(n).width>mw&&l){o.push(l);l=t[i];}else l=n;}if(l)o.push(l);return o;}
+function av(c,k,cx,cy,r){var im=A(AV[k]);c.save();c.beginPath();c.arc(cx,cy,r,0,6.284);c.closePath();c.clip();
+if(im){var s=Math.max(2*r/im.naturalWidth,2*r/im.naturalHeight);c.imageSmoothingEnabled=true;c.imageSmoothingQuality='high';c.drawImage(im,cx-im.naturalWidth*s/2,cy-im.naturalHeight*s/2,im.naturalWidth*s,im.naturalHeight*s);}
+else{c.fillStyle='#262931';c.fillRect(cx-r,cy-r,2*r,2*r);
+c.fillStyle='#565b66';c.beginPath();c.arc(cx,cy-r*0.24,r*0.36,0,6.284);c.fill();
+c.beginPath();c.arc(cx,cy+r*0.66,r*0.58,Math.PI,0);c.fill();}c.restore();}
+return{
+push:function(b){var w=b.who;
+if(w==='typing'){if(!TYP)sfxp('sfx_typing');TYP=true;return;}
+if(w==='stamp'){var sa=lg(CUR);if(sa.length)sa[sa.length-1].ts=b.full;return;}
+if(w==='read'){var ra=lg(CUR);RD=true;RDW=CUR;RDI=-1;
+for(var rz=ra.length-1;rz>=0;rz--){if(ra[rz].who==='chit'){RDI=rz;break;}}return;}
+TYP=false;
+if(w&&AV[w]&&w!=='chit'&&w===CUR)RD=false;
+var fu=(b.full!=null)?b.full:((b.text!=null)?b.text:'');
+var tgt=(w==='chit')?CUR:w;
+if(fu===LFM[tgt])return;
+var kk=(window.VN&&window.VN.S&&window.VN.S.label!==undefined)?(window.VN.S.label+'|'+window.VN.S.pc):'';
+if(kk){if(PUSHED[kk])return;PUSHED[kk]=1;(PKEYS[tgt]=PKEYS[tgt]||[]).push(kk);}
+LFM[tgt]=fu;LF=fu;
+SCR=0;
+var arr=lg(tgt);arr.push({who:w,full:fu});if(arr.length>200)arr.shift();},
+isDay:function(){var v=fl('isday',0);return v===1||v===true||v==='1';},
+inHub:function(){return mode()>0;},
+hubMode:function(){return mode();},
+audioOn:function(){AOK=1;},
+setVol:function(){if(BGM)BGM.volume=(window.GAME_CONFIG&&window.GAME_CONFIG.musicVolume!=null)?window.GAME_CONFIG.musicVolume:0.5;},
+music:function(){
+if(!CFGD){var FF=window.VN&&window.VN.flags;
+if(FF&&FF.bat!==undefined){CFGD=1;var CC=window.GAME_CONFIG||{};if(CC.batteryStart)FF.bat=CC.batteryStart;}}
+if(!AOK)return;
+var bv=fl('bat',999);if(LASTB>20&&bv<=20&&bv>0)sfxp('sfx_lowbat');LASTB=bv;
+var n=(fl('stage4',0)==1||fl('stage5',0)==1)?'bgm_dread':((fl('isday',0)==1&&fl('slot',0)<2)?'bgm_day':'bgm_night');
+if(n===BGMN)return;
+var u=(window.GAME_AUDIO||{})[n];if(!u)return;
+BGMN=n;if(BGM){try{BGM.pause();}catch(e){}}
+BGM=new Audio(u);BGM.loop=true;
+BGM.volume=(window.GAME_CONFIG&&window.GAME_CONFIG.musicVolume!=null)?window.GAME_CONFIG.musicVolume:0.5;
+BGM.play().catch(function(){});},
+setSub:function(n){SUB=n;},
+rec:function(o){OPTR[o.index]={x:o.x,y:o.y,w:o.w,h:o.h};},
+pass:function(){return PASS;},
+fire:function(go){return fire(go);},
+photo:function(c){var P=fl('photo',0);if(!P)return;
+var ks=['','cg_selfie','cg_couple','cg_family','cg_receipt','cg_bridge'],kk=ks[P];if(!kk)return;var im=A(kk);
+c.fillStyle='rgba(0,0,0,.74)';c.fillRect(0,0,W,H);
+var pw=300,ph=300,px=(W-pw)/2,py=92;
+c.save();c.translate(px+pw/2,py+ph/2);c.rotate(-0.019);c.translate(-(px+pw/2),-(py+ph/2));
+c.fillStyle='#e6e2d9';c.fillRect(px-11,py-11,pw+22,ph+46);
+c.strokeStyle='rgba(0,0,0,.4)';c.lineWidth=1;c.strokeRect(px-11,py-11,pw+22,ph+46);
+if(im){var s=Math.max(pw/im.naturalWidth,ph/im.naturalHeight),iw=im.naturalWidth*s,ih=im.naturalHeight*s;
+c.save();c.beginPath();c.rect(px,py,pw,ph);c.clip();
+c.imageSmoothingEnabled=true;c.imageSmoothingQuality='high';
+c.drawImage(im,px+(pw-iw)/2,py+(ph-ih)/2,iw,ih);c.restore();}
+else{c.fillStyle='#20242c';c.fillRect(px,py,pw,ph);}
+c.restore();},
+tv:function(c){if(fl('tvon',0)!=1)return;var im=A(fl('tvchit',0)==1?'tv_news_chit':'tv_news');
+var x=202,y=38,w=164,h=138,t=(window.VN&&window.VN.S&&window.VN.S.t)||0;
+c.save();c.beginPath();c.rect(x,y,w,h);c.clip();
+if(im){var s=Math.max(w/im.naturalWidth,h/im.naturalHeight),iw=im.naturalWidth*s,ih=im.naturalHeight*s;
+c.imageSmoothingEnabled=true;c.globalAlpha=.86+Math.sin(t*9)*.06;
+c.drawImage(im,x+(w-iw)/2,y+(h-ih)/2,iw,ih);c.globalAlpha=1;}
+else{c.fillStyle='#2a3340';c.fillRect(x,y,w,h);}
+c.fillStyle='rgba(0,0,0,.24)';for(var i=0;i<h;i+=3)c.fillRect(x,y+i,w,1);
+c.fillStyle='rgba(255,255,255,.05)';c.fillRect(x,y+((t*70)%h),w,6);
+c.restore();
+var g=c.createRadialGradient(x+w/2,y+h/2,12,x+w/2,y+h/2,200);
+g.addColorStop(0,'rgba(148,180,224,.14)');g.addColorStop(1,'rgba(148,180,224,0)');
+c.fillStyle=g;c.fillRect(x-130,y-100,w+260,h+260);},
+tod:function(c,bed){var s=fl('slot',0);
+if(s>=2){c.fillStyle=bed?'rgba(6,12,32,.58)':(NIGHTBG?'rgba(8,16,40,.16)':'rgba(8,16,40,.66)');c.fillRect(0,0,W,H);
+var g;
+if(bed){g=c.createRadialGradient(185,57,6,185,57,270);
+g.addColorStop(0,'rgba(150,178,220,.17)');g.addColorStop(.5,'rgba(138,164,206,.05)');g.addColorStop(1,'rgba(138,164,206,0)');}
+else{g=c.createRadialGradient(650,214,8,650,214,330);
+g.addColorStop(0,NIGHTBG?'rgba(255,206,138,.10)':'rgba(255,206,138,.34)');
+g.addColorStop(.45,NIGHTBG?'rgba(255,190,120,.04)':'rgba(255,190,120,.10)');
+g.addColorStop(1,'rgba(255,190,120,0)');}
+c.fillStyle=g;c.fillRect(0,0,W,H);}
+else if(s==1){c.fillStyle='rgba(255,172,88,.14)';c.fillRect(0,0,W,H);}
+else{c.fillStyle='rgba(188,214,255,.08)';c.fillRect(0,0,W,H);}},
+bedv:function(c){NIGHTBG=0;var bi=A('bg_bed');
+if(bi){var s=Math.max(W/bi.naturalWidth,H/bi.naturalHeight),bw=bi.naturalWidth*s,bh=bi.naturalHeight*s;
+c.imageSmoothingEnabled=true;c.imageSmoothingQuality='high';c.drawImage(bi,(W-bw)/2,(H-bh)/2,bw,bh);}
+else{c.fillStyle='#14151a';c.fillRect(0,0,W,H);}
+VNU.tod(c,1);},
+isEnd:function(){return isEnd();},
+ending:function(c,b){c.fillStyle='#000';c.fillRect(0,0,W,H);
+var g=c.createRadialGradient(480,268,30,480,268,520);g.addColorStop(0,'#16181e');g.addColorStop(1,'#000');c.fillStyle=g;c.fillRect(0,0,W,H);
+c.fillStyle='#d6dae1';c.font='19px Georgia,serif';c.textAlign='center';c.textBaseline='middle';
+var ls=wrap(c,(b&&b.text)||'',620),n=ls.length;
+for(var i=0;i<n;i++)c.fillText(ls[i],480,268-(n-1)*17+i*34);
+c.textAlign='left';c.textBaseline='alphabetic';VNU.grain(c);},
+tick:function(){var k=(window.VN&&window.VN.S)?(window.VN.S.label+'|'+window.VN.S.pc):'';if(k!==LSTK){LSTK=k;SCR=0;}
+var SS=window.VN&&window.VN.S,L2=SS?(SS.label||''):'';
+if(SS&&INCHAT===1&&CUR&&!FORCE&&L2!=='hub_day'&&L2!=='hub_night')RES[CUR]={l:L2,p:SS.pc};
+for(var i=0;i<CONV.length;i++){var w=CONV[i][0],v=(fl(CONV[i][1],0)==1)?1:0;
+if(PREVAV[w]!==1&&v===1){START[w]=lg(w).length;PKEYS[w]=[];delete RES[w];}
+if(PREVAV[w]===1&&v===0)delete RES[w];
+PREVAV[w]=v;}},
+beginConv:function(w){CUR=w;SCR=0;FORCE=0;PICK=0;CHIP=[];INCHAT=1;if(START[w]===undefined)return;
+var a=lg(w);if(a.length<=START[w])return;
+a.length=START[w];
+var ks=PKEYS[w]||[];for(var i=0;i<ks.length;i++)delete PUSHED[ks[i]];
+PKEYS[w]=[];SCR=0;},
+clearChips:function(){CHIP=[];},
+chipHit:function(x,y){for(var i=0;i<CHIP.length;i++){var s=CHIP[i];if(s&&x>=s.x&&x<=s.x+s.w&&y>=s.y&&y<=s.y+s.h)return i;}return null;},
+chatHit:function(x,y){if(mode()!==0||INCHAT!==1)return null;
+for(var i=0;i<CHIP.length;i++){var s=CHIP[i];if(s&&x>=s.x&&x<=s.x+s.w&&y>=s.y&&y<=s.y+s.h)return {i:i,cancel:s.cancel};}
+if(x>=SC.x+6&&x<=SC.x+74&&y>=SC.y+14&&y<=SC.y+50)return {back:1};
+if(x>=SC.x+SC.w-82&&x<=SC.x+SC.w-6&&y>=SC.y+14&&y<=SC.y+50)return {dig:1};
+if(SCR>0&&x>=SC.x+SC.w-86&&x<=SC.x+SC.w-8&&y>=SC.y+SC.h-82&&y<=SC.y+SC.h-56)return {bot:1};
+var bx=SC.x+10,bw=SC.w-20,by=SC.y+SC.h-48;
+if(x>=bx&&x<=bx+bw&&y>=by&&y<=by+38)return {bar:1};
+return null;},
+scroll:function(d){var L=lg(CUR),mx=Math.max(0,L.length-1),n=SCR+d;
+if(n<0)n=0;
+if(n>mx){VNU.chatAct({dig:1});return;}
+SCR=n;},
+scroll:function(dy){if(mode()>0||!INCHAT)return;
+var L=lg(CUR),mx=Math.max(0,L.length-1);
+if(dy<0){
+if(SCR>=mx){var ar=DEEP[CUR]||[],n=DUG[CUR]||0;
+if(n<ar.length&&bt()>=4){TOPN++;if(TOPN>=2){TOPN=0;VNU.chatAct({dig:1});}}
+else{TOPN=0;TMSG=(n<ar.length)?'電量唔夠':'冇更早嘅訊息';TOAST=90;}return;}
+SCR=Math.min(mx,SCR+2);TOPN=0;return;}
+SCR=Math.max(0,SCR-2);TOPN=0;},
+chatAct:function(s){if(s.back){FORCE=3;PICK=0;CHIP=[];return;}
+if(s.bot){SCR=0;return;}
+if(s.dig){var w=CUR,ar=DEEP[w]||[],n=DUG[w]||0,F=window.VN&&window.VN.flags;
+if(n>=ar.length){TMSG='冇更早嘅訊息';TOAST=120;return;}
+if(!F||(F.bat||0)<4){TMSG='電量唔夠';TOAST=120;return;}
+F.bat=(F.bat||0)-4;DUG[w]=n+1;
+var batch=ar[n].slice();batch.unshift({who:'__div',full:'⋯ 更早 ⋯'});
+var older=lg(w).length;LOGS[w]=batch.concat(LOGS[w]);SCR=older;TMSG='− 4';TOAST=120;return;}
+if(s.bar){if(pend())PICK=1;return;}
+if(s.cancel){PICK=0;CHIP=[];return;}
+PICK=0;VNU.fireIdx(s.i);},
+resume:function(who){if(!pend())return 0;if(who===CUR){FORCE=0;PICK=0;INCHAT=1;return 1;}TOAST=130;return 2;},
+jumpRes:function(who){var r=RES[who],S=window.VN&&window.VN.S;
+if(!r||!r.l||!S||!window.__vnStep)return 0;
+CUR=who;RD=false;TYP=false;FORCE=0;PICK=0;CHIP=[];INCHAT=1;SCR=0;
+S.choices=null;S.waiting=0;S.typing=false;S.over=false;S.showLog=false;
+S.label=r.l;S.pc=Math.max(0,r.p-1);
+var FF=window.VN.flags;if(FF)FF.hub=0;
+window.__vnStep(1);return 1;},
+nav:function(n){if(FORCE)FORCE=n;else SUB=n;},
+setForce:function(n){FORCE=n;},
+setRet:function(n){RET=n;},
+sfx:function(n){sfxp(n);},
+bat:function(){return bt();},
+toast:function(m){TMSG=m;TOAST=130;},
+heldPhone:function(){return RET===2;},
+exitTo:function(n){if(pend()){TMSG='先覆咗嗰句，或者揀「（唔覆）」';TOAST=130;return false;}
+FORCE=0;PICK=0;INCHAT=0;
+if(!inHubState()&&window.VN){RET=n;window.VN.goto('hub_day');}else{SUB=n;}return true;},
+inChat:function(){return INCHAT===1;},
+setChat:function(n){INCHAT=n;},
+blocked:function(){if(pend()){TOAST=130;return true;}return false;},
+fireIdx:function(i){var R=OPTR[i];if(!R)return false;var cv=document.getElementById('c');if(!cv)return false;
+var r=cv.getBoundingClientRect(),sx=r.left+(R.x+R.w/2)*r.width/cv.width,sy=r.top+(R.y+R.h/2)*r.height/cv.height;
+PASS=1;['pointermove','pointerdown','pointerup','click'].forEach(function(t){
+var C=(t==='click')?MouseEvent:PointerEvent;
+cv.dispatchEvent(new C(t,{clientX:sx,clientY:sy,bubbles:true,cancelable:true,pointerId:1}));});
+PASS=0;return true;},
+chip:function(c,o){var n=(window.VN&&window.VN.S&&window.VN.S.choices)?window.VN.S.choices.length:1;
+if(o.index===0)CHIP=[];
+var w=SC.w-24,h=32,g=6,x=SC.x+12,y=SC.y+SC.h-14-n*(h+g)+g+o.index*(h+g);
+CHIP[o.index]={x:x,y:y,w:w,h:h};
+var hov=(MX>=x&&MX<=x+w&&MY>=y&&MY<=y+h);
+c.fillStyle=hov?'rgba(64,102,136,.98)':'rgba(38,54,72,.96)';rr(c,x,y,w,h,16);c.fill();
+c.strokeStyle=hov?'#7ba0c4':'#3d5b76';c.lineWidth=1;c.stroke();
+c.fillStyle='#e0e7ef';c.font='12px system-ui';c.textAlign='center';c.textBaseline='middle';
+c.fillText(o.text,x+w/2,y+h/2);c.textAlign='left';c.textBaseline='alphabetic';},
+hint:function(c,bed){var h=VNU.hit(MX,MY),txt=h?('→　'+h.t):(bed?'撳張床瞓覺，過一日。':'撳枱面嘅物件。藍點圈住嘅，係今朝入嘅第四部機。');
+var w=W-92,x=46,hh=40,y=H-hh-13;
+c.fillStyle='rgba(8,9,12,.84)';rr(c,x,y,w,hh,8);c.fill();
+c.strokeStyle='rgba(255,255,255,.11)';c.lineWidth=1;c.stroke();
+c.fillStyle=h?'#ecdfc4':'#9aa0a8';c.font=(h?'600 ':'')+'14px system-ui';c.textAlign='left';c.textBaseline='middle';
+c.fillText(txt,x+18,y+hh/2);c.textAlign='left';c.textBaseline='alphabetic';},
+phoneHome:function(c){VNU.room(c);frame(c);
+c.save();rr(c,SC.x,SC.y,SC.w,SC.h,18);c.clip();
+var g=c.createLinearGradient(SC.x,SC.y,SC.x,SC.y+SC.h);g.addColorStop(0,'#1a2331');g.addColorStop(1,'#0c0f16');c.fillStyle=g;c.fillRect(SC.x,SC.y,SC.w,SC.h);
+c.fillStyle='#e8e8ea';c.font='200 46px system-ui';c.textAlign='center';c.textBaseline='alphabetic';c.fillText(clk(),SC.x+SC.w/2,SC.y+100);
+c.fillStyle=(bt()<=20)?'#c9453d':'#7f858d';c.font='12px system-ui';c.fillText(bt()+'%',SC.x+SC.w/2,SC.y+124);
+for(var i=0;i<HS_PHONE.length;i++){var s=HS_PHONE[i];if(!s.ic)continue;
+c.fillStyle=s.ic==='msg'?'#2d4a63':(s.ic==='pic'?'#3a4a3c':'#393a42');rr(c,s.x,s.y,60,60,14);c.fill();
+c.fillStyle='#e2e7ec';c.font='23px system-ui';c.textAlign='center';c.textBaseline='middle';
+c.fillText(s.ic==='msg'?'✉':(s.ic==='pic'?'▣':'⚙'),s.x+30,s.y+31);
+c.font='11px system-ui';c.textBaseline='alphabetic';c.fillStyle='#a9aeb6';c.fillText(s.t,s.x+30,s.y+77);
+if(s.ic==='msg'){var n=unread();if(n>0){c.fillStyle='#c9453d';c.beginPath();c.arc(s.x+54,s.y+6,10,0,6.284);c.fill();
+c.fillStyle='#fff';c.font='600 11px system-ui';c.textBaseline='middle';c.fillText(String(n),s.x+54,s.y+6);c.textBaseline='alphabetic';}}}
+c.fillStyle='rgba(255,255,255,.06)';rr(c,370,461,221,38,10);c.fill();
+c.fillStyle='#9aa0a8';c.font='12px system-ui';c.textAlign='center';c.fillText('放低部機',480,485);
+if(TOAST>0){TOAST--;c.fillStyle='rgba(104,38,34,.94)';rr(c,SC.x+22,SC.y+SC.h-104,SC.w-44,34,8);c.fill();
+c.strokeStyle='#8d4a44';c.lineWidth=1;c.stroke();
+c.fillStyle='#ffd9d4';c.font='12px system-ui';c.textAlign='center';c.textBaseline='middle';
+c.fillText('先覆咗嗰句，或者揀「（唔覆）」',SC.x+SC.w/2,SC.y+SC.h-87);c.textBaseline='alphabetic';}
+c.restore();c.textAlign='left';},
+list:function(c){VNU.room(c);frame(c);
+c.fillStyle='#12131a';rr(c,SC.x,SC.y,SC.w,SC.h,18);c.fill();
+c.save();rr(c,SC.x,SC.y,SC.w,SC.h,18);c.clip();
+c.fillStyle='#171922';c.fillRect(SC.x,SC.y,SC.w,46);
+c.fillStyle='#e8e8ea';c.font='600 14px system-ui';c.textAlign='left';c.textBaseline='alphabetic';c.fillText('MESSAGE',SC.x+14,SC.y+29);
+c.fillStyle=(bt()<=20)?'#c9453d':'#5a5c66';c.font='10px system-ui';c.textAlign='right';c.fillText(bt()+'%',SC.x+SC.w-14,SC.y+29);
+var L=listSpots();
+for(var i=0;i<L.length;i++){var s=L[i];
+if(s.ui){c.fillStyle='rgba(255,255,255,.06)';rr(c,s.x,s.y,s.w,s.h,10);c.fill();
+c.fillStyle='#9aa0a8';c.font='12px system-ui';c.textAlign='center';c.fillText('返回',s.x+s.w/2,s.y+24);continue;}
+c.strokeStyle='#1e202a';c.lineWidth=1;c.beginPath();c.moveTo(s.x+8,s.y+s.h);c.lineTo(s.x+s.w-8,s.y+s.h);c.stroke();
+av(c,s.who,s.x+30,s.y+29,19);
+c.textAlign='left';c.fillStyle=s.un?'#e8e8ea':'#7f848c';c.font=(s.un?'600 ':'')+'14px system-ui';c.fillText(s.t,s.x+60,s.y+25);
+c.fillStyle='#5a5c66';c.font='11px system-ui';c.fillText(s.un?'新訊息':'已讀',s.x+60,s.y+44);
+if(s.un){c.fillStyle='#c9453d';c.beginPath();c.arc(s.x+s.w-18,s.y+29,5,0,6.284);c.fill();}}
+if(TOAST>0){TOAST--;c.fillStyle='rgba(104,38,34,.94)';rr(c,SC.x+22,SC.y+SC.h-104,SC.w-44,34,8);c.fill();
+c.strokeStyle='#8d4a44';c.lineWidth=1;c.stroke();
+c.fillStyle='#ffd9d4';c.font='12px system-ui';c.textAlign='center';c.textBaseline='middle';
+c.fillText('先覆咗嗰句，或者揀「（唔覆）」',SC.x+SC.w/2,SC.y+SC.h-87);c.textBaseline='alphabetic';}
+c.restore();c.textAlign='left';},
+hit:function(x,y){var A=curSpots();if(!A)return null;for(var i=0;i<A.length;i++){var s=A[i];if(x>=s.x&&x<=s.x+s.w&&y>=s.y&&y<=s.y+s.h)return s;}return null;},
+mouse:function(x,y){MX=x;MY=y;},
+spots:function(c){var A=curSpots();if(!A)return;var i,s,hv=null,md=mode(),desk=(md==1||md==4);
+for(i=0;i<A.length;i++){s=A[i];
+if(MX>=s.x&&MX<=s.x+s.w&&MY>=s.y&&MY<=s.y+s.h){hv=s;continue;}
+if(!desk)continue;
+var dx=s.x+s.w/2,dy=s.y+s.h/2,key=(s.go==='phone_home');
+c.beginPath();c.arc(dx,dy,key?6.5:5,0,6.284);c.fillStyle='rgba(0,0,0,.55)';c.fill();
+c.beginPath();c.arc(dx,dy,key?4.5:3,0,6.284);c.fillStyle=key?'rgba(168,205,255,.95)':'rgba(255,248,230,.85)';c.fill();
+if(key){c.strokeStyle='rgba(168,205,255,.78)';c.lineWidth=2;rr(c,s.x-5,s.y-5,s.w+10,s.h+10,8);c.stroke();
+c.fillStyle='rgba(10,20,34,.88)';rr(c,dx-40,s.y-33,80,23,5);c.fill();
+c.fillStyle='#bcd6ff';c.font='600 12px system-ui';c.textAlign='center';c.textBaseline='middle';
+c.fillText('第四部機',dx,s.y-21);c.textAlign='left';c.textBaseline='alphabetic';}}
+if(!hv)return;
+c.strokeStyle='rgba(255,240,208,.9)';c.lineWidth=2;rr(c,hv.x,hv.y,hv.w,hv.h,8);c.stroke();
+c.fillStyle='rgba(255,240,208,.07)';c.fill();
+var tw=hv.t.length*15+24,tx=Math.max(8,Math.min(W-tw-8,hv.x+hv.w/2-tw/2)),ty=Math.max(6,hv.y-32);
+c.fillStyle='rgba(0,0,0,.72)';rr(c,tx,ty,tw,25,6);c.fill();
+c.fillStyle='#fff';c.font='600 13px system-ui';c.textAlign='center';c.textBaseline='middle';
+c.fillText(hv.t,tx+tw/2,ty+13);c.textAlign='left';c.textBaseline='alphabetic';},
+day:function(c){var bgi=(fl('slot',0)>=2)?A('bg_desk_night'):null;NIGHTBG=bgi?1:0;if(!bgi)bgi=A('bg_desk_day');
+if(bgi){var s=Math.max(W/bgi.naturalWidth,H/bgi.naturalHeight),bw=bgi.naturalWidth*s,bh=bgi.naturalHeight*s;
+c.imageSmoothingEnabled=true;c.imageSmoothingQuality='high';c.drawImage(bgi,(W-bw)/2,(H-bh)/2,bw,bh);VNU.tod(c);VNU.tv(c);VNU.photo(c);return;}
+c.fillStyle='#1b1c20';c.fillRect(0,0,W,H);
+var wg=c.createLinearGradient(0,0,0,308);wg.addColorStop(0,'#3a3d46');wg.addColorStop(1,'#22242a');c.fillStyle=wg;c.fillRect(0,0,W,308);
+c.fillStyle='#4a3f31';c.fillRect(0,308,W,H-308);c.fillStyle='#5d5040';c.fillRect(0,308,W,7);
+var lg=c.createLinearGradient(0,0,560,H);lg.addColorStop(0,'rgba(198,212,232,.24)');lg.addColorStop(1,'rgba(0,0,0,0)');c.fillStyle=lg;c.fillRect(0,0,W,H);
+c.fillStyle='#0c0d10';rr(c,72,150,178,128,6);c.fill();c.strokeStyle='#3a3c44';c.lineWidth=2;c.stroke();
+c.fillStyle='rgba(148,168,198,.09)';c.fillRect(82,160,158,108);
+c.fillStyle='#c9c3b4';rr(c,150,352,124,88,3);c.fill();
+c.fillStyle='#8d8677';c.fillRect(163,372,98,2);c.fillRect(163,386,98,2);c.fillRect(163,400,70,2);
+for(var i=0;i<3;i++){var px=404+i*66,py=344+((i%2)?9:0);
+c.fillStyle='#101115';rr(c,px,py,50,94,8);c.fill();c.strokeStyle='#2c2e36';c.lineWidth=1.5;c.stroke();}
+c.fillStyle='#05060a';rr(c,646,336,56,104,9);c.fill();c.strokeStyle='#4a5566';c.lineWidth=2;c.stroke();
+c.fillStyle='#12131a';rr(c,651,343,46,90,6);c.fill();
+var pg=c.createRadialGradient(674,388,4,674,388,90);pg.addColorStop(0,'rgba(120,150,200,.20)');pg.addColorStop(1,'rgba(0,0,0,0)');c.fillStyle=pg;c.fillRect(600,300,150,180);},
+hud:function(c){var d=fl('day',1),cash=fl('cash',0),goal=fl('goal',2400),due=(d<=3?3:6),left=Math.max(0,due-d+1);
+c.textBaseline='alphabetic';c.textAlign='left';
+c.fillStyle='rgba(8,9,12,.82)';rr(c,22,18,168,116,8);c.fill();c.strokeStyle='rgba(255,255,255,.12)';c.lineWidth=1;c.stroke();
+c.fillStyle='#e8e8ea';c.font='600 15px system-ui';c.fillText('第 '+d+' 日',38,44);
+c.fillStyle='#8f959d';c.font='12px system-ui';c.fillText(['早上','下午','夜晚'][Math.min(2,fl('slot',0))],104,44);
+c.fillStyle='#c6cbd2';c.font='12px system-ui';
+c.fillText('現金　$'+cash,38,70);
+c.fillText('本期　$'+goal,38,92);
+c.font='600 12px system-ui';
+c.fillStyle=(cash>=goal)?'#7fae86':((left<=1)?'#d47b72':'#7f858d');
+c.fillText(left<=1?'今晚到期':'距到期 '+left+' 日',38,116);c.textAlign='left';},
+room:function(c){c.fillStyle='#0a0b0e';c.fillRect(0,0,W,H);var g=c.createRadialGradient(480,268,70,480,268,540);g.addColorStop(0,'#1a1c23');g.addColorStop(1,'rgba(10,11,14,0)');c.fillStyle=g;c.fillRect(0,0,W,H);},
+phone:function(c){frame(c);
+c.fillStyle='#12131a';rr(c,SC.x,SC.y,SC.w,SC.h,18);c.fill();
+c.save();rr(c,SC.x,SC.y,SC.w,SC.h,18);c.clip();
+c.fillStyle='#171922';c.fillRect(SC.x,SC.y,SC.w,HD);
+c.fillStyle='#5a5c66';c.font='10px system-ui';c.textBaseline='alphabetic';c.textAlign='left';c.fillText(clk(),SC.x+12,SC.y+16);
+var bq=bt();
+c.textAlign='right';c.fillStyle=(bq<=20)?'#c9453d':'#5a5c66';c.fillText(bq+'%',SC.x+SC.w-12,SC.y+16);
+var bx=SC.x+8,by=SC.y+18,bw=58,bh=26,hb=(MX>=bx-2&&MX<=bx+bw+8&&MY>=by-4&&MY<=by+bh+5);
+c.fillStyle=hb?'rgba(86,118,150,.96)':'rgba(255,255,255,.11)';rr(c,bx,by,bw,bh,13);c.fill();
+c.strokeStyle=hb?'#7ba0c4':'rgba(255,255,255,.18)';c.lineWidth=1;c.stroke();
+c.fillStyle='#e2e7ed';c.font='600 12px system-ui';c.textAlign='center';c.textBaseline='middle';
+c.fillText('‹ 返回',bx+bw/2,by+bh/2);
+var dx2=SC.x+SC.w-78,dy2=SC.y+18,dw2=68,dh2=26;
+var arr=DEEP[CUR]||[],more=(DUG[CUR]||0)<arr.length,pw=(fl('bat',0)>=4);
+var hd=(MX>=dx2&&MX<=dx2+dw2&&MY>=dy2&&MY<=dy2+dh2);
+c.fillStyle=(more&&pw)?(hd?'rgba(86,118,150,.96)':'rgba(255,255,255,.10)'):'rgba(255,255,255,.04)';
+rr(c,dx2,dy2,dw2,dh2,13);c.fill();
+c.strokeStyle=(more&&pw)?(hd?'#7ba0c4':'rgba(255,255,255,.16)'):'rgba(255,255,255,.07)';c.lineWidth=1;c.stroke();
+c.fillStyle=(more&&pw)?'#dfe4ea':'#4e535b';c.font='600 11px system-ui';c.textAlign='center';c.textBaseline='middle';
+c.fillText('↺ 舊訊息',dx2+dw2/2,dy2+dh2/2);
+c.textAlign='left';c.textBaseline='alphabetic';
+av(c,CUR,SC.x+86,SC.y+36,14);
+c.fillStyle='#e8e8ea';c.font='600 13px system-ui';
+c.fillText(((window.GAME_DATA.characters||{})[CUR]||{}).name||'',SC.x+108,SC.y+41);
+c.strokeStyle='#23252e';c.lineWidth=1;c.beginPath();c.moveTo(SC.x,SC.y+HD);c.lineTo(SC.x+SC.w,SC.y+HD);c.stroke();c.restore();},
+chat:function(c,b){c.save();c.beginPath();c.rect(SC.x,SC.y+HD,SC.w,SC.h-HD);c.clip();
+var LG=lg(CUR),mw=SC.w-70,bot=SC.y+SC.h-62,items=[],i,j,q;c.font='13px system-ui';
+if(SCR>LG.length-1)SCR=Math.max(0,LG.length-1);
+var wEnd=LG.length-SCR,wStart=Math.max(0,wEnd-12);
+for(i=wStart;i<wEnd;i++){var e=LG[i],tx=(b&&i===LG.length-1&&b.full!=null&&e.full===b.full)?b.text:e.full;
+if(e.who==='__div'){items.push({div:1,dt:e.full,h:28});continue;}
+var ls=wrap(c,tx,mw);items.push({ls:ls,h:ls.length*19+16+(e.ts?14:0),mine:e.who==='chit',ts:e.ts,li:i});}
+if(TYP)items.push({ls:null,h:30,mine:false,typ:1});
+var tot=0;for(j=0;j<items.length;j++)tot+=items[j].h+8;if(RD)tot+=15;
+var y=bot-tot;
+for(j=0;j<items.length;j++){var it=items[j],wq=0;
+if(it.div){c.fillStyle='#5a5f68';c.font='11px system-ui';c.textAlign='center';c.textBaseline='middle';
+c.fillText(it.dt,SC.x+SC.w/2,y+14);c.textAlign='left';c.textBaseline='alphabetic';c.font='13px system-ui';y+=it.h+8;continue;}
+if(it.typ){c.fillStyle='#23252e';rr(c,SC.x+12,y,52,it.h,12);c.fill();
+c.fillStyle='#8a8d96';c.font='16px system-ui';c.textAlign='left';c.textBaseline='middle';c.fillText('⋯',SC.x+27,y+it.h/2);c.font='13px system-ui';y+=it.h+8;continue;}
+for(q=0;q<it.ls.length;q++)wq=Math.max(wq,c.measureText(it.ls[q]).width);
+var bw=wq+22,bx=it.mine?(SC.x+SC.w-12-bw):(SC.x+12);
+var bh2=it.h-(it.ts?14:0);
+c.fillStyle=it.mine?'#2d4a63':'#23252e';rr(c,bx,y,bw,bh2,12);c.fill();
+c.fillStyle='#e8e8ea';c.textAlign='left';c.textBaseline='alphabetic';
+for(q=0;q<it.ls.length;q++)c.fillText(it.ls[q],bx+11,y+21+q*19);
+if(it.ts){c.fillStyle='#7a7f89';c.font='10px system-ui';c.textAlign=it.mine?'right':'left';c.fillText(it.ts,it.mine?(bx+bw-2):(bx+2),y+bh2+11);c.font='13px system-ui';c.textAlign='left';}
+y+=it.h+8;
+if(RD&&RDW===CUR&&it.li===RDI&&it.mine){c.fillStyle='#5a5c66';c.font='10px system-ui';c.textAlign='right';c.textBaseline='alphabetic';c.fillText('已讀',SC.x+SC.w-13,y+2);c.font='13px system-ui';y+=15;}}
+if(TOPN>=1){var tw3=206,tx3=SC.x+(SC.w-tw3)/2,ty3=SC.y+HD+8;
+c.fillStyle='rgba(10,14,20,.94)';rr(c,tx3,ty3,tw3,24,12);c.fill();
+c.strokeStyle='#3a4450';c.lineWidth=1;c.stroke();
+c.fillStyle='#cfd6de';c.font='11px system-ui';c.textAlign='center';c.textBaseline='middle';
+c.fillText('再向上捲　讀更早（−4）',tx3+tw3/2,ty3+12);
+c.textAlign='left';c.textBaseline='alphabetic';}
+c.restore();VNU.bar(c);},
+bar:function(c){var x=SC.x+10,w=SC.w-20,h=38,y=SC.y+SC.h-48,p=pend();
+if(PICK&&p){var n=(window.VN.S.choices||[]).length,ch=34,g=6,sh=n*(ch+g)+46,sy=SC.y+SC.h-8-sh;
+c.save();rr(c,SC.x,SC.y,SC.w,SC.h,18);c.clip();
+c.fillStyle='rgba(6,8,12,.94)';rr(c,SC.x+6,sy,SC.w-12,sh,14);c.fill();
+c.strokeStyle='#2a3340';c.lineWidth=1;c.stroke();
+CHIP=[];
+for(var i=0;i<n;i++){var o=window.VN.S.choices[i],t=(o&&o.text!==undefined)?o.text:o;
+var cx=SC.x+16,cy=sy+8+i*(ch+g),cw=SC.w-32;
+CHIP[i]={x:cx,y:cy,w:cw,h:ch};
+var hv=(MX>=cx&&MX<=cx+cw&&MY>=cy&&MY<=cy+ch);
+c.fillStyle=hv?'rgba(64,102,136,.98)':'rgba(38,54,72,.96)';rr(c,cx,cy,cw,ch,16);c.fill();
+c.strokeStyle=hv?'#7ba0c4':'#3d5b76';c.lineWidth=1;c.stroke();
+c.fillStyle='#e0e7ef';c.font='12px system-ui';c.textAlign='center';c.textBaseline='middle';
+c.fillText(String(t),cx+cw/2,cy+ch/2);}
+var qy=sy+8+n*(ch+g);CHIP[n]={x:SC.x+16,y:qy,w:SC.w-32,h:30,cancel:1};
+c.fillStyle='rgba(255,255,255,.05)';rr(c,SC.x+16,qy,SC.w-32,30,15);c.fill();
+c.fillStyle='#8b9099';c.font='12px system-ui';c.textAlign='center';c.textBaseline='middle';
+c.fillText('取消',SC.x+SC.w/2,qy+15);
+c.restore();c.textAlign='left';c.textBaseline='alphabetic';return;}
+CHIP=[];
+if(SCR>0){var qx=SC.x+SC.w-86,qy=SC.y+SC.h-82,qw=78,qh=26;
+var qh2=(MX>=qx&&MX<=qx+qw&&MY>=qy&&MY<=qy+qh);
+c.fillStyle=qh2?'rgba(70,104,138,.96)':'rgba(28,38,50,.94)';rr(c,qx,qy,qw,qh,13);c.fill();
+c.strokeStyle=qh2?'#7ba0c4':'#3a4652';c.lineWidth=1;c.stroke();
+c.fillStyle='#cfd6de';c.font='11px system-ui';c.textAlign='center';c.textBaseline='middle';
+c.fillText('↓ 最新',qx+qw/2,qy+qh/2);
+c.textAlign='left';c.textBaseline='alphabetic';}
+var hb=(MX>=x&&MX<=x+w&&MY>=y&&MY<=y+h);
+c.fillStyle=p?(hb?'rgba(52,80,106,.98)':'rgba(40,60,80,.96)'):'rgba(28,31,38,.9)';
+rr(c,x,y,w,h,19);c.fill();
+c.strokeStyle=p?(hb?'#7ba0c4':'#3d5b76'):'#282b33';c.lineWidth=1;c.stroke();
+c.fillStyle=p?'#cfe0ee':'#575c65';c.font='12px system-ui';c.textAlign='left';c.textBaseline='middle';
+c.fillText(p?'✉　揀一句回覆…':'輸入訊息…',x+16,y+h/2);
+if(p){c.fillStyle='#7ba0c4';c.beginPath();c.arc(x+w-20,y+h/2,5,0,6.284);c.fill();}
+if(TOAST>0){TOAST--;var tw2=Math.max(76,TMSG.length*15+30);
+c.fillStyle='rgba(10,14,20,.94)';rr(c,SC.x+SC.w/2-tw2/2,y-36,tw2,26,13);c.fill();
+c.strokeStyle='#3a4450';c.lineWidth=1;c.stroke();
+c.fillStyle='#cfd6de';c.font='12px system-ui';c.textAlign='center';c.textBaseline='middle';
+c.fillText(TMSG,SC.x+SC.w/2,y-23);}
+c.textAlign='left';c.textBaseline='alphabetic';},
+gday:function(c){c.save();c.globalAlpha=.055;for(var i=0;i<1000;i++){c.fillStyle=(i%2)?'#fff':'#000';c.fillRect((i*7919)%W,(i*104729)%H,1,1);}c.restore();
+var v=c.createRadialGradient(480,270,320,480,270,700);v.addColorStop(0,'rgba(0,0,0,0)');v.addColorStop(1,'rgba(0,0,0,.34)');c.fillStyle=v;c.fillRect(0,0,W,H);},
+tlayer:function(c,txt){if(!txt)return;var x=46,w=W-92,h=100,y=H-h-18;
+c.fillStyle='rgba(8,9,12,.88)';rr(c,x,y,w,h,10);c.fill();
+c.strokeStyle='rgba(255,255,255,.13)';c.lineWidth=1;c.stroke();
+c.fillStyle='#e2e6ec';c.font='16px Georgia,serif';c.textAlign='left';c.textBaseline='middle';
+var ls=wrap(c,txt,w-44),n=Math.min(ls.length,3),sy=y+h/2-(n-1)*14;
+for(var i=0;i<n;i++)c.fillText(ls[i],x+22,sy+i*28);
+c.textAlign='left';c.textBaseline='alphabetic';},
+narrDay:function(c,b){VNU.tlayer(c,b.text);},
+narr:function(c,b){c.fillStyle='rgba(0,0,0,.40)';c.fillRect(0,0,W,H);
+c.fillStyle='#b9bcc4';c.font='16px Georgia,serif';c.textAlign='left';c.textBaseline='middle';
+var ls=wrap(c,b.text,246);for(var i=0;i<ls.length;i++)c.fillText(ls[i],48,270-(ls.length-1)*15+i*30);},
+scrim:function(c){c.fillStyle='rgba(0,0,0,.55)';c.fillRect(0,0,W,H);},
+opt:function(c,o){if(!o||!String(o.text||'').trim())return;
+c.fillStyle='rgba(28,42,56,.96)';rr(c,o.x,o.y,o.w,o.h,10);c.fill();
+c.strokeStyle='#3a5771';c.lineWidth=1;c.stroke();
+c.fillStyle='#cbd3db';c.font='12px system-ui';c.textAlign='center';c.textBaseline='middle';c.fillText(o.text,o.x+o.w/2,o.y+o.h/2);},
+grain:function(c){c.save();c.globalAlpha=.085;for(var i=0;i<1400;i++){c.fillStyle=(i%2)?'#fff':'#000';c.fillRect((i*7919)%W,(i*104729)%H,1,1);}c.restore();
+var v=c.createRadialGradient(480,270,250,480,270,640);v.addColorStop(0,'rgba(0,0,0,0)');v.addColorStop(1,'rgba(0,0,0,.55)');c.fillStyle=v;c.fillRect(0,0,W,H);}};})();
+function bgDay(c){VNU.day(c);VNU.hud(c);VNU.gday(c);VNU.spots(c);}
+function bgBed(c){VNU.bedv(c);VNU.hud(c);VNU.gday(c);VNU.spots(c);}
+function bgNight(c,b){VNU.room(c);VNU.phone(c);VNU.chat(c,b);VNU.hud(c);VNU.grain(c);VNU.photo(c);}
+window.VN_SKIN={box:function(c,b){
+VNU.music();VNU.tick();VNU.clearChips();
+if(VNU.isEnd()){VNU.ending(c,b);return;}
+if(b.who)VNU.push(b);
+var hm=VNU.hubMode();
+if(hm){if(hm==2){VNU.phoneHome(c);VNU.spots(c);}else if(hm==3){VNU.list(c);VNU.spots(c);}else if(hm==4){bgBed(c);VNU.hint(c,1);}else{bgDay(c);VNU.hint(c);}return;}
+if(VNU.isDay()&&!VNU.heldPhone()){bgDay(c);VNU.narrDay(c,b);return;}
+if(!VNU.inChat()){VNU.phoneHome(c);VNU.photo(c);VNU.narr(c,b);return;}
+if(!b.who){bgNight(c,null);VNU.narr(c,b);return;}
+bgNight(c,b);},
+choice:function(c,o){VNU.music();VNU.rec(o);var hm=VNU.hubMode();
+if(hm){if(o.index===0){if(hm==2){VNU.phoneHome(c);VNU.spots(c);}else if(hm==3){VNU.list(c);VNU.spots(c);}else if(hm==4){bgBed(c);VNU.hint(c,1);}else{bgDay(c);VNU.hint(c);}}return;}
+if(o.index===0){if(VNU.isDay()){bgDay(c);VNU.scrim(c);}else if(VNU.inChat()){bgNight(c,null);}else{VNU.phoneHome(c);VNU.scrim(c);}}
+if(!VNU.inChat()){if(o.index===0)VNU.clearChips();VNU.opt(c,o);}}};
+(function(){var cv=document.getElementById('c');if(!cv)return;
+function pt(e){var r=cv.getBoundingClientRect(),rw=r.width||cv.width,rh=r.height||cv.height;return{x:(e.clientX-r.left)*cv.width/rw,y:(e.clientY-r.top)*cv.height/rh};}
+cv.addEventListener('wheel',function(e){
+if(VNU.hubMode()>0||!VNU.inChat())return;
+e.preventDefault();e.stopPropagation();VNU.scroll(e.deltaY);},{passive:false,capture:true});
+cv.addEventListener('pointermove',function(e){var p=pt(e);VNU.mouse(p.x,p.y);
+cv.style.cursor=((VNU.inHub()&&VNU.hit(p.x,p.y))||(!VNU.inHub()&&VNU.chatHit(p.x,p.y)))?'pointer':'default';},true);
+var GRD=0;
+cv.addEventListener('pointerdown',function(e){VNU.audioOn();if(VNU.pass())return;
+if(!VNU.inHub()){var q=pt(e),cs=VNU.chatHit(q.x,q.y);
+if(cs){e.stopPropagation();e.preventDefault();GRD=1;VNU.chatAct(cs);}return;}
+var p=pt(e),h=VNU.hit(p.x,p.y);e.stopPropagation();e.preventDefault();GRD=1;
+if(!h||!window.VN)return;var F=window.VN.flags;
+if(h.ui){VNU.setChat(0);if(h.go==='phone_home'){if(VNU.bat()<=0){VNU.toast('部機冇電咗');return;}if(VNU.hubMode()==1)VNU.sfx('sfx_boot');F.isday=0;VNU.nav(2);}else if(h.go==='contact_list'){F.isday=0;VNU.nav(3);}
+else if(h.go==='desk'){if(VNU.blocked())return;F.isday=1;VNU.exitTo(1);}
+else if(h.go==='bed'){if(VNU.blocked())return;F.isday=1;VNU.exitTo(4);}return;}
+if(h.who){var rs=VNU.resume(h.who);if(rs)return;if(VNU.jumpRes(h.who))return;if(!h.un)return;}
+if(h.who)VNU.beginConv(h.who);
+VNU.setChat(h.who?1:0);
+if(VNU.hubMode()==2&&!(h.go==='act_gallery'&&F.can_reveal==1))VNU.setRet(2);
+F.hub=0;if(!VNU.fire(h.go))window.VN.goto(h.go);},true);
+['pointerup','mousedown','mouseup','click','touchstart','touchend'].forEach(function(t){
+cv.addEventListener(t,function(e){if(VNU.pass())return;if(VNU.inHub()||GRD){e.stopPropagation();e.preventDefault();if(t==='click'||t==='touchend')GRD=0;}},true);});})();
+window.__GI_SET=function(patch){Object.assign(window.GAME_CONFIG,patch);if(window.VNU&&VNU.setVol)VNU.setVol();if(typeof window.__giOnChange==='function')window.__giOnChange(patch);};
+console.log('__GI__'+JSON.stringify({type:'ready',config:window.GAME_CONFIG}));
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"e3acec4d3d8a413390aba294a7377dd5","r":1}' crossorigin="anonymous"></script>
+</body>
+</html>
