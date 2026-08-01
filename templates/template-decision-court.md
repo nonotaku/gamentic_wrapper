@@ -45,7 +45,7 @@ title (logo + Start + high-day record) → day loop (petitioner card + HUD: 🪙
 - throne-room bg (+1 "festival" variant), day-transition card art
 - stat icons ×3, YES/NO stamp buttons
 - audio: bgm_court (warm lute loop) + bgm_trouble (low-happy variant), sfx: stamp ×2 (yes/no pitched apart), coin, crowd-cheer, crowd-grumble
-- Art recipe: same verbatim style-token approach as template-dating-horror-vn (put the user's style keywords first in every prompt; same block for characters, bg, key art)
+- Art recipe: `reference-vn-art.md` — the owner's style block verbatim at the start of every prompt, one block for characters, bgs and key art alike
 
 ## Writing rubric
 - Petition ≤ 140 chars; reply ≤ 90 chars; humor from characters wanting *reasonable things badly* or *absurd things politely*
@@ -55,4 +55,6 @@ title (logo + Start + high-day record) → day loop (petitioner card + HUD: 🪙
 ## Platform notes (Gamentic)
 - NOT the VN runtime — custom vanilla-canvas loop per get_convention (GAME_CONFIG marker + schema), events in `GAME_DATA.events` (editable via read_data/write_data)
 - Reuse the write_data field-by-field rule for object edits; chunked upload ≤3000 chars
+- Shared platform traps, editing rules and verification route: **`reference-gamentic-platform.md`**. The two that bite this genre hardest: the **embedded-asset ceiling** (12–18 portraits plus backgrounds can reach it — `delete_asset` junk as you go and report headroom to the owner) and the **content-not-index rule** for script edits.
+- Art prompting, style-block discipline and the identity rule: **`reference-vn-art.md`** — the portrait set is one canon original plus minimal-delta variants, same as any VN cast.
 - ESRB E · genre "strategy"

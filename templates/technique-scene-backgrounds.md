@@ -1,6 +1,6 @@
 # technique-scene-backgrounds — depth, layers and focus (UNTESTED)
 
-**Status: not implemented, nothing here has been validated.** It is a design note, to be tried in a dedicated test game rather than retrofitted into an existing one. Proven presentation techniques live in `template-dating-horror-vn.md` (§6 *Environment-first sequences* and *Sprite staging & movement*).
+**Status: not implemented, nothing here has been validated.** It is a design note, to be tried in a dedicated test game rather than retrofitted into an existing one. Proven presentation techniques live in `reference-vn-art.md` (*Environment-first sequences* and *Sprite staging*).
 
 ---
 
