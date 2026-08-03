@@ -71,6 +71,32 @@ The rejected image returned as `char_gm_hurt` — imported from the library for 
 
 **Process failure worth keeping.** Both rejected sprites were wired into the game before the owner ever saw them; the second time was immediately after being told not to. The rule now is: generate, show, wait for approval, then wire.
 
+## Shipped 2026-08-01 — v319–v329 · the mid-game rework
+
+Grilled to a design, then built. **The room degrades one step per transaction and never recovers** — that single mechanic answers both things the owner asked for: the actions feel irreversible *because* the world will not go back, and the room starts going wrong long before chapter 3.
+
+| beat | what plays |
+|---|---|
+| 「杯中蒸氣裊裊。某種金色的東西在裡頭盤繞。」 | `cg_cup_offer` — the cup in extreme close-up, a gold thread coiling in the steam |
+| drink deep / sip / refuse | unchanged |
+| all three converge | **`bg_parlor_cold`** — flames tipped violet, the light gone cold |
+| 「她起身走向書架。」 | `cg_back_shelf` — a CG generated long ago and never used |
+| 「一個願望，換一段記憶。」 | `cg_shelf_cups` — a row of cups on the shelf, receding into darkness |
+| worst / happiest / no bargain | unchanged |
+| all three converge | **`bg_parlor_overgrown`** — vines through the shelves, cobwebs, the lace yellowed: decades have passed while you sat there |
+| chapter 3 | `bg_wrong`, hard cut |
+
+**Placing the CGs on the OFFER rather than the outcome** is what lets one image serve all three branches — it shows what is on the table, not what you did, so refusing never contradicts the picture. Both offer lines already described a close-up; nobody had drawn them.
+
+`bg_parlor` now appears only before anything has been given: the title, `ch1`, and the return from the cup CG. Verified on two opposite paths (deep+worst, refuse+none) that the room never reverts.
+
+### What the grill changed about the plan
+
+- **A degradation ladder needs a different channel per step, not more of the same.** The first stage 2 attempt only deepened stage 1's cold and the owner could not tell them apart — correctly, since they are seen minutes apart, never side by side.
+- **The wall-shadow idea died on the composition.** `bg_wrong`'s signature leaning figure works because that room has pale walls; `bg_parlor` has a dark curtained window behind the table and nothing to cast onto. Two generations were lost before I looked at what the frame actually contains.
+- **The owner supplied the answer: time.** She takes memories, so time is her medium — the room simply ages while you sit in it. Better than any apparition, and it needs nothing to jump out.
+- **Degradation accumulates.** The first overgrown pass had warm brown vines and read as the room recovering. Stage 2 must carry stage 1's cold as well as its own change.
+
 ## Still open — the questions this file was opened for
 
 The face was the reported symptom. Nothing yet addresses the shape of the mid-game itself: one background from the drink to chapter 3, `pos 0.66` throughout, and **no art for either transaction** — the two actions the whole ending ladder hangs on. Questions 1–5 above stand.

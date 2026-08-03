@@ -2,6 +2,8 @@
 
 For a fresh session in the repo root with the **mattpocock-skills plugin loaded**. The owner replies in **Traditional Chinese (HK)**; keep that.
 
+> **Newer handoff exists for live product work:** `handoff-g96d22c.md`, covering an art + mid-game rework of Tea with the Godmother that ran after this file was written. Two lines below are stale as a result — `CONTEXT.md` now exists (it is the expression glossary), and `g96d22c` **is** under authorised edit. Read that file first if the owner is resuming the game rather than starting a new template.
+
 > **Cross-machine note:** this copy lives in the repo (`.scratch/handoff-inspection-horror.md`) so it travels via git. On a machine where Claude's project memory is empty, the memory files referenced below have snapshots at `.scratch/memory-snapshot/` — read those instead, and treat them as the project knowledge base (asset refs, platform gotchas, owner decisions). Machine setup for resuming: see "Resuming on another computer" in `README.md`.
 
 ## Project in one breath
