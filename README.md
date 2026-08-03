@@ -72,6 +72,10 @@ Other notes:
 - **⟳** re-fetches all game websites (otherwise cached for 24 h).
 - Analyses stream live, run at most 2 at a time (extra clicks attach to the running one),
   and are cached in `data/analysis/` — the 🤖 icon turns green when a saved report exists.
+- **Two depths** (toggle in the analysis panel): **⚡ Brief** — quick worth-featuring assessment
+  (~450 words); **🔬 Deep** — full template-lab teardown (system inventory, numbers & balance,
+  flow/screens, art-as-mechanics, template extraction + grill questions; researches the game's
+  wiki/guides for remote games, reads every source file for local ones; cached as `*__deep.md`).
 
 ## Importing games you downloaded yourself (e.g. official itch.io downloads)
 
@@ -95,6 +99,18 @@ Add an entry to `data/curated.json` (any static open-source HTML5 game on GitHub
 
 Optional: `"branch"` (defaults to the repo's default branch), `"entry"` (defaults to `index.html`).
 Then run `npm run fetch`.
+
+## Resuming on another computer
+
+1. `git clone https://github.com/nonotaku/gamentic_wrapper.git` (private — sign in), then `npm run fetch`
+   to re-download the stored games (they're gitignored), and `start-gamentic.bat` for the portal.
+2. In Claude Code on that machine: install the **mattpocock-skills** plugin from the official
+   marketplace (`/plugin` → claude-plugins-official → mattpocock-skills), and make sure the
+   **game-inspector MCP** (gamentic.net) is configured if you'll build games.
+3. Start a session in the repo root and paste:
+   `Read ".scratch/handoff-inspection-horror.md" and continue from there`
+   — it carries the current workstream, and `.scratch/memory-snapshot/` holds the project
+   knowledge base for machines where Claude's memory is empty.
 
 ## Notes & troubleshooting
 

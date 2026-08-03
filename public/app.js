@@ -407,8 +407,10 @@ function syncModalBtns() {
 }
 
 /* ---------------- Claude analysis (single game or batch ranking) ---------------- */
-function openAnalysisFor(id, metaObj, label, force = false) {
-  lastAnalysis = { id, meta: metaObj, label };
+function openAnalysisFor(id, metaObj, label, force = false, depth = 'brief') {
+  lastAnalysis = { id, meta: metaObj, label, depth };
+  $('#aBrief').classList.toggle('on2', depth === 'brief');
+  $('#aDeep').classList.toggle('on2', depth === 'deep');
   $('#apanel').hidden = false;
   const body = $('#aBody');
   const status = (t) => { $('#aStatus').textContent = t; };
@@ -419,7 +421,7 @@ function openAnalysisFor(id, metaObj, label, force = false) {
   body.innerHTML = `<p class="amuted">「${esc(label)}」 — contacting your local Claude CLI…</p>`;
   status('starting');
 
-  let u = `/api/analyze?id=${encodeURIComponent(id)}${force ? '&force=1' : ''}`;
+  let u = `/api/analyze?id=${encodeURIComponent(id)}&depth=${depth}${force ? '&force=1' : ''}`;
   if (metaObj) u += `&meta=${b64url(JSON.stringify(metaObj))}`;
   es = new EventSource(u);
 
@@ -584,7 +586,13 @@ function bind() {
   $('#mInv').addEventListener('click', () => { if (current) invToggle(current); });
   $('#mAnalyze').addEventListener('click', () => { if (current) reviewGame(current); });
   $('#aRedo').addEventListener('click', () => {
-    if (lastAnalysis) openAnalysisFor(lastAnalysis.id, lastAnalysis.meta, lastAnalysis.label, true);
+    if (lastAnalysis) openAnalysisFor(lastAnalysis.id, lastAnalysis.meta, lastAnalysis.label, true, lastAnalysis.depth || 'brief');
+  });
+  $('#aBrief').addEventListener('click', () => {
+    if (lastAnalysis) openAnalysisFor(lastAnalysis.id, lastAnalysis.meta, lastAnalysis.label, false, 'brief');
+  });
+  $('#aDeep').addEventListener('click', () => {
+    if (lastAnalysis) openAnalysisFor(lastAnalysis.id, lastAnalysis.meta, lastAnalysis.label, false, 'deep');
   });
   $('#aClose').addEventListener('click', closeAnalysis);
   $('#cPlay').addEventListener('click', () => { if (current) countPlay(current); });

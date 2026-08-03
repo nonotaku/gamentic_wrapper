@@ -60,6 +60,13 @@ Main menu → Prologue → First encounter → Interactive scenes ×N (status ac
 - **Route flags decide WHICH route; the numeric layer decides WHICH ending inside it.** Carving all endings from one numeric axis makes the player feel they are farming points; branched routes make them feel their choices shaped the story.
 - Every ending: named, one-line epilogue, and an "X of N endings" replay hint.
 - Optional hidden ending: ONE cross-route condition, e.g. all three knowledge flags collected.
+- **Write the priority order as a sentence before coding it** — "offence outranks hunger, hunger outranks interest, interest outranks collection" — then implement it as that ladder. Whichever gate is meant to override the others has to be checked first, or the best-behaved player still hits the wrong ending.
+
+**Gating patterns — pick what the story wants, or none.** Route flags on their own are enough to ship a good split. Each pattern below is one way to make an ending feel earned rather than scored; each costs one flag plus some ending copy.
+
+- **Channel** — one early action, dressed as courtesy, opens the pipe the whole transaction must pass through. Drink the tea and she can take a memory from you; refuse it and she has no way to take *part* of you, so she takes all of you. Refusing the channel never reads as refusing the entity — that gap is the trap. The player cannot see it at the time, which is the point: on replay the first chapter becomes the murder weapon. It works when the action is early, physical, and dressed as flavour, and when every ending it gates says the causality out loud.
+- **Knowledge gate** — a stolen page, an overheard name: it adds later options no one else can see, and what the player DOES with the knowledge splits the routes. Cheap, because the options are text.
+- **Posture** — how the player entered (knocked / walked in / turned back) decides nothing on its own and flavours the epilogue instead. The lightest pattern; use it when a choice should be remembered rather than obeyed.
 
 ---
 
@@ -71,8 +78,11 @@ Main menu → Prologue → First encounter → Interactive scenes ×N (status ac
 
 - **One expression set shared across all tiers**; a `show` with a new key swaps it. Default the resting face to NEUTRAL and spend the smile on warm beats — a permanent smile makes real warmth mean nothing.
 - **Feedback rule: every meaningful choice produces a visible change within two beats** — distance, expression, bg, prop, or `shake` + `sfx_sting`. The player instantly knows that one counted.
+- ⚠ **And the MERGE label must not take it back.** A `show` at the top of a label that branches reconverge on overwrites the face the branch just earned — two beats after she says *I like you*, she is blank, and the game reads as having forgotten what you did. Give merge labels no `show` at all: every incoming path already has a sprite up, so the expression the player provoked is what carries the next line. Both merge points of a shipped game had this, and it was reported as "the smile turns into a sad face".
 - **Danger tells** carry the hidden meter: below ~30 → hollow expression + `bgm_tension`; above ~65 → pleased.
 - Budget ≈ 3–5 new images per scene, everything else reuse.
+
+**Endings: let her speak, then CUT to the consequence.** An ending needs no new picture of the character. Play her last line on a sprite you already own, then change the background to the OBJECT or PLACE the ending turns on and `hide` her — a wrist with a red thread wound round it, a cold cup, doors closing on a thinning line of light. Faceless, so nothing can drift; environment-priced; and an object the player already recognises lands harder than one more bust. One image per ending buys the whole set, and the cut itself is the punctuation.
 
 ---
 

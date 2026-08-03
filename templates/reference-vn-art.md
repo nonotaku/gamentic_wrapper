@@ -16,6 +16,7 @@ Everything below is a consequence:
 - krea-edit inherits the base's **dimensions** too. Prompt text cannot override aspect (see *Aspect*).
 - Chain-editing is safe for environments (no identity to drift) and poison for characters.
 - A back view removes FACE drift but not COSTUME drift: with the room as base the veil, lace and saturation all came back wrong. Even faceless shots take canon as base.
+- **Distance is an identity BUDGET.** The further off and the more turned away she is, the fewer markers have to land — a distant back view is her if the outline is right. So let the markers the beat needs choose the framing: fine ones (a silver streak, a red lining, a collar ribbon) survive only at mid-shot or closer, and at doorway distance nothing but the outline reads. Whatever must read has to be NAMED — veil length and edge, hair length, gown line. Leaving them out does not buy an anonymous figure, it buys a stranger: four generations of "a tall veiled woman" produced four different women, and the fault was the missing description, not drift.
 
 ## Prompting krea2 / krea-edit
 
@@ -24,6 +25,15 @@ Everything below is a consequence:
 - **Character design:** beautiful human first, horror as detail (a faint third eye, not full scales). Heavy monster traits eat the "I trust her" read that a horror reversal leans on; if the owner wants them anyway, the warmth has to come from dialogue instead.
 - **Prompt traps:** `visual novel character sprite` and glam adjectives → polished anime; `character sheet` → hallucinated photo insets; `mature female` alone → elderly. Directional words in imperative form get PAINTED AS TEXT ("pushed inward" appeared as signage on the doors) — describe geometry instead, and add `no text, no words, no letters`.
 - **Reference images beat description.** Owner-pasted target screenshots converged a redesign in 1–2 rounds where blind style words took 5.
+- **Delta size decides whether style survives.** A pose change or a light change holds; adding a whole new element — a second figure — dragged the render into polished anime with a redesigned gown. Restate the style words IN FULL for a big delta, and prompt against the specific way it drifts (`NOT smooth, NOT glossy, NOT polished anime illustration`); "same gouache style" only carries a small one.
+- **Picking the base for a fix turns on one question: is the thing you are changing already in the picture?**
+  - **A property of the whole image** — light, tone, palette — takes your own flawed output as base and changes only that axis. A daylit night scene came back correct in one generation with the composition untouched; re-running from the original would have rolled the composition too.
+  - **A subject already in the frame** takes the clean original instead. "Change ONLY the standing figure", aimed at a picture that already had one, produced a SECOND figure in the foreground — **the edit verb reads as ADD whenever its subject is already present.** Go back to the version without it and fold the correction into the instruction that put it there.
+- **krea-edit lightens by default.** "Same palette" does not buy darkness. Spell out the low-key state — *almost the whole frame in deep shadow, lit only by one candle, nothing daylit* — or a midnight scene comes back as an afternoon.
+- **krea-edit will not turn a head.** Ask for a lifted chin or a changed gaze and you get a re-composed frame instead — the pose holds and the crop moves, so the sprite stops matching the rest of the set. Head angle and eye direction are fixed at canon; choose a base that already holds the angle you need.
+- **Anchor scale to an object in the frame.** "About a third of the frame tall" was ignored four times running; "the same height as the candelabra" moved it. The model measures against what it can see, not against the canvas.
+- **Look at the object before interpreting the complaint.** "The chairs are wrong" cost three rounds of guessing — the sprite's chair? the count? the placement? the camera? — when the chair in the picture was simply malformed: one seat carrying two backs. Generators produce impossible objects, and an owner who sees one has no word for it but *wrong*. When a complaint names a thing, open the art and examine that thing as an object first; only then read the sentence for meaning.
+- **Check the base before blaming drift.** Traits that look like drift are often faithfully inherited: a "too red" hairstyle and a raised arm both came straight from the base sprite, not from the edit. `view_asset` the base first — it is free, and it decides whether you are fixing the edit or the canon.
 - **Workflow:** `concept_art` ×4 → owner picks → `import_asset` the picked original as canon → krea-edit every variant from it.
 - **Local engines only** — `concept_art` / `generate_asset` / `character_sprite`. OpenArt is banned by standing owner rule even though the MCP exposes `openart_asset` / `openart_video`.
 
@@ -32,7 +42,9 @@ Everything below is a consequence:
 Minimal-delta prompts from the canon white-bg original: "keep her EXACT same face shape … change nothing else". Loosely-described big changes make krea-edit redraw and anime-ify the face.
 
 - **Default to a NEUTRAL face.** A gentle smile as the resting sprite reads as "she is interested in you" from the first line, and the warmth then means nothing when she is actually pleased. Ship neutral as the default and spend the smile on warm beats only.
-- **Restraint still needs a signal.** An "anger" edit that only drained warmth was indistinguishable from neutral. Express in-character anger by changing something visible while staying in character — for a habitually half-lidded character, *eyes closing into a polite smile that no longer reaches them* reads colder than any scowl, and the forehead marking becomes the only open eye in the frame.
+- **Restraint still needs a signal.** An "anger" edit that only drained warmth was indistinguishable from neutral. Change something visible while staying in character — for a habitually half-lidded character, *eyes closing while the polite smile holds* reads colder than any scowl, and a forehead marking that OPENS is the tell she cannot suppress: the only eye in the frame still looking at you.
+- **The closed-eye mask carries a first meeting too.** Eyes shut behind a courteous smile is "I am being polite AT you" as readily as it is displeasure — the same image opens a game and closes a door. Separate the two by what the forehead does, not by drawing a second face.
+- ⚠ **A half-lidded character has no free neutral.** Take the smile off a face whose eyes already rest half-closed and you get sorrow, not composure — half-lidded plus a level mouth is the standard drawing of sadness. Two generations failed identically before the cause was named. The resting face needs something positive holding it up: leaving *the faintest lift at the mouth corners* was what finally read as calm. Brows are the other lever, and the strongest — a lift confined to the INNER ends is the sadness signal, while both ends rising together reads as open and attentive.
 - **Keep the eye shape.** "Wide-eyed" edits enlarge the eyes into generic anime and break the design; ask for the same narrow shape and move the signal elsewhere (pupil size, shadow, gaze direction).
 - Ladder that shipped: neutral · gentle smile (interest) · pleased · excited · sad · cold (closed-eye smile) · hollow.
 
@@ -40,7 +52,9 @@ Minimal-delta prompts from the canon white-bg original: "keep her EXACT same fac
 
 A pale or textured source background makes the keyer eat pale FACES → krea-edit `change the background to pure flat white` first, THEN key. Sheer fabric picks up a green tint from a chroma key, so white is the only safe plate.
 
-Sprites must be **propless** — "no table, no chair, no furniture, no background". A chair the character actually sits on is the one exception; anything else collides with the room's own furniture.
+Sprites must be **propless** — anything the sprite carries collides with the room's own furniture, and a chair it sits on is no exception: the sprite's chair has to agree with the room's chairs in style, angle and eye level, at every `pos` the character can stand at.
+
+⚠ **Never name what you want gone.** A cleanup prompt that said *the small brown fragment of chair* and then added *no chair, no chair leg, no furniture* came back with a WHOLE chair — five mentions taught the model the picture has one. The white-plate recipe works precisely because it names only the target state. Describe the frame you want — *pure flat white edge to edge, only the woman left in the picture* — and let the unwanted thing go unmentioned.
 
 ## Colour grading — make sprites belong to the room
 

@@ -559,6 +559,77 @@ Keep it under ~450 words.
 Start your report directly with "## Verdict" — no preamble, no narration of your process.`;
 }
 
+function deepRemotePrompt(g, localTitles) {
+  return `You are a senior game-design researcher producing a TEARDOWN REFERENCE for a template lab. Other agents will build a game template from this report — write it like a skill document: predictable structure, single source of truth, zero filler.
+
+GAME: ${g.title}${g.author ? ' — by ' + g.author : ''}
+Category: ${g.category}
+Source page: ${g.url}
+Ranking metric: ${g.metric ? `${g.metric.label}: ${g.metric.value}` : 'n/a'}
+Description: ${g.desc || '(none)'}
+
+RESEARCH: WebSearch to locate, then WebFetch up to 5 pages — store page, wiki/fandom, guides, developer interviews/postmortems. Every claim traces to a fetched page or carries [inferred].
+
+WRITING RULES (these outrank style):
+- Each fact lives in exactly ONE section — its owner. Later sections point back ("see Numbers"), and a restated fact is a defect.
+- Coin a LEADING WORD for each core system — one compact recurring term (like "the adjudication unit", "the anomaly table"), defined once at first use, reused verbatim everywhere after. A synonym is a defect.
+- Every sentence carries a fact, a number, or a decision; delete any sentence that changes nothing.
+- Mark every value [confirmed] (read on a fetched page) or [inferred] (your estimate).
+
+SECTIONS, each with its completion criterion:
+## Verdict
+Score /10 for template-reference value + one paragraph. Complete when a reader can decide whether to build on this game without reading further.
+## System inventory
+Owner of WHAT EXISTS: every player verb and every meter/resource/timer, one line each, exactly once. Complete when nothing named later in the report is missing here.
+## Numbers & balance
+Owner of VALUES: a table of every documented constant — counts, rates, thresholds, ramps, strikes, ranks. Complete when every number in the report lives in this table.
+## Flow & screens
+Owner of SEQUENCE: boot → menu → session unit → result → replay loop; save model; run length. Complete when an agent could draw the screen state machine from this section alone.
+## Presentation as mechanics
+What art/audio DO: tells, feedback, dread beats, readability devices — each tied to the inventory system it serves.
+## Why it works
+The psychological loop + the market story behind the rating count. Three insights, maximum.
+## Template extraction
+The payoff. Map onto our two-layer convention: numeric layer → GAME_CONFIG keys with default values; route flags → named flags with what sets them; the interaction verbs to build; the art asset list with counts; an explicit OUT-OF-SCOPE list; and 5–8 open design questions, each phrased as a decision a grilling session can put to the owner. Local library for comparisons: ${localTitles}. Complete when a template author could start writing template-<genre>.md from this section alone.
+## Sources
+The pages actually fetched, one line each.
+
+800–1500 words. Start at "## Verdict".`;
+}
+
+function deepLocalPrompt(g, st) {
+  return `You are a senior game engineer producing a SOURCE-TEARDOWN REFERENCE for a template lab. Other agents will build a game template from this report — write it like a skill document: predictable structure, single source of truth, zero filler.
+
+GAME: ${g.title} — by ${g.author}
+Category: ${g.category} | GitHub: ${g.repoUrl} (⭐ ${g.stars ?? '?'}) | License: ${g.license}
+Source on disk: games/${g.slug}/  (entry: games/${g.slug}/${g.entry})
+
+READ THE CODE: use Read/Glob/Grep until every main source file has been read; every claim carries a file (and where it matters, line) reference.
+
+WRITING RULES (these outrank style):
+- Each fact lives in exactly ONE section — its owner; later sections point back, and a restated fact is a defect.
+- Coin a LEADING WORD for each core system — one recurring term defined at first use, reused verbatim; a synonym is a defect.
+- Every sentence carries a fact, a file reference, a number, or a decision; delete any sentence that changes nothing.
+
+SECTIONS, each with its completion criterion:
+## Verdict
+Score /10 for template-reference value + one paragraph. Complete when a reader can decide whether to mine this codebase without reading further.
+## Architecture map
+Owner of STRUCTURE: every file with its one-line role, module boundaries, data flow. Complete when no file referenced later is missing here.
+## Systems & algorithms
+Owner of HOW IT WORKS: each core algorithm with file:line references. Complete when the game could be re-implemented from these descriptions.
+## Numbers & balance
+Owner of VALUES: a table of the actual constants (rates, speeds, thresholds, curves) with file references. Complete when every number in the report lives in this table.
+## Flow & screens
+Owner of SEQUENCE: boot → menu → play → end; input; persistence. Complete when the screen state machine can be drawn from this section alone.
+## Craft highlights & smells
+What is genuinely well-engineered; what is dated or fragile — each with its file reference.
+## Template extraction
+The payoff. Which systems translate to our vanilla-canvas/VN-runtime platform; numeric layer → GAME_CONFIG keys with defaults; route flags → named flags; asset needs with counts; an explicit OUT-OF-SCOPE list; and 5–8 open design questions phrased as decisions for a grilling session. Complete when a template author could start writing template-<genre>.md from this section alone.
+
+1000–1800 words. Start at "## Verdict".`;
+}
+
 function batchPrompt(m) {
   const rows = (m.games || []).map((g, i) =>
     `${i + 1}. ${g.title}${g.author ? ' — by ' + g.author : ''} | category: ${g.category} | ${g.metric || 'no metric'} | ${g.source}${g.desc ? ' | ' + g.desc : ''}`
@@ -584,14 +655,16 @@ Base judgments on the metadata given plus your knowledge of these games/genres; 
 Keep it under ~600 words. Start directly with "## Ranking" — no preamble.`;
 }
 
-function runClaude(prompt, onEvent, onDone) {
+function runClaude(prompt, onEvent, onDone, opts = {}) {
+  const maxTurns = String(opts.maxTurns || 12);
+  const timeoutMs = opts.timeoutMs || 6 * 60 * 1000;
   let finished = false;
   let attempt = 0;
 
   const start = (includePartial) => {
     attempt++;
     const args = ['-p', '--output-format', 'stream-json', '--verbose',
-      '--max-turns', '12', '--allowedTools', 'Read,Glob,Grep,WebFetch,WebSearch'];
+      '--max-turns', maxTurns, '--allowedTools', 'Read,Glob,Grep,WebFetch,WebSearch'];
     if (includePartial) args.push('--include-partial-messages');
     const child = spawn('claude', args, { cwd: ROOT, shell: true, windowsHide: true });
 
@@ -603,12 +676,12 @@ function runClaude(prompt, onEvent, onDone) {
 
     const timer = setTimeout(() => {
       if (!finished) {
-        onEvent({ t: 'err', message: 'analysis timed out after 6 minutes' });
+        onEvent({ t: 'err', message: `analysis timed out after ${Math.round(timeoutMs / 60000)} minutes` });
         finished = true;
         killTree(child);
         onDone(null);
       }
-    }, 6 * 60 * 1000);
+    }, timeoutMs);
 
     child.stdin.on('error', () => { /* EPIPE when the CLI exits early — the close handler reports it */ });
     try { child.stdin.write(prompt); child.stdin.end(); } catch { /* ignore */ }
@@ -796,7 +869,8 @@ const handler = async (req, res) => {
 
     if (p === '/api/analysis') {
       const id = url.searchParams.get('id') || '';
-      const file = path.join(ANALYSIS_DIR, safeId(id) + '.md');
+      const depth = url.searchParams.get('depth') === 'deep' ? 'deep' : 'brief';
+      const file = path.join(ANALYSIS_DIR, safeId(id) + (depth === 'deep' ? '__deep' : '') + '.md');
       if (!fs.existsSync(file)) return send(res, 404, { error: 'no analysis yet' });
       return send(res, 200, fs.readFileSync(file, 'utf8'), { 'Content-Type': 'text/markdown; charset=utf-8' });
     }
@@ -804,6 +878,7 @@ const handler = async (req, res) => {
     if (p === '/api/analyze') {
       const id = url.searchParams.get('id') || '';
       const force = url.searchParams.get('force') === '1';
+      const depth = url.searchParams.get('depth') === 'deep' ? 'deep' : 'brief';
       if (!id) return send(res, 400, { error: 'missing id' });
 
       res.writeHead(200, {
@@ -812,12 +887,12 @@ const handler = async (req, res) => {
         Connection: 'keep-alive',
       });
       // absolute lifetime cap so an abandoned stream can never pin a browser connection forever
-      const sseCap = setTimeout(() => { try { res.end(); } catch { /* gone */ } }, 8 * 60 * 1000);
+      const sseCap = setTimeout(() => { try { res.end(); } catch { /* gone */ } }, (depth === 'deep' ? 13 : 8) * 60 * 1000);
       req.on('close', () => clearTimeout(sseCap));
       const emit = (obj) => { try { res.write(`data: ${JSON.stringify(obj)}\n\n`); } catch { /* client gone */ } };
       try { res.write('retry: 60000\n\n'); } catch { /* slow down zombie-page reconnect storms */ }
 
-      const file = path.join(ANALYSIS_DIR, safeId(id) + '.md');
+      const file = path.join(ANALYSIS_DIR, safeId(id) + (depth === 'deep' ? '__deep' : '') + '.md');
       if (!force && fs.existsSync(file)) {
         emit({ t: 'cached' });
         emit({ t: 'done', full: fs.readFileSync(file, 'utf8') });
@@ -842,19 +917,21 @@ const handler = async (req, res) => {
       if (!game) { emit({ t: 'err', message: 'unknown game id and no metadata supplied' }); return res.end(); }
 
       const localTitles = catalog.games.map((g) => g.title).slice(0, 12).join(', ');
-      const prompt = local ? localAnalysisPrompt(local, stats[id])
-        : game.batch ? batchPrompt(game)
-        : remoteAnalysisPrompt(game, localTitles);
+      const prompt = game.batch ? batchPrompt(game)
+        : local ? (depth === 'deep' ? deepLocalPrompt(local, stats[id]) : localAnalysisPrompt(local, stats[id]))
+        : (depth === 'deep' ? deepRemotePrompt(game, localTitles) : remoteAnalysisPrompt(game, localTitles));
 
-      // one run per game: extra clicks/tabs attach to the same in-flight run
-      let run = RUNNING.get(id);
+      // one run per game+depth: extra clicks/tabs attach to the same in-flight run
+      const runKey = id + '|' + depth;
+      let run = RUNNING.get(runKey);
       if (!run) {
         if (RUNNING.size >= MAX_ANALYSES) {
-          emit({ t: 'err', message: `${RUNNING.size} analyses are already running. Please wait for them to finish (1–2 min), then try again.` });
+          emit({ t: 'err', message: `${RUNNING.size} analyses are already running. Please wait for them to finish, then try again.` });
           return res.end();
         }
-        run = { emitters: new Set(), acc: '', mode: local ? 'source-code review' : (game.batch ? 'group review & ranking' : 'metadata review'), model: '', secs: 0 };
-        RUNNING.set(id, run);
+        const baseMode = local ? 'source-code review' : (game.batch ? 'group review & ranking' : 'metadata review');
+        run = { emitters: new Set(), acc: '', mode: (depth === 'deep' ? '🔬 DEEP ' : '⚡ ') + baseMode, model: '', secs: 0 };
+        RUNNING.set(runKey, run);
         run.timer = setInterval(() => {
           run.secs += 15;
           broadcast(run, { t: 'tick', secs: run.secs });
@@ -874,8 +951,8 @@ const handler = async (req, res) => {
             broadcast(run, { t: 'done', full: clean });
           }
           for (const r of run.emitters) { try { r.end(); } catch { /* gone */ } }
-          RUNNING.delete(id);
-        });
+          RUNNING.delete(runKey);
+        }, depth === 'deep' ? { maxTurns: 24, timeoutMs: 10 * 60 * 1000 } : {});
       }
       emit({ t: 'start', mode: run.mode });
       if (run.model) emit({ t: 'meta', model: run.model });

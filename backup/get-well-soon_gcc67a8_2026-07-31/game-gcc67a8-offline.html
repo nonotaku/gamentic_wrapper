@@ -1,5 +1,38 @@
 ﻿<!doctype html>
-<html><head><script>(function(){var w=window;w.__giEntities=w.__giEntities||{};w.__giTrackEntity=w.__giTrackEntity||function(){};w.__giTrackAnims=w.__giTrackAnims||function(){};w.__giUntrack=w.__giUntrack||function(){};})();</script><meta charset="utf-8"><title>Get Well Soon</title>
+<html><head>
+<script>(function(){
+var B="https://gamentic.net/api/games/gcc67a8/",T="1786183633.e234df99d67e752515e3f2fe";
+if(!T)return;
+function stamp(u){
+  if(typeof u!=='string'||!u)return u;
+  if(u.indexOf('data:')===0||u.indexOf('blob:')===0)return u;
+  var rel=/^(?:\.\/)?(?:media|src)\//.test(u), abs=B&&u.indexOf(B)===0;
+  if(!rel&&!abs)return u;
+  if(/[?&]t=/.test(u))return u;
+  return u+(u.indexOf('?')>=0?'&':'?')+'t='+T;
+}
+window.__giSignUrl=stamp;
+var _f=window.fetch;
+if(_f)window.fetch=function(i,init){
+  if(typeof i==='string')return _f.call(this,stamp(i),init);
+  try{if(i&&i.url)return _f.call(this,new Request(stamp(i.url),i),init);}catch(e){}
+  return _f.apply(this,arguments);
+};
+var _o=XMLHttpRequest.prototype.open;
+XMLHttpRequest.prototype.open=function(m,u){try{arguments[1]=stamp(u);}catch(e){}return _o.apply(this,arguments);};
+var P=[[window.HTMLImageElement,'src'],[window.HTMLMediaElement,'src'],[window.HTMLSourceElement,'src'],[window.HTMLScriptElement,'src'],[window.HTMLLinkElement,'href'],[window.HTMLTrackElement,'src']];
+for(var i=0;i<P.length;i++)(function(C,k){
+  if(!C||!C.prototype)return;
+  var d=Object.getOwnPropertyDescriptor(C.prototype,k);
+  if(!d||!d.set||!d.configurable)return;
+  Object.defineProperty(C.prototype,k,{configurable:true,enumerable:d.enumerable,get:d.get,set:function(v){d.set.call(this,stamp(String(v)));}});
+})(P[i][0],P[i][1]);
+var _sa=Element.prototype.setAttribute;
+Element.prototype.setAttribute=function(n,v){
+  if(n==='src'||n==='href'||n==='xlink:href')v=stamp(String(v));
+  return _sa.call(this,n,v);
+};
+})();</script><script>(function(){var w=window;w.__giEntities=w.__giEntities||{};w.__giTrackEntity=w.__giTrackEntity||function(){};w.__giTrackAnims=w.__giTrackAnims||function(){};w.__giUntrack=w.__giUntrack||function(){};})();</script><meta charset="utf-8"><title>Get Well Soon</title>
 <style>html,body{margin:0;height:100%;background:#04070c;display:flex;align-items:center;justify-content:center}canvas{aspect-ratio:16/9;max-width:100%;max-height:100%;display:block}</style>
 </head><body>
 <canvas id="c" width="960" height="540"></canvas>
@@ -27,8 +60,7 @@ window.GAME_ASSETS = {
   "worried_fix": "media/worried_fix.jpg",
   "gentle_fix": "media/gentle_fix.jpg",
   "far_fix": "media/far_fix.jpg",
-  "neutral_matte": "media/neutral_matte.jpg",
-  "regen_mid": "media/regen_mid.jpg"
+  "neutral_matte": "media/neutral_matte.jpg"
 }; // __GI_ASSETS__
 window.GAME_AUDIO = {
   "sfx_bubble": "media/sfx_bubble.mp3",

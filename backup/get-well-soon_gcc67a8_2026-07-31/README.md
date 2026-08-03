@@ -1,7 +1,11 @@
 # Get Well Soon — backup
 
 **Game:** `gcc67a8` · https://gamentic.net/edit/gcc67a8 · https://gamentic.net/play/gcc67a8
-**Taken:** 2026-07-31, at game version 108 (private, `published: pending`, ESRB T, genre story)
+**Refreshed:** 2026-08-01, at game version 145 (**public**, ESRB T, genre story)
+**Folder name still says 07-31** — that was the first capture (v108). The old-capture mid sprites are also preserved in `media_pre-2026-08-01/`.
+
+### 2026-08-01: a day of sprite experiments, fully reverted
+Several attempts were made to fix the chest defect (matte-master sprite set, a tint layer, an in-game background keyer). The owner rejected the direction and ordered a full revert the same day. **Content now matches v108 again**: the five original hue-matched sprites are back (the four mid shots byte-match the original files; `gm_far` is the same source asset re-encoded), every line of added code was removed, and config/schema are character-identical to v108. Only the platform's version counter advanced (now 145 — it cannot be rewound).
 
 ---
 
@@ -60,7 +64,7 @@ Several intermediate versions *were* captured, because they had been injected as
 
 ## Known defects at the time of this backup
 
-1. **White patches on the chest and collarbone** of the in-game sprites. Cause: the hue-correction passes painted glossy specular highlights onto skin that was already pale and unscaled there. Invisible on the white working background, obvious once composited over the dark bone room. Three attempted fixes all failed — removing the highlights erased the face, regenerating from scratch lost the face and dropped the chest band, and a local chest-only edit was blocked by the content filter.
+1. **White/dark patches on the chest** — present, and accepted by the owner for now (all 2026-08-01 fix attempts were reverted at their order). The true cause, established by alpha-channel measurement: the server's cutout keyer eats the near-white chest pixels, leaving small **transparent holes** (~645 px in the chest of `gm_neutral`) that show the dark scene through the sprite. It is *not* a painted highlight and *not* caused by any colour pass — the pale chest exists in the earliest master (`asset:a9aa7b998b6`), so no revert can remove it either. Lessons kept: measure the alpha channel before diagnosing "white patches"; check a defect's oldest ancestor before accepting a revert as the remedy; judge sprites composited over the real dark background, never on the white working background.
 2. The main-menu image is still unsatisfactory to the owner (deferred by the owner).
 3. `bg_wrong` only got the "lantern out" half — the "too many eyes at the window" never rendered.
 4. No close-up distance tier — far and mid only.
