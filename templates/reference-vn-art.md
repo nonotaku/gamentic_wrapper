@@ -16,6 +16,7 @@ Everything below is a consequence:
 - krea-edit inherits the base's **dimensions** too. Prompt text cannot override aspect (see *Aspect*).
 - Chain-editing is safe for environments (no identity to drift) and poison for characters.
 - A back view removes FACE drift but not COSTUME drift: with the room as base the veil, lace and saturation all came back wrong. Even faceless shots take canon as base.
+- ⚠ **The rule breaks quietest when the picture is mostly scene.** A CG is a room with a woman in it, so the room feels like the subject and the scene becomes the base by reflex — and her face comes back redrawn every time. Written down, followed for weeks, then broken twice in one afternoon on exactly that reasoning. **Whoever must stay herself is the base, however little of the frame she occupies.**
 - **Distance is an identity BUDGET.** The further off and the more turned away she is, the fewer markers have to land — a distant back view is her if the outline is right. So let the markers the beat needs choose the framing: fine ones (a silver streak, a red lining, a collar ribbon) survive only at mid-shot or closer, and at doorway distance nothing but the outline reads. Whatever must read has to be NAMED — veil length and edge, hair length, gown line. Leaving them out does not buy an anonymous figure, it buys a stranger: four generations of "a tall veiled woman" produced four different women, and the fault was the missing description, not drift.
 
 ## Prompting krea2 / krea-edit
@@ -30,6 +31,8 @@ Everything below is a consequence:
   - **A property of the whole image** — light, tone, palette — takes your own flawed output as base and changes only that axis. A daylit night scene came back correct in one generation with the composition untouched; re-running from the original would have rolled the composition too.
   - **A subject already in the frame** takes the clean original instead. "Change ONLY the standing figure", aimed at a picture that already had one, produced a SECOND figure in the foreground — **the edit verb reads as ADD whenever its subject is already present.** Go back to the version without it and fold the correction into the instruction that put it there.
 - **krea-edit lightens by default.** "Same palette" does not buy darkness. Spell out the low-key state — *almost the whole frame in deep shadow, lit only by one candle, nothing daylit* — or a midnight scene comes back as an afternoon.
+- **krea-edit will not open a hand.** A held object is fused to the hand that holds it: the white-plate recipe, an enumeration of every part to keep, a description of what the bottom edge should contain, and arms lowered out of frame all failed to take one teacup off one sprite, five generations running. Whatever canon is holding, every derivation holds too — so settle props at canon time, and when one is already there, adopt it as the character's iconography rather than spending generations on removal.
+- **Some subjects have a stronger prior than your prompt.** Glowing amber eyes in darkness render as CAT eyes — vertical slit pupils survived a positive description of a round pupil, an avoid-list naming slit pupils, and a two-image reference supplying the character's own eye shape. When three angles fail, the prior is the design: either take what the generator insists on, or cut the element. One enormous eye with a round pupil rendered correctly at the first attempt — **scale beat repetition**, because a big shape is drawn as anatomy where a small one is drawn as a glint.
 - **krea-edit will not turn a head.** Ask for a lifted chin or a changed gaze and you get a re-composed frame instead — the pose holds and the crop moves, so the sprite stops matching the rest of the set. Head angle and eye direction are fixed at canon; choose a base that already holds the angle you need.
 - **Anchor scale to an object in the frame.** "About a third of the frame tall" was ignored four times running; "the same height as the candelabra" moved it. The model measures against what it can see, not against the canvas.
 - **Look at the object before interpreting the complaint.** "The chairs are wrong" cost three rounds of guessing — the sprite's chair? the count? the placement? the camera? — when the chair in the picture was simply malformed: one seat carrying two backs. Generators produce impossible objects, and an owner who sees one has no word for it but *wrong*. When a complaint names a thing, open the art and examine that thing as an object first; only then read the sentence for meaning.
@@ -55,6 +58,8 @@ A pale or textured source background makes the keyer eat pale FACES → krea-edi
 Sprites must be **propless** — anything the sprite carries collides with the room's own furniture, and a chair it sits on is no exception: the sprite's chair has to agree with the room's chairs in style, angle and eye level, at every `pos` the character can stand at.
 
 ⚠ **Never name what you want gone.** A cleanup prompt that said *the small brown fragment of chair* and then added *no chair, no chair leg, no furniture* came back with a WHOLE chair — five mentions taught the model the picture has one. The white-plate recipe works precisely because it names only the target state. Describe the frame you want — *pure flat white edge to edge, only the woman left in the picture* — and let the unwanted thing go unmentioned.
+
+**When the thing to remove is already in the base, no wording saves you** — a base is evidence, and "remove every small glowing eye" left the eyes where they were twice over. Restart from an input that never contained it and describe the target state alone; the eyes vanished the moment the contaminated base was dropped.
 
 ## Colour grading — make sprites belong to the room
 
@@ -94,6 +99,18 @@ Three modes, one per beat:
 - **Give the move a reason** — it should reveal information. That tilt-down delivered "the ceiling is far higher than the little house outside could hold", a beat narration would otherwise state flatly.
 - **`hide` the sprite for the duration of an environment-only move**, then `show` when the camera returns — sprites sit at a fixed screen position and would otherwise stand mid-air in the new framing. Also `hide` before a prologue's first background, or the title sprite is left standing in your forest.
 - **Canon shot wins.** When a shot is already approved, rebuild the others to match IT. Check item by item — prop type, handle, panel cutting, palette, contrast, brush texture — so continuity comes back as a checklist rather than "it feels off".
+
+## Living backgrounds — cinemagraph, not boil
+
+A menu or idle scene wants motion, but krea-edit repaints the WHOLE frame on every variant — "change ONLY the flames" still micro-shifts the table, the cups, every brushstroke — so flipping full-frame variants reads as **boil**: the whole painting wobbles. The form that shipped is a **cinemagraph**: the canon background drawn static every frame, with motion composited only where light lives.
+
+- **Frames:** derive variant B from canon with an imperative minimal-delta prompt naming just the moving elements (flames lean, steam rises); CHAIN C from B, D from C — chaining keeps the set mutually consistent (environments chain safely), where independent derivations double the drift between frames. Each hop softens the image; by the third generation the blur is visible, so spend late hops on frames that can afford it (a dim "dip" beat reads fine soft).
+- **Composite:** hook `drawImage` (the same idiom as colour grading above): while the title label is active and the drawn image is the canon bg, draw the static base first, then paste feathered elliptical patches cut from the current frame — normalized centre/radius ellipses over each moving zone, alpha solid to 55% of the radius then fading to the edge (`destination-in` radial gradient) — so the seam between moving and frozen pixels never shows.
+- **Cadence:** an fps config slider (default 2 — storybook low-frame pacing; 0 = static), and an irregular pattern — eight flicker ticks, then one dip — beats a metronome. The dip tick is a flat translucent darkening of the whole frame: a light-only change, no pixel moves.
+- **Verification is counters, not pixels** (the canvas is cross-origin-tainted — `reference-gamentic-platform.md`): expose a ready flag once patches are built and increment a counter inside the composite path; an offscreen `drawImage` of the canon URL fires the path deterministically even while a hidden pane freezes rAF.
+- ⚠ `animated_cg` (LTX) drifts and cannot loop — play it once as a cutscene; a menu loop is this composite's job.
+
+Shipped and owner-verified on `g96d22c` v343 (three patches: candelabra flames + two steam wisps).
 
 ## Aspect
 

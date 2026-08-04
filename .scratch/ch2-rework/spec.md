@@ -105,3 +105,40 @@ The face was the reported symptom. Nothing yet addresses the shape of the mid-ga
 
 - `.scratch/tea-godmother-art-pass/issues/07-merge-labels-wipe-the-face.md` — the change being questioned
 - `templates/template-dating-horror-vn.md` §3 gating patterns — the drink is the Channel
+
+## Settled 2026-08-04 (grilling, second pass) — questions 1–5 CLOSED
+
+Scope agreed: everything except three residues was already answered by v302–329. The residues, grilled one by one:
+
+- **Q4 (does she move):** she does — **the two offers pull her to Near**. "Still point" (she never moves, the room does) was put up as the recommendation and rejected; the owner wants 迫近感. Direction sharpened mid-build to an extreme close-up: face and chest fill the frame, veil spilling past the edges, a shade dangerous — she looms. `Near` is now a CONTEXT.md term.
+- **Faces:** one per offer — the smile looms at the drink, the Mask (eyes closed, faint closed forehead mark) looms at the trade.
+- **Placement:** each Near lands on the existing show-before-choice (drink: after the cup CG; trade: after `cg_shelf_cups`), `pos` stays 0.66. The branch shows that follow restore normal distance automatically.
+- **Q2 residue (per-branch outcome art):** none — the offer-CG principle stands; consequence is already carried by her face and by the room ladder.
+- **`char_gm_back_b`:** kept deliberately, unused. Not an open item; ignore the server's dead-asset warning.
+
+## Shipped 2026-08-04 — v353–v360
+
+`char_gm_near` + `char_gm_polite_near` generated (150 cr including detours), wired at the two offer choices (v360), script refs + image loads + console verified through the embed.
+
+## Superseded 2026-08-04 — v361–v374 · the looms became a CG
+
+**The Near looms did not survive contact with the game.** Owner's verdict on seeing them in place: "quite bad effect". Grilled again; the settled shape:
+
+| beat | what plays now |
+|---|---|
+| drink offer | `cg_cup_offer` carries it; the sprite reverts to plain `char_gm` |
+| trade offer | **`cg_shadow_offer`** takes the screen — she fills the frame, pure dark behind, sprite hidden |
+| each trade branch | restores `bg_parlor_cold`, then its own expression |
+
+`char_gm_near`, `char_gm_polite_near` and the working file `cg_shadow_sq` were deleted from the game (library copies remain). **The offer-CG principle survived** — the CG shows what is on the table at the moment of asking, so all three branches can share it.
+
+**A CG taking over a choice needs the branches to take the room back.** `b_worst` / `b_happy` / `b_none` each `show` an expression; without an explicit `bg` at their start the sprite would have stood on top of the CG of herself. Each branch now opens with `bg_parlor_cold`, and `b_none` — which had no `show` of its own and used to inherit the offer's sprite — got `char_gm_calm` so it does not open on an empty room.
+
+**What the CG went through (11 takes, 165 credits) — the two rules that cost the most:**
+
+- **The base carries identity, and I broke that rule first.** Takes 1–2 used the scene as base with her as reference; the face came back redrawn (thick white hair section, rounder face) and the owner named it immediately. Flipping to her as base fixed it in one generation.
+- **Naming what you want gone keeps it.** "Remove every small glowing eye" left the eyes in place twice; they only went when the contaminated base was abandoned and the prompt described the target state alone, never mentioning them.
+- Amber eyes in darkness generate as **cat eyes** — vertical slit pupils survived a positive description, an avoid-list, and her own eye as a two-image shape reference. The owner cut them entirely; a single enormous eye with a round pupil did render correctly, and was then cut too.
+- Final direction after three rounds of owner notes: full-frame character, dark void behind, **a hint of background only** (two candle flames), lighting and gouache texture restated in full. Pure black alone read as flat and styleless; the full parlour read as too busy and shrank her.
+
+**Trap (5 failed attempts, solid):** krea-edit cannot detach a HELD object from a character — the white-plate recipe, kept-parts enumeration, bottom-edge description and arms-out-of-frame ALL failed to remove the teacup her hand holds; hand and held object are fused. Both canons hold the cup, so every derivation inherits it. Resolution: the cup was accepted as her iconography (every shipped bust holds one). **Promoted to `reference-vn-art.md` 2026-08-04**, together with the base-carries-identity relapse and the cat-eyes prior.
