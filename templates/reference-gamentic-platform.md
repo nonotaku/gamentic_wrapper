@@ -2,6 +2,8 @@
 
 Shared reference for any game built on this platform, VN or not. Pointed at by the genre templates; holds no genre content of its own. Everything here was paid for in a live build — treat each ⚠ as a scar, not a suggestion.
 
+*v2 (2026-08-04): three verification claims re-measured with probe rig `g8bb0c7` and corrected in place; the per-surface restriction matrix moved to `reference-runtime-surfaces.md`.*
+
 ---
 
 ## Editing a game safely
@@ -15,14 +17,15 @@ Shared reference for any game built on this platform, VN or not. Pointed at by t
 
 ## Verifying what you built
 
+- **Restrictions differ per surface** (dev harness vs play page vs embeds) — `reference-runtime-surfaces.md` is the measured matrix; check which surface you are on before trusting any probe result.
 - **The embed URL is the reliable probe:** open `/api/games/<id>/embed` in a browser and drive it with JS. The runtime exposes `VN.flags`, `VN.goto()`, `VN.S` (`label`, `pc`, `bg`, `line`, `choices`, `actors`), so a whole branch can be walked and asserted headlessly. The play page wraps the game in a cross-origin iframe and cannot be read.
-- ⚠ **`playtest_screenshot` renders a BLACK canvas** for any game whose assets are served as `media/…` paths — its headless environment cannot resolve them. Automated visual checking is unavailable there; read state through the embed instead.
+- **`playtest_screenshot` renders `media/…` assets normally** (re-measured 2026-08-04; an earlier regime returned black). Automated visual checking works in the harness — and the harness is MORE permissive than production, so a passing screenshot says nothing about storage, dialogs or canvas readback.
 - **Automation reaches gameplay through the menu only if number keys pick rows.** `playtest_screenshot` can click the screen centre and press keys, nothing else — so bind `1`–`9` in any custom menu. Keys sent in one burst arrive faster than beats advance, so send generously and check where you actually landed.
-- **A game auto-restores the last save on load.** Clear `localStorage` before probing a fresh run, or you resume mid-story and misread the result.
+- **A game auto-restores the last save only where storage works (the dev harness).** On every production route `localStorage`/`sessionStorage`/cookies THROW SecurityError, so embed probes always start fresh — and a player's mid-story save cannot survive a reload; script progress must tolerate that.
 - ⚠ **`S.bg === 'x'` proves the script ran, not that anything is on screen.** A beat whose background had been deleted from `GAME_ASSETS` walked clean through every state assertion and rendered pure black. Close the loop with the image itself: `new Image()` every key any `show` or `bg` references and wait for `onload`. Cheap, and it is the only check that distinguishes a working scene from a black one.
 - ⚠ **Another agent may prune assets under you.** Re-using a long-unreferenced asset is the exact moment a cleanup pass elsewhere deletes it. After pointing the script at anything that was previously dead, re-check that it still exists — and prefer `import_asset` from the library ref, which restores it for free.
 - ⚠ **A collapsed browser pane freezes the page.** `document.hidden` goes true, so `requestAnimationFrame` stops, screenshots time out and timers throttle to a crawl. "The draw hook was never called" then measures the pane, not the code. Confirm a frame counter (`S.t`) is still advancing before reading any render result as evidence — and drive the story by dispatching `pointerdown` on the canvas, which keeps working while the loop is frozen.
-- ⚠ **The canvas and its `media/` images are cross-origin-tainted**, so `toDataURL` and `getImageData` both throw and there is no pixel check of any kind. What survives: `fetch` the PNG and read byte 25 — colour type `6` is RGBA, which is how you prove a sprite really got its alpha channel. Anything genuinely visual ends with the owner's own eyes; say so plainly instead of implying you saw it.
+- ⚠ **Canvas taint is a production fact, not a universal one**: on play/embed routes `toDataURL` and `getImageData` throw (opaque origin), while the harness reads pixels freely. Production-side, what survives is `fetch` the PNG and read byte 25 — colour type `6` is RGBA, which is how you prove a sprite really got its alpha channel. Anything genuinely visual ends with the owner's own eyes; say so plainly instead of implying you saw it.
 
 ## Assets and storage
 

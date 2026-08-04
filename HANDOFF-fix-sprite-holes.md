@@ -13,11 +13,13 @@ The character's chest is painted near-white. gamentic's server-side cutout keyer
 
 ## Current game state
 
-- `gcc67a8`, **public**, content == v108 (all of 2026-08-01's art experiments were reverted at the owner's order; version counter ~145+).
+- `gcc67a8`, **public**, version 165 (2026-08-04): template-v3 refine + the Danganronpa investigation build shipped (examine loops ch1_b/ch2_search, clue-gated questions, secret 7th ending end_sea, chapter cards removed; script = 78 labels). **The five `gm_*` sprites and all media are UNTOUCHED — still bit-identical to the v108 set below.**
+- Custom code after `/* __GI_VN_RUNTIME__ end */` is now the `__GWS2` engine block (menu geometry, mixed hotspots, settings, boot gate, number keys, posture derive). Path B's `drawImage` wrapper must coexist with it — append after `__GWS2`, still calling the SAVED original. The boot gate preloads every `GAME_ASSETS` image at load; a repaired-canvas swap hooks the same runtime `IMG` cache as before.
+- ⚠ New platform fact: the embed page is served **document-sandboxed** — `localStorage` throws for page JS (wrap in try/catch), and every embed probe is a fresh run.
 - Live sprites (hue-matched set, FINAL, faces locked): neutral `asset:a68e5a012e8` · gentle `asset:ab43adf05fe` · worried `asset:a19db1a1cab` · hungry `asset:ae83d2c5339` · far `asset:aa5c161a823`.
 - **The source assets behind all five live sprites still exist, `canEdit:true`, as JPG on flat white bg** (krea-edit outputs `neutral_fix`, `gentle_fix`, `worried_fix`, `hungry_fix2`, `far_fix`) — JPG has no alpha, so the "hole" areas are intact in the originals. `import_asset(url: "asset:…", transparent: true/false, sizePx)` can re-run the key-out from them. Test any re-key under a tmp GAME_ASSETS name first (then `delete_asset`), never straight over `gm_*`.
 - Live sprites are 512×512 RGBA; live media == local backup bit-identical (sha256-verified 2026-08-01).
-- Local backup: `C:\Project\gamentic\backup\get-well-soon_gcc67a8_2026-07-31\` (offline-playable, synced to v108 content).
+- Local backup (THIS machine): `C:\Project\gametic_wrapper\backup\get-well-soon_gcc67a8_2026-07-31\` (offline-playable; media == live, sha-verified 2026-08-01; script/code sections are pre-refine — v158 content diverges, media does not).
 
 ## Facts that kill or enable each fix path (verified 2026-08-01)
 
