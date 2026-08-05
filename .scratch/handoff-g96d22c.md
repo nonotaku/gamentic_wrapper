@@ -95,4 +95,35 @@ Ask the owner which outstanding item to take, or whether they are resuming the m
 - The owner runs a SECOND parallel session on the animated_cg/CG pipeline (v342–352, sandbox remix `gce8ca9`) — its record lives in the shared memory file; division holds: that thread owns animated CG experiments, this thread shipped menu + Near.
 - ~~Outstanding item (a) `char_gm_angry` framing~~ **CLOSED without a generation (v375):** the owner chose to retire the open-forehead face rather than reshoot it. All five displeasure beats (`c2_refuse`, `b_worst`, `t_veil`, `ask_monster`, `end_fled`) now `show char_gm_polite`, which also carries the `ch1` first meeting. Verified: no script reference to `char_gm_angry` remains, all 26 art keys load, console clean. `CONTEXT.md` **Mask** rewritten — one face, the words decide the reading. `char_gm_angry` left injected but unused, alongside `char_gm_back_b`; both are deliberate keeps, so the dead-asset warning now names two.
 - **The handoff backlog is empty.** Open threads live elsewhere: `.scratch/ch2-rework/spec.md` (mid-game record, all questions closed) and the owner's parallel animated_cg pipeline.
+
+## Addendum 4 — 2026-08-05 · sound pass, round 1 (v376–v380, 20 cr)
+
+Grilled from a full-script audit rather than a backlog: bilingual turned out COMPLETE (102 EN / 102 TW gated, plus mirrored language-specific labels — no English leaks), and the real gap was audio — 2 BGM tracks, 4 cues, 3 SFX across 61 labels.
+
+**Principle the owner picked: sound goes where the WRITING already describes a sound.** Four new SFX, all verified firing at runtime:
+
+| sfx | label | the line it serves |
+|---|---|---|
+| `sfx_knock` | `prologue` | 「門上沒有名字。你敲了門。沒有任何回應。」 |
+| `sfx_knock_dead` | `pro_knock` | 「你再敲一次。聲音進去了，卻沒有回來。」— same knock, tail swallowed, anechoic |
+| `sfx_door` | `pro_enter` | 「門沒有鎖。從來都沒有。」(all three prologue branches converge here) |
+| `sfx_drink` | `c2_deep` + `c2_sip` | the drink the whole ending ladder hangs on |
+
+Deliberately left silent by the owner: the room-degradation steps, and the ch3 hard cut to `bg_wrong`. **Music is settled as-is** — a score decaying with the room was proposed twice and declined both times ("music is ok for now"); the two existing tracks stay. Do not re-open it unasked.
+
+⚠ **Correction to `reference-gamentic-platform.md`: synthetic pointer events do NOT advance this runtime; synthetic keyboard does.** `pointerdown`/`pointerup`/`click` on window, document and canvas all left `S.pc` unmoved (30 clicks, three targets); `keydown` Enter/Space advanced it 4→10 immediately. The platform file currently recommends the pointer route — it needs the fix next time the owner runs the skill.
+
+## Addendum 5 — 2026-08-05 · the sip bug (v384, free)
+
+**Found by simulating the whole choice tree, not by playing.** A JS walker over `GAME_DATA.script` — follow `goto`, fork at every `choice`, carry the flags, record where `end` fires — enumerated all 5,538 paths in one call. Keep this technique: it is the only way to audit an ending ladder honestly, and it costs nothing. (Its one artefact: `end_taken` / `end_bring_home` look unreachable because they `goto` their `_via` labels before ending — normalise the `_via` suffix before counting.)
+
+**The defect:** `drank` was set only by 一飲而盡, so 淺嘗即止 was indistinguishable from refusing. `r_hungry`'s fallback for `!drank` is `end_fled`, whose prose has the player bolting for the door — **354 of 646 fled endings were polite sippers**, some at favor 72, who had sat through the entire game.
+
+**The fix:** a new `tasted` flag, set by BOTH drinking options; `r_hungry`'s fled exit now keys off `!tasted`. `drank` still gates the fed route in `resolve`, so a sip is a taste and not a meal. Sippers now land on `end_unfed` — she was given a mouthful, not a meal, which is what that ending already says.
+
+Verified twice: the simulator re-run shows fled = 292 paths, **all refusals**, no sippers, no deep-drinkers, and all 8 endings still reachable; and a live runtime probe (`goto c2_sip` → flags → `goto resolve`) lands on `end_unfed` with `tasted: true, drank: false`.
+
+⚠ **Still true and knowingly accepted:** the game offers no "leave" choice anywhere, so `end_fled`'s prose describes an action even refusers never took. The owner chose to fix only the sip routing. Two free options remain if it is ever reopened — rewrite the two opening lines so it reads as never having stayed, or add a fourth 「起身離開」 option in `ch3`.
+
+Probe recipe for audio, worth reusing: wrap `HTMLMediaElement.prototype.play`, record `this.src`, then `VN.goto` each label. Anything whose `sfx` sits before the label's first `say` fires on the goto alone; anything after a `say` needs the keyboard advance above.
 - **Same day, later — the looms were rejected in place and replaced by a CG (v361–v374, 165 cr).** Trade offer now hands the screen to `cg_shadow_offer` (she fills the frame, dark void behind, two candle flames as the only背景, sprite hidden); each trade branch reopens with `bg_parlor_cold`; drink offer reverted to plain `char_gm` with `cg_cup_offer` carrying the beat; both loom sprites and the working file `cg_shadow_sq` deleted from the game. Verified: all three branches restore the room with their own expression, all 27 script-referenced art keys load, console clean. Full record + the generation lessons: `.scratch/ch2-rework/spec.md` §Superseded 2026-08-04. Wallet 個人 2,490 at close.
