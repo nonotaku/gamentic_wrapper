@@ -125,5 +125,63 @@ Verified twice: the simulator re-run shows fled = 292 paths, **all refusals**, n
 
 ⚠ **Still true and knowingly accepted:** the game offers no "leave" choice anywhere, so `end_fled`'s prose describes an action even refusers never took. The owner chose to fix only the sip routing. Two free options remain if it is ever reopened — rewrite the two opening lines so it reads as never having stayed, or add a fourth 「起身離開」 option in `ch3`.
 
+## Addendum 6 — 2026-08-05 · the void face, and the change made visible (v465–v470)
+
+**The devouring is now shown, in three stages, using art the owner picked after a long exploration** (~45 generations; the winners and the technique lessons are the lasting part).
+
+The visual language: her face becomes flat matte black with only her own narrow pale eyes left in it, and the black then spreads down her body with a torn, irregular edge — never a smooth gradient. `asset:a43d290737b` is the canon base for the whole line; derive from it, not from a later chain link.
+
+| stage | sprite | where |
+|---|---|---|
+| a thread of black at the collar, body still clean | `char_gm_spread_early` | `end_devoured`, on "The candles go out" |
+| across the shoulders, tearing as it goes | `char_gm_void_spread` | on "Do not be afraid" |
+| all but a few pale islands taken | `char_gm_spread_deep` | on "a spoon, gently stirring" |
+| what is under the veil | `char_gm_void_half_a` | `t_veil`, for the two lines the hand is through it, then back to `char_gm_calm` |
+
+**No new dialogue was written** — the three stages ride the three lines the ending already had, so the change happens while she talks. Verified: script order correct, all four sprites load at 1024², and a live probe holds `char_gm_spread_early` at the first line rather than racing ahead.
+
+Kept but unwired, deliberately: `char_gm_void`, `_third`, `_many`, `char_gm_grin` + `_m1`, `char_gm_slits` + `_tilt`, `char_gm_void_black`, `_head`, `_half_b`. The dead-asset warning now names 15 — that is expected, not a defect.
+
+## Addendum 7 — 2026-08-05 · she makes a sound when her face changes (v471–v488, 55 cr)
+
+Not voice acting — five short wordless breaths, fired on the **expression swap** rather than the line. 234 say lines would have been unbearable; there are 32 shows, and each one is the moment her feeling actually changes.
+
+`vo_pleased` (pleased/excited) · `vo_warm` (smile/neutral, and her arrival, her first words, her leaving) · `vo_cold` (the Mask, all five offences) · `vo_hurt` (hurt/sad) · `vo_hollow` (the danger tell). All `generate_speech`, voice **`woman_calm`** — the owner auditioned all four female presets on one identical line and picked it.
+
+**Deliberately silent:** the veil reveal and the three devouring stages. Those beats already carry a sting and the tension track, and the transformation reads better without her.
+
+Wiring note worth reusing: `edit_game` with `replaceAll` on the exact `show` block per sprite key does the whole set in one batch, and conditional shows (`if: favor>=65`) need the **same `if` on the sfx** or the sound fires when the sprite does not. Verified: 32 cues, every one paired to the show that follows it, no if-mismatches, no missing audio files, and a live probe heard `vo_hurt` / `vo_cold` / `vo_hollow` at the right labels.
+
+⚠ **Accent lives in words, not in breaths — but the SFX engine cannot make a human breath.** Wordless takes via `generate_sound` came back unusable; the fix for "too American" was changing the TTS voice, not the engine.
+
+## Addendum 8 — 2026-08-05 · the reveal chapter finally reveals something (v489, free)
+
+`ch3` had her say **"Look at me as I am"** with no `show` at all — the player kept whatever face chapter two left behind. Worse, `t_gaze`'s narration counts her eyes *until counting loses meaning* over a sprite with two. The writing had been promising a reveal the art never delivered.
+
+Settled by grilling: **she offers, and how much you see is what you chose.** One axis, three payoffs, all from sprites already in the game:
+
+| beat | sprite | reading |
+|---|---|---|
+| `ch3`, on her invitation | `char_gm_void` | she gives half — the face is a void, but the eyes and the small smile are still hers |
+| `t_gaze` — hold her gaze | `char_gm_void_many` | you accept what was offered, and the narration's many eyes are finally there |
+| `t_veil` — lift the veil | `char_gm_void_black` (was `_half_a`) | you took more than was offered, so you see all of her, and she shouts |
+| `t_bow` — look away | `char_gm` unchanged | you declined, so she puts it back |
+
+`ch3` stays silent; `t_gaze` keeps `vo_pleased`, because a monster face over her genuinely moved hum is the point — it is still her. Verified live: the void lands on her invitation line, `t_veil` reaches `_black`, `t_bow` unchanged.
+
+Known seam, accepted: after `t_gaze` the question beats show her ordinary faces again — she recomposes without saying so. `t_veil` has a line for it ("Forgive me. The tea has gone bitter"); `t_gaze` does not. Add one if it ever grates.
+
+**Extended immediately after (v492).** The owner's framing: the Void is not a progression but *her mask slipping*, and **she goes back to normal when the player does the right thing** — which is what `t_veil` and `t_bow` were already doing. So the state now drops at every beat where she is seen through, and `char_gm_void_half_a` is the base face for all of them:
+
+| beat | was | now |
+|---|---|---|
+| `ch3` invitation | `char_gm_void` | `char_gm_void_half_a` |
+| `ask_past` — what were you before | `char_gm_hurt` | `char_gm_void_half_a` |
+| `ask_twelve` — the twelve guests | `char_gm_hurt` | `char_gm_void_half_a` |
+| `ask_monster` — you call her one | `char_gm_polite` | `char_gm_void_half_a` |
+| `q_truth` — the stolen pages laid out | `char_gm_sad` | `char_gm_void_half_a` |
+
+Unchanged on purpose: `t_bow`, `q_sweet`, `ask_en` (courtesy keeps her face), the two extremes (`t_gaze` many-eyes, `t_veil` all-black), `ch1`, and **all eight endings** — the owner scoped the Void to chapter three so the last thing the player sees of her is still a person. The voice cues stay as they were, so the emotion still comes from her breath and her words while the face carries only how much performance is left. `Void` is now a term in `CONTEXT.md`. Verified live; `char_gm_hurt` is now unused but kept.
+
 Probe recipe for audio, worth reusing: wrap `HTMLMediaElement.prototype.play`, record `this.src`, then `VN.goto` each label. Anything whose `sfx` sits before the label's first `say` fires on the goto alone; anything after a `say` needs the keyboard advance above.
 - **Same day, later — the looms were rejected in place and replaced by a CG (v361–v374, 165 cr).** Trade offer now hands the screen to `cg_shadow_offer` (she fills the frame, dark void behind, two candle flames as the only背景, sprite hidden); each trade branch reopens with `bg_parlor_cold`; drink offer reverted to plain `char_gm` with `cg_cup_offer` carrying the beat; both loom sprites and the working file `cg_shadow_sq` deleted from the game. Verified: all three branches restore the room with their own expression, all 27 script-referenced art keys load, console clean. Full record + the generation lessons: `.scratch/ch2-rework/spec.md` §Superseded 2026-08-04. Wallet 個人 2,490 at close.

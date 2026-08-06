@@ -32,6 +32,14 @@ The chest-up, leaning-in framing — she has closed the distance and the frame n
 
 Carried by a **CG**, not a sprite: sprites are drawn at a fixed on-screen height, so a close crop makes a bust look cropped rather than close. In `g96d22c` the trade offer hands the whole screen to `cg_shadow_offer` and hides the sprite; the sprite versions were tried first and read badly.
 
+## Void
+
+The face gone — a flat black shape where hers was, holding only her own eyes. Not an **Expression** but a *state*: what shows when the courteous performance drops, and what the player stops seeing the moment they are courteous again.
+
+It is reversible by design. She lets it go herself when she invites you to look, it slips whenever she is seen through — asked what she was before, called what she is, shown the pages she wrote — and it is back to her own face wherever the player answers well. Emotion still comes from the words and her voice; the Void only says how much of the performance is left.
+
+In `g96d22c` one image carries the state (`char_gm_void_half_a`, head and neck black, her body still human) and two carry its extremes: `char_gm_void_many` when you accept the look she offered, `char_gm_void_black` when you take more than she offered. Chapter three only — the endings keep her human faces, so the last thing you see of her is still a person.
+
 ## Chapter vs choice
 
 A `c<N>_` label prefix numbers the **choice**, not the chapter. `c2_deep` is the second choice of the game and lives in chapter 1. Chapters are the `ch<N>` labels alone.
