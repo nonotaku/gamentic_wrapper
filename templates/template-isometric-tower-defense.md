@@ -1,4 +1,4 @@
-# template-isometric-tower-defense — v7
+# template-isometric-tower-defense — v8
 
 **Proven blueprint** distilled from our own shipped game **NEON BASTION** (`g86bd9a` v373 = pure-TD baseline; `gbe4dbe` = full build with story/tech-tree/i18n layers). Not a reimplementation of someone else's game: every number below was tuned live on this platform and owner-playtested (NORMAL verdict: "not too hard, not too easy"). Treat each ⚠ as a scar — it was paid for.
 
@@ -8,6 +8,7 @@
 *v5 (2026-08-05): the WYRMWARD retrofit (v41) ran the two v4 sections blind and filed 13 frictions — both sections tightened: fit snippet made self-contained, pointer math corrected, art-in-DOM ruled, fit proven by on-screen readout, register given font stacks / z-order / sfx delegation / control budget.*
 *v6 (2026-08-05): owner played the retrofit and asked where the camera and the tower VFX were — neither existed in the recipe, so neither existed in two blind builds. Game-feel section added (cursor-anchored zoom + clamp + pan, event-queue VFX kit, per-role fire signatures, shake ladder) with `zoom`/`screenShake` knobs and two checklist lines.*
 *v7 (2026-08-05): the WYRMWARD feel pass (v42) ran the game-feel section blind and filed 13 frictions — spaces named, clamp bounds and zoom range fixed, pointer chain given its two exits and its shake exclusion, event outbox contract and float throttle stated, shake ladder completed, shape-not-colour rule added, headless proof affordances inherited from the display pipeline.*
+*v8 (2026-08-06): the shell (display pipeline, register, menu/loader/settings/records anatomy) promoted to `reference-game-shell.md` so every future genre template starts beautiful without copying — this file keeps its genre-specific overlays and pointers.*
 
 ## When to use
 Isometric grid tower defense: build towers on open cells beside multi-route enemy paths, survive authored waves plus an endless mode — Arknights / Kingdom Rush lineage. Session 15–30 min per stage, campaign of seeded stages.
@@ -28,25 +29,13 @@ Sibling spec: `gamentic_gameskill_rewritten/strategy_game/TowerDefence.md` is a 
 
 ⚠ **Integer grid coords are CELL CENTRES** — a tile spans ±0.5 in grid space. Terrain tiles, height lifts and hit tests drawn corner-to-corner land half a tile off, and the error *looks like* a z-height bug (we "fixed" tower lift first; the real cause was the origin convention). Pick one convention, write it as a comment at the projection function, derive everything from it.
 
-## Display pipeline — how the game stays sharp
+## Shell — display pipeline, register, menu (`reference-game-shell.md`)
 
-The stage is a FIXED 1600×900 element the window never resizes; a fit pass scales the WHOLE stage uniformly and letterboxes the rest:
+The fixed-stage fit, the DOM-draws-the-UI mandate, the presentation register, the two-level menu, the loader gate and the settings/records/win-lose anatomy all live in **`reference-game-shell.md`** — adopt it whole and re-theme freely (owner policy: beautiful default, never start bare). TD-specific overlays on that shell:
 
-```js
-// #stage { position:absolute; top:0; left:0; width:1600px; height:900px; transform-origin:0 0; }
-// (at the default transform-origin 50% 50% this exact formula mis-centres the stage)
-const s = Math.min(innerWidth / 1600, innerHeight / 900);
-stage.style.transform = `translate(${(innerWidth - 1600*s)/2}px, ${(innerHeight - 900*s)/2}px) scale(${s})`;
-// world-coordinate input = (clientX - stageRect.left) / s — bare clientX/s is off by the
-// letterbox bar. DOM-relative measurements (getBoundingClientRect widgets) are ALREADY in
-// scaled space; dividing there double-corrects.
-```
-
-- ⚠ `canvas { width:100%; height:100% }` stretches the raster to the window — aspect breaks on any non-16:9 screen and everything blurs. A blind build shipped exactly this; the owner caught it on sight.
-- **Canvas draws the WORLD; DOM draws the UI.** Transform-scaled DOM text re-rasterises crisply at every window size, while canvas text is a raster that blurs with it — and only DOM can reach the presentation register below (CSS glow, hover transitions). Canvas-drawn buttons read as a 2000s website game. **Art inside a DOM panel is still art**: key art as a CSS background, portraits as `<img>` over `GAME_ASSETS`, and an entity that exists only as draw code gets its own small canvas in the panel.
-- World canvases sit 1:1 inside the stage — attribute size = stage px (NEON layers a static background canvas under the live one) — with `imageSmoothingQuality = 'high'` on world draws.
-- **Prove the fit with an on-screen readout** (window size, `s`, stage ratio, bar widths, canvas attr vs css) — a fixed-viewport screenshot cannot show a resize; the readout can, and it is what satisfies the letterbox checklist line.
-- Retrofitting a canvas-drawn UI: delete its immediate-mode hit state wholesale — one leftover hover/panel guard eats every click the new DOM panels should receive.
+- The iso board's empty diamond corners are what let the 18×14 grid tuck under the shell's two ~240px HUD panels (Iron numbers above).
+- The records screen IS the codex: entries read the live TOWERS/ENEMIES tables (per-entry lore + counters), and animated bosses preview there (§ Sprite animation) — also how verification reaches them without playing ten waves. Before the codex exists, Archive fronts a field manual / best-scores screen; the 3-row front menu holds either way.
+- The wave-preview/muster panel is HUD, not banner — it carries the next wave's archetype label and the `NO DETECTION BUILT!` warning (taxonomy above).
 
 ## Game feel — camera & combat feedback
 
@@ -169,25 +158,6 @@ if (map.w < GRID_W || map.h < GRID_H) {
 - Route generators: `single / converge / split / shifting` — mode and biome are read from seed digits, so the seed browser doubles as a level editor.
 - **Generated-map difficulty is a route-geometry formula, not a guess**: `hpScale = clamp(0.5–2, (0.70 + (avgRouteLen−20)·0.015) · shiftPenalty · spawnRelief · genHpMul)` with `spawnRelief = 1 − (spawnCount−1)·0.07` — the relief exists because a bot playtest beat multi-spawn maps 3/10 vs 13/13 single-route. Long routes pay more; extra entrances pay relief.
 - Endless: `genWave` spends a budget per wave — `budget = (8 + n × endlessRamp) × WAVE_COUNT_MUL`, **linear**, default ramp 3.2; a boss wave pins the boss group at count 1 and pays for it with `budget × 0.55` on the rest. Count scaling lives HERE, in the budget — boss counts never scale. Archetypes cycle, ladder keeps unlocking.
-
-## Screens & shell
-
-- Front menu = **3 rows** — play / records / settings, worded in the game's own voice (NEON: Begin Operation / Archive / System) — over key art; everything else nests. A menu that lists every subscreen reads as a debug build. Archive fronts whatever records exist — codex when built, a field manual / best-scores screen in a slice; the row count holds either way.
-- **Loader**: preload `GAME_ASSETS` behind a progress bar counting `load`/`error` events ⚠ — not `decode()` promises and not `img.complete` (false in the same tick the Image is created, everywhere). Time the gate out (~12s) and `try/catch` the whole thing — never trap the player behind a loader.
-- ⚠ `showScreen` toggles a **hardcoded id list** (it comes with the DOM shell the display pipeline mandates) — a new overlay does nothing until its id joins the list. Grep for the list the moment a new screen "never appears".
-- **Codex reads live definition tables** (TOWERS/ENEMIES + per-entry lore), so it cannot drift from the game. Animated entries reuse the sprite registry for a click-to-zoom preview.
-- Unlocks and dev toggles live in **Settings**, not the menu.
-
-## Presentation baseline (default on, swap — never start bare)
-
-Owner policy: builders customise **from a beautiful baseline, not from a blank page** — blank pages are how ugly ships. Adopt this shell, then re-theme palette / typeface / key art per game; every piece is replaceable, none is skippable-to-nothing:
-
-- Menu: full-bleed key art, dimmed toward the row strip; wordmark with a subtle glow + one-line sub-title; 3 rows left-aligned with per-row accent colours.
-- Loader: thin progress bar + percentage over a darkened frame of the same key art.
-- HUD: two dark side panels (~240px) with accent borders; icons, not labels, for the resource/status readouts.
-- Every button: hover state + hover/click sfx. A silent button reads as broken.
-- **Register — what "beautiful" means concretely** (NEON's shell as evidence): a radial-gradient stage backdrop; panels in translucent dark glass with 1px accent borders and a soft outer glow — store the accent twice (`--accent` hex + `--accent-rgb` triplet) so borders and rgba glows share one hue; uppercase display type with wide letter-spacing for titles and a compact numeric face (`ui-monospace, Consolas, monospace` + `tabular-nums` — webfonts are CSP-blocked, so name system stacks); scanline + vignette overlay divs ABOVE the world canvas and BELOW the DOM UI, `pointer-events: none`; 120–200ms ease-out hover transitions everywhere.
-- The browser-default test cuts deep: it outlaws native `<input>` controls, so budget a hand-built slider and switch (pointer capture). Wire hover/click sfx by **delegation on a marker class** — per-button listeners die on every `innerHTML` rebuild.
 
 ## Production sandbox — four build rules
 
