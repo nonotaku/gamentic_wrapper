@@ -54,6 +54,35 @@ Created: 2026-08-05（grill-with-docs session）
 
 ⚠ **未量過嘅變數：呢次係盲生**（用 `prompt`，冇餵 `image`）。餵一張鎖定嘅厚塗 canon 落去做 base 會唔會保住畫風同身份 —— **未知**。閘一嘅第一件事就係答呢條。
 
+### 1.4 答案：餵 canon 做 base，畫風同身份**保得住**
+
+`girl_idle`（6 幀，餵 `canon_idle` 做 base）驗證：身份一致、冇多人、gouache 筆觸完整保留。**所以「LTX 覆蓋畫風」嘅結論要收窄** —— 覆蓋只發生喺**盲生**（淨係畀 `prompt`）；有 base 圖嘅時候，畫風跟住 base 走。
+
+### 1.5 ⚠ 新疤：去背底板嘅顏色唔可以同角色衫色一樣
+
+原本 canon 係**白色水手服上衣**站喺**純白底板**上。`sprite_animation(transparent: true)` 去背嗰陣把件衫一齊當背景鏟走。
+
+`reference-vn-art.md` §Cutout 已經記低咗一半（「淺色背景會令 keyer 食掉淺色**面部**」）；呢個係同一個病嘅另一半 —— **被食嘅係同底板同色嗰忽衫**。
+
+兩個修法，owner 揀咗前者：
+1. **改角色設計，避開底板色**（本例：深藍水手服 + 卡其外套）。
+2. 換底板色 —— 但 `reference-vn-art.md` 記低咗紗質布料會被 chroma 染綠，所以白係唯一安全底板。即係話**衫要讓底板**，唔係底板讓衫。
+
+順帶：新設計仲要避開**深色**（`reference-vn-art.md`：深色 sprite 喺深色背景會消失），而 DAWN DEBT 全程夜街。所以衫色被夾喺「唔可以白、唔可以深」中間 → 中間調暖色（卡其）。
+
+### 1.6 平台不穩定紀錄（同日）
+
+| 現象 | 次數 | 成本 |
+|---|---|---|
+| image2video 即時撻（`local ComfyUI could not produce the video`） | 3 | 360cr |
+| job 被殺（`server 可能重啟過`），卡喺 `stage: image` 約 8 分鐘 | 1 | 45cr |
+| 成功 | 2（`girl_run` 舊版、`girl_idle`） | 90cr |
+
+- 四次失敗全部回傳 `"no video credits burned"`，**四次都收咗錢**，事後複查冇退。
+- `sprite_animation` 單價中途由 **120 跌到 45**。
+- `check_video` 餵 `videoUrl` 會炸（`moov atom not found` —— 下載到嘅唔係有效影片）。餵 `name` 會分析**張 sprite sheet 而唔係影片**，於是把「六個人排一行」誤報成「主體散成 6 嚿，去背咬穿」。**呢個假警報要識得拆**，否則會白白重做一張冇問題嘅圖。
+- ⚠ 錢包對唔上數：session 開始 14,395；平台自己記錄嘅開支（本遊戲 ＋ 未綁定）≈ 625cr，但錢包實際走咗 1,688cr。**約 1,063cr 來源不明**，已三次向 owner 報告。
+
 ### 1.3 呢啲發現要點處理
 
 `templates/` 嘅編輯要行 `/mattpocock-skills:writing-great-skills`，而 Claude **自我 invoke 唔到**（handoff 第 3 條）。所以上面嘅發現暫存喺呢份 spec；驗證足夠之後，由 owner 執行嗰個 skill promote 入：
@@ -287,6 +316,36 @@ matte flat colors, sketchy rough lineart, unblended shading, textured brush edge
 | **穿模跌出世界** | y 去到 216,458，夜巡卡死永不結束 | 終端速度 22 × dt 上限 3 ＝ 一步 66px > 地板 40px 厚。改成**分拆細步**（每步 ≤14px），另加世界底部安全判定 |
 
 驗證方式：喺瀏覽器直接跑 `window.__step` 泵幀 —— 幾何量度（踏板間距、豎井位置）＋ 三輪 ×2500 幀壓力測試，零穿模。
+
+### 已落地嘅動畫（閘一）
+
+| asset | 幀 | 來源 canon | 狀態 |
+|---|---|---|---|
+| `girl_idle` | 6 | `canon_idle`（企姿） | ✅ 重做過一次 —— 第一版六格一樣，改為**逐個部位寫明點郁**（胸口起伏／膊頭升降／頭微低再抬／重心換腳／馬尾擺／外套下擺晃）之後先有動作 |
+| `girl_run` | 8 | `canon_run`（跑姿） | ✅ 腳步清楚交替、手臂擺動、身份一致 |
+
+**成功配方（三條缺一不可）：**
+1. **餵 canon 做 `image`**，唔好盲生 —— 畫風同身份跟住 base 走。
+2. **來源姿勢要同目標動作一致** —— idle 要企姿 canon，跑步要跑姿 canon。攞跑姿去出 idle 會兩頭唔到岸。
+3. **motion prompt 要逐個部位寫明點郁**，唔可以寫「gently breathing」呢類形容詞。
+
+⚠ `canon_run` / `canon_idle` 會被平台報做「生成咗但冇畫出嚟」。**呢個係預期之內** —— 佢哋係白底**來源圖**，唔係遊戲 sprite；fallback 鏈已經特登唔會落到佢哋度，否則畫面會出現白方塊。
+
+### 閘一完成（2026-08-06）
+
+| 類 | 內容 |
+|---|---|
+| 影片循環 ×4 | `girl_idle` 6f · `girl_run` 8f · `girl_limp` 8f · `zombie_walk` 8f |
+| 逐格姿勢 ×6 | `girl_jump` · `girl_shoot` · `girl_hurt` · `girl_death` · `girl_grab` · `zombie_death` |
+| 白底來源圖 ×4 | `canon_run` · `canon_idle` · `canon_limp` · `canon_zombie` —— **永遠唔會被畫出嚟**，平台警告係預期之內 |
+| 場景 | `bg_street` · `bg_shelter` · `keeper`（收容所管事人立繪） |
+| CG / 封面 | `cg_bad_end`（上鏈鐵閘＋地上嗰個橙背囊）· 封面 |
+| 音效 ×11 | click · jump · pickup · shoot · hurt · death · zombie_death · gate · extract · win · lose |
+| 音樂 ×4 | `bgm_menu` · `bgm_night` · `bgm_tension`（天亮倒數剩 45 秒自動切）· `bgm_shelter` |
+
+**開支 1,048cr / 預算 4,000。** 其中 **405cr 係失敗嘅 `sprite_animation` 收費**（三次即撻 ×120 ＋ 一次被殺 ×45，全部零產出，全部聲稱冇收費）。扣走呢筆，真正買到嘢嘅係 643cr。
+
+同期修好嘅 code 問題：閘企喺地板面 10px 變成絆腳唇（行唔過）· sprite 朝向反轉（面向左嘅 canon 配「向左翻轉」＝一路倒後行）· 搜刮同開槍姿勢生成咗但冇 anim state · 背景蓋過前景（加 0.52 底噪 ＋ 視差）· 撤離點由一嚿純綠改成有框有呼吸光嘅門。
 
 ### 未建
 

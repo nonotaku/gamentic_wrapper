@@ -1,4 +1,4 @@
-# template-isometric-tower-defense — v5
+# template-isometric-tower-defense — v7
 
 **Proven blueprint** distilled from our own shipped game **NEON BASTION** (`g86bd9a` v373 = pure-TD baseline; `gbe4dbe` = full build with story/tech-tree/i18n layers). Not a reimplementation of someone else's game: every number below was tuned live on this platform and owner-playtested (NORMAL verdict: "not too hard, not too easy"). Treat each ⚠ as a scar — it was paid for.
 
@@ -6,6 +6,8 @@
 *v3 (2026-08-05): second blind build (WYRMWARD `g6ead49`, Opus 5, fantasy theme — zero theme resistance) — tower-side anchor added, sell/move economy corrected against source, endless budget and the master HP chain published, ladder/floor made self-consistent, bot-sim verification made explicit.*
 *v4 (2026-08-05): owner visual QA of blind build #2 caught what the checklist could not — blur from stretch-scaling and a 2000s-website UI register. Display pipeline section added (fixed stage + uniform scale + DOM-draws-the-UI, mandated), presentation register made concrete.*
 *v5 (2026-08-05): the WYRMWARD retrofit (v41) ran the two v4 sections blind and filed 13 frictions — both sections tightened: fit snippet made self-contained, pointer math corrected, art-in-DOM ruled, fit proven by on-screen readout, register given font stacks / z-order / sfx delegation / control budget.*
+*v6 (2026-08-05): owner played the retrofit and asked where the camera and the tower VFX were — neither existed in the recipe, so neither existed in two blind builds. Game-feel section added (cursor-anchored zoom + clamp + pan, event-queue VFX kit, per-role fire signatures, shake ladder) with `zoom`/`screenShake` knobs and two checklist lines.*
+*v7 (2026-08-05): the WYRMWARD feel pass (v42) ran the game-feel section blind and filed 13 frictions — spaces named, clamp bounds and zoom range fixed, pointer chain given its two exits and its shake exclusion, event outbox contract and float throttle stated, shake ladder completed, shape-not-colour rule added, headless proof affordances inherited from the display pipeline.*
 
 ## When to use
 Isometric grid tower defense: build towers on open cells beside multi-route enemy paths, survive authored waves plus an endless mode — Arknights / Kingdom Rush lineage. Session 15–30 min per stage, campaign of seeded stages.
@@ -45,6 +47,23 @@ stage.style.transform = `translate(${(innerWidth - 1600*s)/2}px, ${(innerHeight 
 - World canvases sit 1:1 inside the stage — attribute size = stage px (NEON layers a static background canvas under the live one) — with `imageSmoothingQuality = 'high'` on world draws.
 - **Prove the fit with an on-screen readout** (window size, `s`, stage ratio, bar widths, canvas attr vs css) — a fixed-viewport screenshot cannot show a resize; the readout can, and it is what satisfies the letterbox checklist line.
 - Retrofitting a canvas-drawn UI: delete its immediate-mode hit state wholesale — one leftover hover/panel guard eats every click the new DOM panels should receive.
+
+## Game feel — camera & combat feedback
+
+No checklist screenshot demands either system, and both blind builds shipped without them — feel must be asked for explicitly.
+
+**Camera** — the board is fixed; the VIEW belongs to the player:
+- Wheel (and a +/− key pair, so headless runs can drive it) zooms **toward the cursor**: `camX = fx - (fx - camX) * (z/z0)` (same for Y), **all values in STAGE pixels**, then clamp. Range 0.6–3.2, wheel step ×1.14, key step ×1.25, one key resets to 1× (validated defaults). Clamp to the **1600×900 canvas rect** — clamping to the grid diamond lets the HUD panels sit over live cells; a zoomed-out view re-centres, a zoomed-in pan stops at the rect. Middle-drag and arrow keys pan.
+- Persist the zoom as the `zoom` config knob, **camera-writes-knob only** — the inspector's onChange re-reads an external patch and never writes back, or the two sides feedback-loop.
+- Pointer conversion gains two layers on top of the display-pipeline division: subtract `camX/camY`, divide by `zoom`, then unproject — and the chain has **two useful exits**: stage-space (position DOM tooltips/overlays) and world-space (grid maths). One helper owns the chain and returns both. **Exclude the shake offset from the inverse** (an apply-with-shake for drawing, an apply-without for input) or the cursor's cell jitters through every boom.
+
+**Combat feedback** — the engine emits EVENTS; the renderer translates them into a small primitive kit. The sim never draws — that separation is what lets the bot-sim run headless:
+- Kit: spark burst · expanding ring · transient beam (ttl) · floating numbers · additive-composite ambient. Events: fire, impact, death (boss death = the biggest), place/upgrade/sell rings, spawns, and every rule twist that changes the board.
+- The queue is a **drain-and-clear outbox with a cap (~220)** — ttl-decayed events die unseen at high game speed, and a headless run never drains, so cap instead of leak. Floating numbers need a cap (~90) AND a throttle (skip <~3 damage, ≥0.12s per body) — DoT enters every frame and strobes a bare cap instantly.
+- **Each tower role owns a distinct fire + impact signature, distinct in SHAPE at screenshot scale** — colour alone vanishes at 800px. One glance must say which role is firing (pierce trace, chain arcs, lobbed arc — one role only, road-writing…). A role without a signature reads as broken even when its numbers work.
+- Screen shake is ONE scalar: merge with `max()` (never add), decay exponentially, ladder the strengths — small boom 4 · big burst / boss spawn / barrier-break 8 · board change 10 · boss death 14 · **fire and trash spawns kick 0** (eight towers shaking every shot is constant noise). `screenShake: false` refuses new shake AND zeroes the standing scalar.
+- Performance: bake the ground to a SCREEN-space layer keyed `zoom|camX|camY` — the key **excludes the shake offset** (blit the bake shifted by it, padded ~28px), or shake dirties the bake every frame.
+- Prove feel the way the display pipeline proves fit — on-screen: a cam readout with an **anchor round-trip** (the world point under the cursor survives a zoom unchanged), and a dev volley that fires every role through the real fire path in one frame for the signature screenshot.
 
 ## Enemy taxonomy: trash / threat / boss
 
@@ -194,7 +213,7 @@ const SPRITE_ANIM = {
 
 ## GAME_CONFIG knobs (expose all in schema)
 
-`WAVE_COUNT_MUL, TRASH_HP_MUL` (the two compensation levers — in a new build name the second `nonBossHpMul`; NEON's key is historical and it multiplies every non-boss) · `diffMul` per difficulty (`{easy .78, normal 1, hard 1.32}` — the global lever the bot-sim bisects) · `endlessRamp 3.2` (endless budget slope) · `genHpMul 1` (multiplies the generated-map hpScale formula) · hi-ground % / bonus · rubble % · startCredits · `voiceLines` (bool — mutes wave/boss VO lines; omit the knob entirely in a build with no speech, a dead toggle is worse than none). Balance lives in config + the WAVES/CAMPAIGN tables so the owner tunes without code.
+`WAVE_COUNT_MUL, TRASH_HP_MUL` (the two compensation levers — in a new build name the second `nonBossHpMul`; NEON's key is historical and it multiplies every non-boss) · `diffMul` per difficulty (`{easy .78, normal 1, hard 1.32}` — the global lever the bot-sim bisects) · `endlessRamp 3.2` (endless budget slope) · `genHpMul 1` (multiplies the generated-map hpScale formula) · hi-ground % / bonus · rubble % · startCredits · `zoom` (persisted view) · `screenShake` (bool) · `voiceLines` (bool — mutes wave/boss VO lines; omit the knob entirely in a build with no speech, a dead toggle is worse than none). Balance lives in config + the WAVES/CAMPAIGN tables so the owner tunes without code.
 
 ## Asset slots
 
@@ -205,8 +224,8 @@ const SPRITE_ANIM = {
 
 ## Build checklist (done = every line true)
 
-Projection comment states the cell-centre convention · every wave (campaign AND endless) passes through the shaping pass · every wave from the first ladder rung onward contains a threat unit · a detector is purchasable before the first stealth wave · a forced high-ground tower measurably outranges a flat one · `cellFree` is the only build gate · a reload mid-campaign survives storage throwing · X/quit works with dialogs suppressed · resizing the window letterboxes (no stretch) and HUD text stays crisp at every size · a scripted bot-sim completes a full run and prints its verdict on-screen · boss animates — two pinned-frame grabs differ (sheet or procedural) · codex numbers match a live tower's tooltip · owner has playtested one full NORMAL stage.
+Projection comment states the cell-centre convention · every wave (campaign AND endless) passes through the shaping pass · every wave from the first ladder rung onward contains a threat unit · a detector is purchasable before the first stealth wave · a forced high-ground tower measurably outranges a flat one · `cellFree` is the only build gate · a reload mid-campaign survives storage throwing · X/quit works with dialogs suppressed · resizing the window letterboxes (no stretch) and HUD text stays crisp at every size · zoom moves toward the cursor (anchor round-trip printed on-screen) and clamps at the canvas rect · every tower role's fire signature is distinguishable in one synchronised-volley screenshot · a scripted bot-sim completes a full run and prints its verdict on-screen · boss animates — two pinned-frame grabs differ (sheet or procedural) · codex numbers match a live tower's tooltip · owner has playtested one full NORMAL stage.
 
 ## Optional layers (own templates pending)
 
-Live2D companion character · two-character story dialogue · EN/zh-TW i18n · icon talent tree — each proven in `gbe4dbe`; add after the loop above is fun bare.
+Live2D companion character (`reference-live2d-character.md`) · two-character story dialogue (`reference-story-dialogue.md`) · EN/zh-TW i18n (`reference-canvas-i18n.md`) · icon talent tree (`reference-talent-tree.md`) — each proven in `gbe4dbe`; add after the loop above is fun bare. Sprite-sheet animation stays in § Sprite animation above; its own deep-dive reference is deliberately deferred.
