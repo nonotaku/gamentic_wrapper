@@ -183,5 +183,24 @@ Known seam, accepted: after `t_gaze` the question beats show her ordinary faces 
 
 Unchanged on purpose: `t_bow`, `q_sweet`, `ask_en` (courtesy keeps her face), the two extremes (`t_gaze` many-eyes, `t_veil` all-black), `ch1`, and **all eight endings** — the owner scoped the Void to chapter three so the last thing the player sees of her is still a person. The voice cues stay as they were, so the emotion still comes from her breath and her words while the face carries only how much performance is left. `Void` is now a term in `CONTEXT.md`. Verified live; `char_gm_hurt` is now unused but kept.
 
+## Addendum 9 — 2026-08-05 · every ending gets its own last image (v493–v504, 105 cr)
+
+Four endings shared `bg_wrong` — including `end_bring_home`, the one the game itself calls the hardest. A coverage audit put it plainly: three different paths, one picture.
+
+The three that already had a CG turned out to use a grammar worth copying — **sprite carries the dialogue, then the screen cuts to an object CG and the sprite hides, so the ending card lands on the image.** The four new ones follow it exactly, so 7 of 8 endings now close on their own picture (`end_devoured` uses its three-stage sprite progression instead, deliberately).
+
+| ending | closing CG |
+|---|---|
+| A Guest Remembered | `cg_end_spoon` — her hand laying the spoon across the saucer, the tea half drunk |
+| You Stay | `cg_end_stitch` — her hands stitching red thread into the black lace hem, the promise she said she would sew in |
+| The Thirteenth Page | `cg_end_thirteen` — her hand setting one more cup at the end of the row |
+| You Bring Her Home | `cg_end_leave` — the door open on the night, the two of you walking out |
+
+**Owner's art direction: keep the object close-up language, but put her in it.** The answer was *her hands* — `cg_end_thread` already had a hand in frame, so no new visual language was invented and no face means no identity drift.
+
+⚠ **`cg_end_leave` is the first time the player has ever been drawn.** Every earlier beat kept him off-screen on purpose (the prologue even cut the hands off the door-push). The owner asked for two figures here because it is the one ending where you leave together — but he now has a look (dark long coat, short hair, seen from behind), and any future shot of him has to match it.
+
+Generation notes: adding a second figure failed silently the first time because her back filled the doorway — **there was no room for him**, and no prompt fixes a composition problem; the fix was moving her aside and placing both figures beyond the threshold. Krea also drew a floating hand when only hands were asked for, and connecting the arm needed its own single-axis edit.
+
 Probe recipe for audio, worth reusing: wrap `HTMLMediaElement.prototype.play`, record `this.src`, then `VN.goto` each label. Anything whose `sfx` sits before the label's first `say` fires on the goto alone; anything after a `say` needs the keyboard advance above.
 - **Same day, later — the looms were rejected in place and replaced by a CG (v361–v374, 165 cr).** Trade offer now hands the screen to `cg_shadow_offer` (she fills the frame, dark void behind, two candle flames as the only背景, sprite hidden); each trade branch reopens with `bg_parlor_cold`; drink offer reverted to plain `char_gm` with `cg_cup_offer` carrying the beat; both loom sprites and the working file `cg_shadow_sq` deleted from the game. Verified: all three branches restore the room with their own expression, all 27 script-referenced art keys load, console clean. Full record + the generation lessons: `.scratch/ch2-rework/spec.md` §Superseded 2026-08-04. Wallet 個人 2,490 at close.
