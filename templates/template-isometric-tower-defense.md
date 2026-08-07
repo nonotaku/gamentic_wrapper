@@ -1,4 +1,4 @@
-# template-isometric-tower-defense — v8
+# template-isometric-tower-defense — v10
 
 **Proven blueprint** distilled from our own shipped game **NEON BASTION** (`g86bd9a` v373 = pure-TD baseline; `gbe4dbe` = full build with story/tech-tree/i18n layers). Not a reimplementation of someone else's game: every number below was tuned live on this platform and owner-playtested (NORMAL verdict: "not too hard, not too easy"). Treat each ⚠ as a scar — it was paid for.
 
@@ -9,6 +9,8 @@
 *v6 (2026-08-05): owner played the retrofit and asked where the camera and the tower VFX were — neither existed in the recipe, so neither existed in two blind builds. Game-feel section added (cursor-anchored zoom + clamp + pan, event-queue VFX kit, per-role fire signatures, shake ladder) with `zoom`/`screenShake` knobs and two checklist lines.*
 *v7 (2026-08-05): the WYRMWARD feel pass (v42) ran the game-feel section blind and filed 13 frictions — spaces named, clamp bounds and zoom range fixed, pointer chain given its two exits and its shake exclusion, event outbox contract and float throttle stated, shake ladder completed, shape-not-colour rule added, headless proof affordances inherited from the display pipeline.*
 *v8 (2026-08-06): the shell (display pipeline, register, menu/loader/settings/records anatomy) promoted to `reference-game-shell.md` so every future genre template starts beautiful without copying — this file keeps its genre-specific overlays and pointers.*
+*v9 (2026-08-06): the MARCHFAST max-scope run (`g47f441` v61, two agents, crash-resumed) filed 19 frictions — bake cache given a readiness term, ground-vs-prop anchor rule split, bot plans must outlast the run, volley spread+hold, codex headless affordances, no-dead-toggles promoted to a rule, treeless-curve validation required, finish-what-you-start for optional layers.*
+*v10 (2026-08-06): the first 3D build (THE LAST PICNIC on seed `gaac970`) proved the SYSTEMS transfer whole — 2D-only sections now labelled, ladder remap given its worked table, WAVE_COUNT_MUL de-deadened for authored waves, volley hold raised, the bot-sim asked for a difficulty SWEEP, result screens given headless keys.*
 
 ## When to use
 Isometric grid tower defense: build towers on open cells beside multi-route enemy paths, survive authored waves plus an endless mode — Arknights / Kingdom Rush lineage. Session 15–30 min per stage, campaign of seeded stages.
@@ -51,8 +53,8 @@ No checklist screenshot demands either system, and both blind builds shipped wit
 - The queue is a **drain-and-clear outbox with a cap (~220)** — ttl-decayed events die unseen at high game speed, and a headless run never drains, so cap instead of leak. Floating numbers need a cap (~90) AND a throttle (skip <~3 damage, ≥0.12s per body) — DoT enters every frame and strobes a bare cap instantly.
 - **Each tower role owns a distinct fire + impact signature, distinct in SHAPE at screenshot scale** — colour alone vanishes at 800px. One glance must say which role is firing (pierce trace, chain arcs, lobbed arc — one role only, road-writing…). A role without a signature reads as broken even when its numbers work.
 - Screen shake is ONE scalar: merge with `max()` (never add), decay exponentially, ladder the strengths — small boom 4 · big burst / boss spawn / barrier-break 8 · board change 10 · boss death 14 · **fire and trash spawns kick 0** (eight towers shaking every shot is constant noise). `screenShake: false` refuses new shake AND zeroes the standing scalar.
-- Performance: bake the ground to a SCREEN-space layer keyed `zoom|camX|camY` — the key **excludes the shake offset** (blit the bake shifted by it, padded ~28px), or shake dirties the bake every frame.
-- Prove feel the way the display pipeline proves fit — on-screen: a cam readout with an **anchor round-trip** (the world point under the cursor survives a zoom unchanged), and a dev volley that fires every role through the real fire path in one frame for the signature screenshot.
+- Performance (**2D canvas builds only** — a 3D world has no CPU bake to cache): bake the ground to a SCREEN-space layer keyed `zoom|camX|camY` — the key **excludes the shake offset** (blit the bake shifted by it, padded ~28px), or shake dirties the bake every frame. **And the key must include art-readiness** ⚠: the first bake always runs before any tile Image has decoded (the lookup CREATES the Image), paints fallbacks and caches them for the whole session — a bake that wanted art it did not have is not cacheable. Prime the tile images at boot; this one line cost a build every terrain asset it generated.
+- Prove feel the way the display pipeline proves fit — on-screen: a cam readout with an **anchor round-trip** (the world point under the cursor survives a zoom unchanged), and a dev volley that fires every role through the real fire path — **spread across the board** (first-free-cell placement stacks every work in one row and smears the signatures into one blob) and **held 5–6s** (primitive ttls run 0.14–0.45s; a one-frame volley is dead before any capture lands, and 2.5s is the floor on fast hardware, not a safe default on a slow harness).
 
 ## Enemy taxonomy: trash / threat / boss
 
@@ -104,13 +106,13 @@ const THREAT_LADDER = [ {from:4,t:'soak'}, {from:5,t:'barrierGate'}, {from:7,t:'
 // threat is worth several trash units (any hp-budget-ish conversion is fine; 14 trash must
 // not become 14 barrier-gates)
 ```
-The floor exists because authored tables drift: someone adds a filler wave and the mid-game goes flat. The `from` numbers assume ~18-wave stages — for a shorter run, remap the rungs across your wave count keeping at least one wave between rungs (naive proportional scaling collides on rounding and can land a threat before the floor even starts).
+The floor exists because authored tables drift: someone adds a filler wave and the mid-game goes flat. The `from` numbers assume ~18-wave stages — for a shorter run, remap the rungs across your wave count keeping at least one wave between rungs (naive proportional scaling collides on rounding and can land a threat before the floor even starts). The worked 10-wave table, used by two builds: `3,4,5,6,7,8,9` — copy it.
 
 ## Difficulty method (the part worth stealing)
 
 Playtest lesson: **with 8 towers, several are AoE — trash evaporates and only the stealth unit ever threatened.** The fix that worked, in order:
 
-1. **Count, not HP**: `WAVE_COUNT_MUL 1.4` more bodies, not spongier ones (applied in the generated-wave budget — authored tables were re-authored by hand). Sponges feel like lag; crowds feel like pressure.
+1. **Count, not HP**: `WAVE_COUNT_MUL 1.4` more bodies, not spongier ones. Store authored wave counts PRE-multiplier so the knob scales campaign and endless alike (boss group counts still never scale) — NEON applied it in the generated budget only and hand-re-authored the tables, which left the knob dead in campaign, violating the no-dead-toggles rule below. Sponges feel like lag; crowds feel like pressure.
 2. **Non-boss HP floor**: `hpMul = hpBase * (isBoss ? 1+(mut.hp-1)*0.5 : mut.hp * TRASH_HP_MUL)` with `TRASH_HP_MUL 1.45` — the name is historical: it multiplies **every non-boss** (threats included). Bosses were already right, so they are excluded — and mutators hit bosses at HALF strength and never multiply boss count (a doubled boss is a brick wall, not a variation).
 3. **Threats earlier** (the ladder above) — pressure comes from questions, not stats.
 
@@ -126,11 +128,11 @@ hp = def.hp * hpCurve(wave) * diffMul[difficulty] * (map.hpScale || 1)
 // generated maps only.
 ```
 
-Anchor every balance claim to a deliberately placed test subject (force a tower onto a high cell, pin a wave to one archetype) — a random playthrough proves nothing about the knob you turned. And since screenshots cannot place towers at all, **balance is provable only by a headless bot-sim**: a scripted build order buying at real prices, seeded runs, verdict printed on-screen (the 3/10-vs-13/13 evidence below and both blind builds' tuning came from exactly this). Bisect the global lever in small steps — the kill→bounty→tower loop makes it **a cliff, not a slope** (one blind build measured dead-by-wave-4 at 1.45 and flawless at 1.8 on the same lever).
+Anchor every balance claim to a deliberately placed test subject (force a tower onto a high cell, pin a wave to one archetype) — a random playthrough proves nothing about the knob you turned. And since screenshots cannot place towers at all, **balance is provable only by a headless bot-sim**: a scripted build order buying at real prices, seeded runs, verdict printed on-screen (the 3/10-vs-13/13 evidence below and both blind builds' tuning came from exactly this). Bisect the global lever in small steps — the kill→bounty→tower loop makes it **a cliff, not a slope** (one blind build measured dead-by-wave-4 at 1.45 and flawless at 1.8 on the same lever). ⚠ **The bot's plan must OUTLAST the run**: a bot that ends failing stages rich (thousands unspent, plan exhausted) has measured its plan's length, not the balance — print unspent money in the verdict and treat a rich failure as an invalid reading, or you will tune the lever against a lie (one inherited bot reported 2/5 on a game that measures 5/5 once the bot actually spends). **And sweep the lever, never sample one point**: run every difficulty. If two difficulties produce IDENTICAL leak counts, the early game is being decided by build time, not by the lever — the lever's whole effect is landing in leftover money.
 
 ## Terrain
 
-- **High ground**: 5% of non-route cells, ×1.25 on range AND on every offensive output stat the role has (`dmg`, `dps`, `dot`, area damage — a role whose whole output lives in one odd key must still get it) — applied INSIDE `towerStats` to the already-merged stats, so tooltips, combat and the codex all agree; the renderer lifts the tower sprite 5px screen-up from its cell-centre anchor so it stands ON the slab, not beside it. **Rubble**: 9% of the same pool, blocks building. Both drawn from generated tile art assets, not hand-coded polygons.
+- **High ground**: 5% of non-route cells, ×1.25 on range AND on every offensive output stat the role has (`dmg`, `dps`, `dot`, area damage — a role whose whole output lives in one odd key must still get it) — applied INSIDE `towerStats` to the already-merged stats, so tooltips, combat and the codex all agree; the renderer lifts the tower sprite 5px screen-up from its cell-centre anchor so it stands ON the slab, not beside it. **Rubble**: 9% of the same pool, blocks building. Both drawn from generated tile art assets, not hand-coded polygons. ⚠ **One anchor rule per art kind**: a generated GROUND tile (a square frame with the 2:1 rhombus inscribed) anchors at the cell CENTRE; a standing PROP (keep, gate) anchors at its bottom edge — bottom-anchoring a ground tile floats its rhombus half a tile high.
 - Seed both from an **FNV hash of the route geometry** ⚠ — generated maps have no `map.id`, so seeding from id gave every generated map the same terrain.
 - Authored maps smaller than the grid scale up:
 ```js
@@ -149,7 +151,7 @@ if (map.w < GRID_W || map.h < GRID_H) {
 - ⚠ Towers store `gx/gy` only — any helper written with `tw.x` fails silently. One coordinate vocabulary per entity.
 - `towerStats(tw, skipBuffs)` — the one stat resolver, and tooltip, combat AND codex must all call it; preview flags like `skipBuffs` (price yourself without recursion, show unbuffed truth) are what make the codex-matches-tooltip checklist line satisfiable at all.
 - **The adjacency-buff role can't pay for itself as a pure buff** — at small tower counts a percentage multiplier never out-earns another tower. NEON redeems it by making it the cheap detection carrier (§ taxonomy) — reason enough to place one. A build that drops the role moves `detect` to another cheap tier-1 instead.
-- Campaign difficulty rides a **tree-expectation curve** (`CAMPAIGN_TECH = [1.00,1.00,1.10,1.28,1.00,1.20,1.38,1.03]`): stage n scales against the meta-progression a player is EXPECTED to arrive with — a full tree ≈ +35% effective power (dmg ×1.22, rate ×1.14), and the curve mirrors it. ⚠ When a rework lets players spend the same points on non-DPS lines, the assumption weakens — bring the peaks *down*, don't trust the old curve.
+- Campaign difficulty rides a **tree-expectation curve** (`CAMPAIGN_TECH = [1.00,1.00,1.10,1.28,1.00,1.20,1.38,1.03]`): stage n scales against the meta-progression a player is EXPECTED to arrive with — a full tree ≈ +35% effective power (dmg ×1.22, rate ×1.14), and the curve mirrors it. ⚠ When a rework lets players spend the same points on non-DPS lines, the assumption weakens — bring the peaks *down*, don't trust the old curve. ⚠ **A build that ships NO tree must re-validate the curve as what it then is** — a plain per-stage ramp: bot-sim it at the shipped values or flatten it to 1.00; the numbers above assume the tree exists, and a treeless build keeping them untested is unmeasured difficulty.
 - 3 paths × 3 tiers scales down cleanly (a slice shipped 2 × 2 with the same absolute-override merge) — cut tiers, never the merge rule.
 
 ## Campaign & endless
@@ -179,9 +181,11 @@ const SPRITE_ANIM = {
 - ⚠ `sprite_animation` is FORBIDDEN on accounts with OpenArt off — check before promising sheets. The registry shape still earns its keep there: drive a **procedural frame index** (bob height, part rotation, emitter offsets keyed on `frame`) through the same `SPRITE_ANIM` entry, and every consumer — draw path, preview, pinned-frame verification — works unchanged.
 - Horizontal sheets; draw `drawImage(img, f*fw, 0, fw, fh, …)` with ⚠ `fw = img.naturalWidth / frames` — aspect maths on sheet width squashes the sprite by the frame count. Fall back to the still when the sheet is missing.
 - DOM preview: CSS `steps(frames)` animating `background-position-x` across the **full sheet width in px** ⚠ — percentage positions map across (image − element) and land between frames.
-- **A still screenshot cannot prove animation.** Pin the frame index (or read `getAnimations()[0].currentTime` via an on-screen debug line) and compare two grabs. Put every animated entity in the codex preview — a late-game boss is unreachable in a headless run, and the codex is how the pinned-frame check reaches it without playing.
+- **A still screenshot cannot prove animation.** Pin the frame index (or read `getAnimations()[0].currentTime` via an on-screen debug line) and compare two grabs. Put every animated entity in the codex preview — a late-game boss is unreachable in a headless run, and the codex is how the pinned-frame check reaches it without playing. **Give the codex itself headless affordances**: one key opens it, one key parks the selection on an animated entry — a mouse-only codex is unreachable exactly where the proof needs it. The RESULT screens need the same: a boss-drill key and force-win/force-lose keys routed through the real game-over pipeline, or a capture run can never photograph the boss or either ending.
 
 ## GAME_CONFIG knobs (expose all in schema)
+
+**No dead toggles, anywhere** — a control wired to nothing (a language switch over an empty dictionary, a points knob without its screen, a flag nothing reads) reads as broken; remove the CONTROL and keep the scaffold inert until the layer ships. One build shipped three at once.
 
 `WAVE_COUNT_MUL, TRASH_HP_MUL` (the two compensation levers — in a new build name the second `nonBossHpMul`; NEON's key is historical and it multiplies every non-boss) · `diffMul` per difficulty (`{easy .78, normal 1, hard 1.32}` — the global lever the bot-sim bisects) · `endlessRamp 3.2` (endless budget slope) · `genHpMul 1` (multiplies the generated-map hpScale formula) · hi-ground % / bonus · rubble % · startCredits · `zoom` (persisted view) · `screenShake` (bool) · `voiceLines` (bool — mutes wave/boss VO lines; omit the knob entirely in a build with no speech, a dead toggle is worse than none). Balance lives in config + the WAVES/CAMPAIGN tables so the owner tunes without code.
 
@@ -189,7 +193,7 @@ const SPRITE_ANIM = {
 
 - Tower sprites ×8 + tier-3 per-path variants (`spriteMaxPaths`), enemy sprites per type, boss stills + 8-frame anim sheets where the account allows (§ Sprite animation)
 - Terrain: high-ground and rubble tile art (iso diamond, drawn at cell centre), map backgrounds per biome, menu key art
-- UI icons (HUD ×7, meta-tree nodes as needed) — generate in batches, wire each immediately: an unreferenced asset is invisible and the platform warns forever
+- UI icons (HUD ×7, meta-tree nodes as needed) — generate in batches, wire each immediately: an unreferenced asset is invisible and the platform warns forever. ⚠ But the warning also false-fires on table-driven access (`A(k)`, key loops) and cannot see a stale render layer — when REFERENCED art is invisible, suspect the bake cache before the wiring
 - Audio: ui click/hover, per-tower fire, boss stingers, bgm — all registered at init (see sandbox §4)
 
 ## Build checklist (done = every line true)
@@ -198,4 +202,4 @@ Projection comment states the cell-centre convention · every wave (campaign AND
 
 ## Optional layers (own templates pending)
 
-Live2D companion character (`reference-live2d-character.md`) · two-character story dialogue (`reference-story-dialogue.md`) · EN/zh-TW i18n (`reference-canvas-i18n.md`) · icon talent tree (`reference-talent-tree.md`) — each proven in `gbe4dbe`; add after the loop above is fun bare. Sprite-sheet animation stays in § Sprite animation above; its own deep-dive reference is deliberately deferred.
+Live2D companion character (`reference-live2d-character.md`) · two-character story dialogue (`reference-story-dialogue.md`) · EN/zh-TW i18n (`reference-canvas-i18n.md`) · icon talent tree (`reference-talent-tree.md`) — each proven in `gbe4dbe`; add after the loop above is fun bare. **Finish any layer you start**: scaffolding without content (a live switch over an empty dictionary, a knob without its screen, an empty screen div) is worse than absence — controls absent, scaffolds inert, until the layer ships whole. Sprite-sheet animation stays in § Sprite animation above; its own deep-dive reference is deliberately deferred.

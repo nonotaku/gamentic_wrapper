@@ -18,6 +18,7 @@ three kinds: `../CONTEXT.md`. Routing rule for genre asks vs named-game asks:
 | File | What | Validation |
 |---|---|---|
 | [reference-game-shell.md](reference-game-shell.md) | The DOM shell: display pipeline, register, menu/loader/settings/records anatomy | Distilled from NEON's shell; hardened by the WYRMWARD retrofit loop |
+| [reference-3d-blockworld.md](reference-3d-blockworld.md) | Three.js blocks + 2D billboards world (no generated meshes); seed workflow, CORS truth, crowd recipe, harness perf caveats | Tank War 3D (shipped) + rig `g891f14` measurements + THE LAST PICNIC blind build (`gaac970`) |
 | [reference-live2d-character.md](reference-live2d-character.md) | Rig generation → flat-part runtime → crop pattern | v2 — VESPER (`gbe4dbe`) + ORISS blind build (`g6ead49`) |
 | [reference-story-dialogue.md](reference-story-dialogue.md) | Story layer for action games — **free to use, not a mandate** | Proven in `gbe4dbe`; voice pipeline validated by the ORISS voice pass |
 | [reference-canvas-i18n.md](reference-canvas-i18n.md) | EN + zh-TW for canvas games (dictionary-by-source-string) | Proven in `gbe4dbe` full translation; no blind test yet |
@@ -28,8 +29,8 @@ three kinds: `../CONTEXT.md`. Routing rule for genre asks vs named-game asks:
 
 | File | Genre | Validation |
 |---|---|---|
-| [template-isometric-tower-defense.md](template-isometric-tower-defense.md) | Isometric tower defense | v8 — two blind builds + two blind retrofits + two owner visual-QA rounds |
-| [template-dating-horror-vn.md](template-dating-horror-vn.md) | Dating-sim × horror VN | v3 — shipped twice (`g96d22c`, `gcc67a8`) |
+| [template-isometric-tower-defense.md](template-isometric-tower-defense.md) | Isometric tower defense | v9 — three blind builds (one max-scope, crash-resumed) + two blind retrofits + owner visual-QA rounds |
+| [template-dating-horror-vn.md](template-dating-horror-vn.md) | Dating-sim × horror VN | v4 — shipped twice (`g96d22c`, `gcc67a8`); +3 rules & 2 optional reveal patterns from the 08-06 polish |
 | [template-decision-court.md](template-decision-court.md) | Yes/No petition kingdom sim | v1 — distilled from *Sort the Court* analysis |
 
 ## Experiment logs (never uploaded; promote on proof, then delete)
