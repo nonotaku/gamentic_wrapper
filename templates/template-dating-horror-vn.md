@@ -10,6 +10,8 @@ Read the matching companion before ordering art or touching code. Unvalidated le
 
 *v3 (2026-08-01): re-cut per writing-great-skills — cross-genre production recipes moved into the two shared references, so each file has one job and one source of truth.*
 
+*v4 (2026-08-06): three rules paid for on `g96d22c` — fallback-gate prose, the player-camera decision, script-described sound — plus two optional reveal patterns.*
+
 ## When to use
 Dating-sim × horror/mystery VN — "survive the encounter with an entity": monster romance, analog-horror narrative. One run 12–20 min, replayed for other routes.
 
@@ -61,6 +63,7 @@ Main menu → Prologue → First encounter → Interactive scenes ×N (status ac
 - Every ending: named, one-line epilogue, and an "X of N endings" replay hint.
 - Optional hidden ending: ONE cross-route condition, e.g. all three knowledge flags collected.
 - **Write the priority order as a sentence before coding it** — "offence outranks hunger, hunger outranks interest, interest outranks collection" — then implement it as that ladder. Whichever gate is meant to override the others has to be checked first, or the best-behaved player still hits the wrong ending.
+- **A fallback gate collects everyone the gates above it rejected — read its ending's prose against ALL of them.** A shipped `!drank → you bolt for the door` looked airtight until a full-path walk showed 354 of that ending's 646 arrivals were polite sippers, some at favour 72: the middle drink option set no flag, so a taste was indistinguishable from a refusal. Give the middle option its own flag (a sip is a taste, not a meal). Then the deeper check: if no choice in the game performs the action the ending narrates — nobody can actually walk out — either add that choice or re-aim the prose at something every arrival truly did.
 
 **Gating patterns — pick what the story wants, or none.** Route flags on their own are enough to ship a good split. Each pattern below is one way to make an ending feel earned rather than scored; each costs one flag plus some ending copy.
 
@@ -81,8 +84,14 @@ Main menu → Prologue → First encounter → Interactive scenes ×N (status ac
 - ⚠ **And the MERGE label must not take it back.** A `show` at the top of a label that branches reconverge on overwrites the face the branch just earned — two beats after she says *I like you*, she is blank, and the game reads as having forgotten what you did. Give merge labels no `show` at all: every incoming path already has a sprite up, so the expression the player provoked is what carries the next line. Both merge points of a shipped game had this, and it was reported as "the smile turns into a sad face".
 - **Danger tells** carry the hidden meter: below ~30 → hollow expression + `bgm_tension`; above ~65 → pleased.
 - Budget ≈ 3–5 new images per scene, everything else reuse.
+- **The player is a camera until you decide otherwise — and the first drawing designs him.** This lineage crops him out on purpose; the prologue's door-push cut the hands off its own shot. If one beat earns an exception (the ending where you leave together), take it knowingly: the moment he has a coat and a haircut, every later shot of him must match. Make that call at art-planning time, not at the eighth ending.
 
 **Endings: let her speak, then CUT to the consequence.** An ending needs no new picture of the character. Play her last line on a sprite you already own, then change the background to the OBJECT or PLACE the ending turns on and `hide` her — a wrist with a red thread wound round it, a cold cup, doors closing on a thinning line of light. Faceless, so nothing can drift; environment-priced; and an object the player already recognises lands harder than one more bust. One image per ending buys the whole set, and the cut itself is the punctuation.
+
+**Reveal patterns — optional, like the gating patterns: take one only if the story stages a true form.**
+
+- **The frame answers the line.** A line that aims the player's eyes — *look at me as I am* — is a promise the art keeps on that line, not later. Something changes as she says it, and what the player chooses next decides how much more they see. A shipped reveal chapter said that line over an unchanged sprite, and the game's one invitation showed nothing.
+- **The true form is a state, not an expression.** One slipped-mask image, dropped whenever she is seen through, back whenever the player answers well — emotion stays in the words and the voice while the face carries only how much of the performance is left. A monster face per mood reads as random image swaps; the single image read as a mask slipping.
 
 ---
 
@@ -95,6 +104,8 @@ Tune these in the editor; they are starting points, not canon. Numeric layer sta
 ## 6. Audio
 
 `bgm_main` + `bgm_tension` from one instrument family, so the tension cue reads as the same world going wrong. Sfx: click / choice / sting / one prop sound the story keeps touching.
+
+**Place sfx where the writing already describes a sound.** Grep the script for knocks, doors, pours, pages, spoons, hums — a line that names a sound and plays none is a promise broken, and those beats outrank any generic UI click. When the words themselves upgrade a sound — *the sound goes in, and does not come back* — that is a sound design: give the same action a second, altered take instead of reusing the first.
 
 ---
 

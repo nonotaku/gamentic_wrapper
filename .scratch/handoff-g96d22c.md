@@ -154,6 +154,8 @@ Wiring note worth reusing: `edit_game` with `replaceAll` on the exact `show` blo
 
 ⚠ **Accent lives in words, not in breaths — but the SFX engine cannot make a human breath.** Wordless takes via `generate_sound` came back unusable; the fix for "too American" was changing the TTS voice, not the engine.
 
+**Owner verdict 2026-08-06: the breaths are "not performing good".** The pattern was deliberately left OUT of the template when the session's lessons were promoted — do not extend it, do not re-pitch it, and expect a possible removal pass on the 32 cues if the owner asks.
+
 ## Addendum 8 — 2026-08-05 · the reveal chapter finally reveals something (v489, free)
 
 `ch3` had her say **"Look at me as I am"** with no `show` at all — the player kept whatever face chapter two left behind. Worse, `t_gaze`'s narration counts her eyes *until counting loses meaning* over a sprite with two. The writing had been promising a reveal the art never delivered.
