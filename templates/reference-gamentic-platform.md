@@ -4,19 +4,22 @@ Shared reference for any game built on this platform, VN or not. Pointed at by t
 
 *v2 (2026-08-04): three verification claims re-measured with probe rig `g8bb0c7` and corrected in place; the per-surface restriction matrix moved to `reference-runtime-surfaces.md`.*
 
+*v3 (2026-08-12): the two `write_data` bullets collapsed into one division of labour; probe-the-lock, scan/walk/simulate, the conditional-goto false positive and the slider lever added; the CJK bullet re-aimed at the cause instead of the audit.*
+
 ---
 
 ## Editing a game safely
 
-- **Story data through `read_data` / `write_data`, code through `edit_game` find/replace.** `write_data` receives object and array values JSON-stringified (platform bug) → write scalar fields one at a time, or do bulk surgery with `edit_game`. Chunked upload ≤3000 chars.
+- **`edit_game` inserts and reshapes; `write_data` changes one existing scalar.** `write_data` receives object and array values JSON-stringified (platform bug), so a whole label written that way becomes the string `"[]"` and the game dies at the first click. Add or restructure commands with `edit_game` find/replace; use `write_data` for a single field (`script.<label>[i].text`), where there is no string to match and therefore nothing to get wrong — which makes it the safer tool for a pure text fix. Chunked upload ≤3000 chars.
+- **Probe a lock before building the workaround.** A tool written off as dead stays dead in your notes long after the platform fixes it. `edit_game` was recorded as hard-blocked and re-opened on the first throwaway real edit; the leaf-write workaround that assumption bought cost ~500 calls per chapter where find/replace cost four. One small genuine edit, at the start of any session that plans to route around a tool.
 - ⚠ **Address a script command by its CONTENT, never by a hard-coded index across calls.** Locate the node by `cmd`, and verify by re-reading the WHOLE array afterwards rather than the single field you wrote. Another agent inserting one command shifts every index — a "restore" once wrote into the wrong command and turned a `bgm` into an option-less `choice`, hanging the game at the title with no error.
 - **`edit_game` is fail-closed**: if any `find` is missing or ambiguous the entire batch is rejected, so a failed batch changes nothing. Include enough surrounding text to make each `find` unique.
 - **Two agents may share a game.** Re-read state before editing; version numbers move between your own calls.
 - **One condition per `goto`.** Compound conditions (`a && b`) are undocumented, so express branching as a ladder of tiny labels with a single test per hop. A multi-way ending resolver and a language split are both written this way, and each hop stays independently verifiable.
-- **`write_data` cannot write arrays or objects** — the value arrives JSON-stringified, so a whole new label written that way becomes the string `"[]"`. Add or replace a label with `edit_game` find/replace; keep `write_data` for scalar fields.
 
 ## Verifying what you built
 
+- **Three passes, because each is blind to what the others catch: scan, walk, simulate.** *Scan* the whole script for shape — every `say` has text, every `goto` and `choice` target exists, every `bg`/`show` key is in `GAME_ASSETS`, every label terminates. *Walk* each label with `VN.goto` and read `S.line` back, the only proof that the text you wrote is the text that plays. *Simulate* the tree in plain JS — follow gotos, fork at choices, carry flags, record where `end` fires — to prove every ending is still reachable and count the paths into each. The scan cannot see a wrong word, the walk cannot see routing, and the simulation cannot see either; one game shipped a bug that only the third pass could find (5,538 paths, one tool call, zero credits).
 - **Restrictions differ per surface** (dev harness vs play page vs embeds) — `reference-runtime-surfaces.md` is the measured matrix; check which surface you are on before trusting any probe result.
 - **The embed URL is the reliable probe:** open `/api/games/<id>/embed` in a browser and drive it with JS. The runtime exposes `VN.flags`, `VN.goto()`, `VN.S` (`label`, `pc`, `bg`, `line`, `choices`, `actors`), so a whole branch can be walked and asserted headlessly. The play page wraps the game in a cross-origin iframe and cannot be read.
 - **`playtest_screenshot` renders `media/…` assets normally** (re-measured 2026-08-04; an earlier regime returned black). Automated visual checking works in the harness — and the harness is MORE permissive than production, so a passing screenshot says nothing about storage, dialogs or canvas readback.
@@ -68,9 +71,11 @@ Point the menu row at a real no-op label (`settings` = `[{goto: start}]`) so it 
 
 **Volume:** the runtime builds `Audio` objects that never enter the DOM, so hook `HTMLMediaElement.prototype.play` to collect them and set `volume` on each call — a looping element is music, a one-shot is sfx. Store `musicVolume` / `sfxVolume` in `GAME_CONFIG` so the same knobs appear in the inspector.
 
-## Two levers for UI the runtime never planned for
+## Three levers for what the runtime never planned for
 
 **A DOM button is immune to the canvas.** Every handler in this file — the runtime's advance-on-click, the menu, the choice rows — bails unless `e.target` IS the canvas, so an absolutely-positioned button cannot collide with any of them. Spend DOM on anything outside the painted scene (a hide toggle, a restart button, the boot gate) and keep canvas work for what must sit inside the art. Follow the canvas's `getBoundingClientRect()` on a slow interval so the button tracks resizes and letterboxing.
+
+**A slider beats a re-roll.** When a generator cannot place something precisely — a mark on a face, a mask over a scene — stop paying per attempt and draw it in code: a few strokes inside the `drawImage` hook, its numbers in `GAME_CONFIG`, its knobs in the inspector `schema`. Four generations to move one drawn line failed four different ways and twice destroyed the character; the same placement became a slider the owner drags, at zero further cost and reversible in one value. The moment the note is *"a bit lower"*, the work belongs in code. Give the owner a preview toggle in the same group so they can see the shot without playing to it — and remember `requestAnimationFrame` is paused while a browser pane is hidden, so rAF-driven work is unobservable to you and has to be verified on their screen.
 
 **An empty override hook is a hide.** The runtime draws its dialogue box only while `window.VN_SKIN.box` is NOT a function, so installing `function(){}` hides the box and `delete`ing it restores the original exactly — nothing reimplemented, nothing to drift. Look for this shape wherever a runtime offers "your hook, or my default". While hidden, park `S.choices` in a variable so a row nobody can see cannot be clicked blind, and let the next click restore the UI instead of advancing the story.
 
@@ -89,5 +94,6 @@ Both die to the same overlay: preload every `GAME_ASSETS` image behind a progres
 - Every `say` gets a twin gated on `if: "!lang_tw"` / `if: "lang_tw"`; the TW name plate uses a second character id.
 - A language row gotos a tiny setter label (`set_tw` = `[set, goto start]`). Option-level `set` + `goto` on the same option is unreliable — the flag can fail to apply before the jump.
 - Language branches follow the one-condition-per-`goto` rule above: clone the label and split arrivals with two stacked gotos.
-- **Audit every CJK string after writing.** Unicode-escape slips produce plausible-looking wrong characters — nine of them survived one pass. Dump every `if: "lang_tw"` string through the embed URL and read them back.
+- ⚠ **Paste CJK literally into tool arguments.** Hand-escaping to `\uXXXX` produces plausible wrong characters that nothing downstream catches — `卻`→`却`, `扇`→`扈`, `蠟`→`蜡`, `攔`→`攬` (that last one inverted a sentence: *the chair did not stop you* became *did not embrace you*). They raise no error, they match find/replace cleanly, and a structural scan is blind to them; sixteen have shipped this way across two passes. Backstop, since one always gets through: after landing, dump every label's strings through the embed URL and read them.
+- ⚠ **A conditional `goto` pair is the routing idiom, not a dead end.** `goto X if lang_tw` followed by a bare `goto Y` is how every language split and ending resolver in this lineage is written, so a checker that treats the first `goto` as terminal calls everything after it unreachable — sixteen false positives in one run, on a script with no defect. Skip `if`-bearing `goto` and `end` when deciding where a label actually stops.
 - ⚠ **Twin options double every incoming edge.** Each choice carries an EN row and a TW row pointing at the same label, so any graph pass over the script counts a plain branch target as a merge point — one such pass flagged nine correct labels as defects. Dedupe incoming edges by source label before trusting the shape of the flow.

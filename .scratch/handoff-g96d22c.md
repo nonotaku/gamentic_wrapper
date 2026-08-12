@@ -154,7 +154,9 @@ Wiring note worth reusing: `edit_game` with `replaceAll` on the exact `show` blo
 
 ⚠ **Accent lives in words, not in breaths — but the SFX engine cannot make a human breath.** Wordless takes via `generate_sound` came back unusable; the fix for "too American" was changing the TTS voice, not the engine.
 
-**Owner verdict 2026-08-06: the breaths are "not performing good".** The pattern was deliberately left OUT of the template when the session's lessons were promoted — do not extend it, do not re-pitch it, and expect a possible removal pass on the 32 cues if the owner asks.
+**Owner verdict 2026-08-06: the breaths are "not performing good".** The pattern was deliberately left OUT of the template when the session's lessons were promoted — and the owner then ordered the removal. **All 32 cues are out (v505–v536) and the five `vo_` audio files deleted (v537); expression swaps are silent again.** Verified: zero `vo_` cues left, zero dangling references, spot-checked labels structurally intact, `sfx_teacup`/`sfx_sting` untouched.
+
+⚠ **The removal had to go through `write_data`, because `edit_game` is now HARD-BLOCKED on this game.** A new validation gate opens the game in a headless browser and rejects the whole batch on any `console.error` — and the two `generate_music` BGM tracks are hosted at `/asset/*.mp3`, which the sandboxed origin cannot fetch (no CORS header). Every `edit_game` on any game with hosted music now fails with "拒收 — 隻遊戲喺 headless 瀏覽器實測開唔到", regardless of what the edit touches; retried, deterministic. **Escalation of PLATFORM-BUGS item 6, filed as item 16.** Until the platform fixes it (CORS on `/asset`, or exempting the platform's own hosts from the gate), script edits on this game go through `write_data` — delete array items HIGHEST INDEX FIRST within a label — and `delete_asset` still works.
 
 ## Addendum 8 — 2026-08-05 · the reveal chapter finally reveals something (v489, free)
 
@@ -206,3 +208,238 @@ Generation notes: adding a second figure failed silently the first time because 
 
 Probe recipe for audio, worth reusing: wrap `HTMLMediaElement.prototype.play`, record `this.src`, then `VN.goto` each label. Anything whose `sfx` sits before the label's first `say` fires on the goto alone; anything after a `say` needs the keyboard advance above.
 - **Same day, later — the looms were rejected in place and replaced by a CG (v361–v374, 165 cr).** Trade offer now hands the screen to `cg_shadow_offer` (she fills the frame, dark void behind, two candle flames as the only背景, sprite hidden); each trade branch reopens with `bg_parlor_cold`; drink offer reverted to plain `char_gm` with `cg_cup_offer` carrying the beat; both loom sprites and the working file `cg_shadow_sq` deleted from the game. Verified: all three branches restore the room with their own expression, all 27 script-referenced art keys load, console clean. Full record + the generation lessons: `.scratch/ch2-rework/spec.md` §Superseded 2026-08-04. Wallet 個人 2,490 at close.
+
+## Addendum 10 — 2026-08-06 → 08-10 · the prose refine (art frozen, text is the work now)
+
+The owner called the art ~80% done and moved the whole effort to **wording and story, judged in
+Chinese** — they read Chinese better than English, so Chinese is now the original and English is
+the translation. Their diagnosis of the shipped prose, verbatim in substance: it reads as Western
+aphorism, not VN narration — too fast, no build-up, **no protagonist inner monologue**, almost no
+interaction detail, no visible link to the "dark fairy tale" subtitle, and above all
+**"你的句子很多都意義不明"** (they named "（茶,是有耐心的）", "（門沒有鎖。從來都沒有。）",
+"房間還是原樣。房間已不是原樣。" as the type).
+
+**Approved style** (sample-tested before any rewrite): 你-narration + parenthesised first-person
+inner voice + sensory build-up + interaction detail (pouring, porcelain, the chair) + her
+fairy-tale self-awareness. Old ideas are kept; the *saying* of them is made plain.
+**Scope**: 重點加肉 — spine beats ×3, transitions and branch reactions ×1.5.
+**Workflow the owner chose**: one chapter at a time, Chinese draft → owner approves → land →
+next chapter; **English deferred** until all Chinese is locked, so English players keep seeing the
+old, unbroken version behind the language gate.
+
+Drafts and full landed text live in `.scratch/story-refine/`. Status:
+
+| chapter | labels | zh lines | versions | state |
+|---|---|---|---|---|
+| prologue + ch1 | 16 | → ~65 | v538–900 | landed, owner scored it 75/100 and said that is enough for now |
+| ch2 (the bargain) | 7 | 13 → ~45 | v901–1088 | landed |
+| ch3 (reveal / questions / last question) | 10 | 16 → **89** | v1092–1098 | landed |
+| the eight endings | — | — | — | **next** |
+| English retranslation | all | — | — | deferred until the Chinese is locked |
+
+**The one naming rule that governs every line**: she has no name. The nameplate is `???` in both
+languages; nobody in the story calls her 教母; the stolen page is the only place the word appears.
+
+**Tooling — this changed on 08-10 and it matters more than anything else here.**
+`edit_game` is **unblocked** (PLATFORM-BUGS #16 no longer reproduces; probed with a real edit,
+then 17 more edits across four batches). `write_data` still stringifies structure (#17). The
+division of labour that fell out of it, and that the ending pass should start from:
+
+- **`edit_game` find/replace** to insert new script items — a whole chapter is ~4 calls.
+- **`write_data` scalar** (`script.<label>[i].text`) to change one existing line — no string
+  matching, so no way to miss.
+- **Probe `edit_game` with one small real edit before assuming it is locked.** The leaf-write
+  workaround costs ~500 calls per chapter; find/replace costs 4.
+- **Never hand-escape CJK as `\uXXXX` in a tool argument.** Two characters went wrong that way in
+  one afternoon (`却`/`卻` killed a whole batch, `扈`/`扇` shipped a typo). Paste the Chinese.
+- Still true from the leaf-write era: **`read_data` the label before touching it.** Chinese and
+  English `say` items are interleaved and `choice`/`goto`/`sfx` sit among them, so no index can
+  be inferred.
+
+**Verification recipe used for every chapter** (cheap, no screenshots needed): run a structural
+scan in the embed over `window.GAME_DATA.script` — every `say` has text, every `goto`/`choice`
+target exists, every `bg`/`show` key is in `GAME_ASSETS`, every label terminates, nothing sits
+after an unconditional terminator — then `VN.flags.lang_tw = true; VN.goto(label)` for each label
+and read `VN.S.line`. ⚠ The scan must **skip `if`-bearing `goto`/`end`**: conditional gotos
+(`goto X if lang_tw` then `goto Y`) are this script's routing idiom, and a checker that treats the
+first goto as terminal reports a wave of false "unreachable" errors. The one surviving hit,
+`ch1: unreachable from [29]`, is a deliberate fallback goto behind a choice — not a defect.
+
+### Addendum 10b — 2026-08-10 · the endings, and the Chinese is now complete (v1099–1104)
+
+Owner's call after chapter three: *"no need we make all first"* — skip the per-chapter test, finish
+everything. So the last question's three answers and all eight endings landed in the same pass.
+41 edits, five `edit_game` batches. **The Chinese script is now complete end to end.**
+
+| | zh lines |
+|---|---|
+| prologue + ch1 | ~65 |
+| ch2 | ~45 |
+| ch3 | 89 |
+| last question + 8 endings | 44 → **123** |
+
+Three things the owner had listed as known-but-unactioned were cleared here, because a prose pass
+is the right place for all of them:
+
+1. **`end_fled` described an action no choice performs.** It opened "你拔腿就跑" but its actual
+   entry condition is `!tasted` — a guest who never touched the cup and sat politely through the
+   entire tea. Rewritten as what really happens: the tea ends, you bow, you walk to the door, and
+   *then* she stops you. The `shake` moved off the top of the label to land on the turn.
+2. **Ending-name collision** 1／8 被吞噬 vs 2／8 整個吞噬 → 2／8 is now **整個收下** ("received
+   whole" — her polite register is the horror).
+3. **3／8 不夠下飯 broke tone** (a diner idiom in a gothic fairy tale) → **嚥不下的客人**, which
+   picks up her own line 「而你沒有給我任何一樣，值得嚥下的東西」.
+
+All eight ending names are now distinct.
+
+**Verification:** structural scan clean (61 labels; the only hit is `ch1[29]`, a deliberate
+fallback goto behind a choice); full-tree simulation walks **6,318 paths and reaches all eight
+endings**, no orphans; every label's Chinese lines dumped and proofread line by line.
+
+⚠ **The proofreading step is not optional, and this is the third time the same trap fired.**
+Hand-escaping CJK as `\uXXXX` put two wrong characters into shipped text — **蜡** (simplified) for
+**蠟**, and **攬** (embrace) for **攔** (block), the latter inverting a sentence's meaning
+("椅子沒有攬你" = the chair did not embrace you, where it must read "did not stop you"). Neither
+errors out: both are valid characters, both find/replace cleanly, and the structural scan cannot
+see them. Only dumping every label's text and reading it caught them. Rules: **paste Chinese
+literally into tool arguments, never escape it**, and **always dump-and-read after landing**.
+A logic slip surfaced the same way — `q_truth` is gated `pages>=2` but the new prose counted
+"一頁。兩頁。三頁。"; the player holds two at that moment.
+
+**Remaining on this game:** the English retranslation (deferred by the owner until the Chinese is
+locked — it now is). English players continue to see the old, unbroken text behind the language
+gate, so there is no rush and no breakage.
+
+## Addendum 11 — 2026-08-10 · the bad endings get their own deaths (v1105–1115, 120 cr)
+
+Owner's finding: *"some of the ending does not have a cg like being eat, and some bad end should
+be about the mystery godmother eliminate us in different way."* Audit confirmed both halves —
+`end_devoured` was the only ending with no closing CG (it ended on a white-background sprite), and
+all seven CGs that did exist were still-life close-ups, so no bad ending showed her actually doing
+anything. Owner then chose the widest option: **all five bad endings**.
+
+**The base that made it cheap: `cg_shadow_offer`.** It is already 16:9, full-frame her, void
+behind, two candle flames, and owner-approved style — so every new CG is a ONE-STEP krea-edit off
+it and inherits ratio, identity and brushwork for free. That skips the 3-step "16:9 transplant
+chain" (~45cr each) documented in Addendum 6.
+
+| ending | how she removes you | asset | takes |
+|---|---|---|---|
+| 1／8 被吞噬 | **eats you** — face is one flat black void, two narrow eyes looking down at you, the cup still lit at the bottom | `cg_end_devoured` (new) | 4 |
+| 2／8 整個收下 | **folds you in** — both arms wide, open empty hands reaching past both edges | `cg_end_shut` (replaced) | 2 |
+| 3／8 嚥不下的客人 | **pours you back out** — cup tipped over, a ribbon of pale gold running into the saucer | `cg_end_cup` (replaced) | 1 |
+| 4／8 被她帶走 | **keeps you on a lead** — red thread hooked over her raised finger, running out of frame to your wrist | `cg_end_thread` (replaced) | 2 |
+| 5／8 你留下來 | **sews you in** — needle and red thread stitched into the black lace hem | `cg_end_stitch` (replaced) | 1 |
+
+Four were replaced in place (same GAME_ASSETS key) so **no script edit was needed and no orphan
+assets were created**; the old versions stay in the library as restore points. Only `end_devoured`
+needed script work: `bg cg_end_devoured` + `hide gm` inserted before its ending card, so all eight
+endings now close on an image.
+
+**Deliberate scope call:** only 1／8 uses the void face. The other four keep her ordinary human
+face — Addendum 8 scoped the Void to chapter three so the last thing the player sees is still a
+person, and a polite face performing the act is worse anyway. 1／8 is the one ending where you
+saw what she is, so it is the one that gets the black face.
+
+### Three tooling facts this cost credits to learn
+
+1. **`character_sprite` keys the background out unless you pass `transparent: false`.** Three
+   takes went white before this landed. The output is a transparent PNG and the preview renders
+   alpha as white, which reads exactly like "the model ignored my background instruction". Any
+   full-scene CG must set it explicitly.
+2. **To free a held object, give the OBJECT a new place — not just the hands a new job.**
+   `reference-vn-art.md` already says a pose rewrite frees a prop; that was not enough here (take
+   one left the red thread looped round the teacup handle). What worked: *"with one hand she has
+   pushed the teacup and its saucer far away to the side of the table, where they now sit small
+   and forgotten"*. Relocating beats removing, and it never triggers the never-name-what-you-want-
+   gone failure.
+3. **The image in the tool result is a 512px thumbnail, not the output.** I flagged the new CGs as
+   low-resolution on that basis; measuring the served files says every one is **1280×695**, larger
+   than the 768×410 originals. Judge resolution by loading `GAME_ASSETS[key]` and reading
+   `naturalWidth`, never by the preview.
+
+Items 1 and 2 belong in `templates/reference-vn-art.md` — that file is owner-gated, so they are
+parked here until the owner runs `/writing-great-skills`.
+
+Verified: all eight endings resolve a closing CG, every key exists in `GAME_ASSETS`, every file
+loads at 1280×695, every ending hides the sprite before the card. Personal wallet 9,926 at close.
+
+## Addendum 12 — 2026-08-11/12 · the devoured ending, and what a long art loop costs (v1105–1161)
+
+Owner's finding after the endings shipped: `end_devoured` was the only ending with no closing CG,
+and none of the bad-ending CGs showed her *doing* anything. They chose the widest fix — all five
+bad endings get a "her + void" image — and that part landed cleanly in one pass off
+`cg_shadow_offer` (16:9, full-frame her, void behind, approved style, so every new CG is a
+ONE-STEP krea-edit that inherits ratio, identity and brushwork for free):
+
+| ending | how she removes you | asset |
+|---|---|---|
+| 2／8 整個收下 | folds you in — arms wide, empty open hands past both edges | `cg_end_shut` |
+| 3／8 嚥不下的客人 | pours you back out — cup tipped, a ribbon of pale gold into the saucer | `cg_end_cup` |
+| 4／8 被她帶走 | keeps you on a lead — red thread over her raised finger, out of frame | `cg_end_thread` |
+| 5／8 你留下來 | sews you in — needle and red thread into the black lace hem | `cg_end_stitch` |
+
+Then 1／8 被吞噬 ate the rest of the session. **~30 generations on one image, ending back where it
+started.** The final state is deliberately conservative: the CG is the clean extreme close-up of
+her void face derived from `char_gm_void_half_a`, no marks, and `endShot` is 0.
+
+**What the owner actually wanted, and what finally answered it.** After rejecting a grin, a gaping
+maw, a Kuchisake slit, a scrawled mouth and a found-footage restyle, the real note was: *"it should
+be see her transform from a human form to void before, and the CG is the void form coming to the
+player and consuming the player."* The ending had always opened with her face **already** black —
+there was no turning. The fix needed **one** new sprite; everything else was art generated weeks
+ago and never once drawn:
+
+`char_gm_calm` → **`char_gm_void_creep`** (new: the black crept in from hairline, ear and jaw,
+her own face a shrinking island with her eyes, nose, mouth and blush still human) →
+`char_gm_void_head` → `char_gm_spread_early` → `char_gm_void_spread` → `char_gm_spread_deep` → CG.
+Chapter text went 11 → 18 zh lines. `char_gm_void_head` came off the never-drawn list.
+**Look in `list_assets` before generating: this game had a whole unused transformation in it.**
+
+### The expensive lessons
+
+1. **krea-edit cannot MOVE an existing mark.** Every "shift it down / make it thinner" prompt
+   repaints the whole region and re-rolls everything in it. Four consecutive attempts to move one
+   red line: two repainted her lower face as pale skin (destroying the void), one deleted the
+   scribble, one ate an eye. If a mark is in the wrong place, **redraw the whole mark from the
+   clean base with the position stated against a non-anatomical landmark** ("two thirds of the way
+   between her eyes and the top of her collar"). Never say "at the height a mouth would be" — that
+   phrasing makes the model restore anatomy.
+2. **Chain-edit drift is cumulative and fatal.** Nine links deep the owner said "not even the same
+   person". Rebuild from canon every few steps; never chain past ~3.
+3. **`character_sprite` keys the background out unless `transparent: false`.** Three takes went
+   "white background" before this landed — the output is a transparent PNG and the preview shows
+   alpha as white, which reads exactly like the model ignoring the instruction.
+4. **To free a held object, give the object a new PLACE, not the hands a new job.**
+   `reference-vn-art.md` says a pose rewrite frees a prop; that was not enough. What worked:
+   *"with one hand she has pushed the teacup and its saucer far away to the side of the table,
+   where they now sit small and forgotten."*
+5. **The image in the tool result is a 512px thumbnail, not the output.** Measure the served file
+   (`GAME_ASSETS[key]` → `naturalWidth`); these CGs are all 1280×695.
+6. **Stop hand-escaping CJK as `\uXXXX`.** Four wrong characters shipped this session alone —
+   `却`/`卻`, `扈`/`扇`, `蜡`/`蠟`, `攬`/`攔`, plus `顒`/`頜`, `脆`/`脖`, `膠`/`膀`. None error;
+   none show up in a structural scan. Paste the Chinese, then dump every label and read it.
+
+### The code path (still live, currently idle)
+
+Because generation could not place a mark reliably, the mouth scrawl was moved into canvas code
+with inspector sliders — and that exposed a real platform fact worth keeping:
+**the top-biased cover-crop patch rewrites the runtime's 5-argument `drawImage` into a 9-argument
+source-rect call.** A hook that only tests `arguments.length === 5` therefore never fires on any
+background, silently. It also pins `sy = 0`, so on a square CG only the top 56% of the image is
+ever on screen. Both are now handled in the devoured hook (`cgPan` controls the crop). The scrawl
+code, the `endShot` 0/1/2 switch, the per-frame lofi effect and `previewDevoured` all remain in the
+source and are reachable — `endShot 0` + `scrawlOn false` is simply the chosen state.
+
+### Platform state at close — the owner cannot open the editor
+
+Verified from the served build that **the game itself is healthy**: 61 labels, VN runtime alive,
+52 assets, 41 config keys, only the known Cloudflare RUM CORS noise. Two server-side flags changed
+between v1142 and v1160 that **no tool available here can set**:
+
+- `teamId`: `null` → `9e5cee62-…` (gamenticOffcial — the owner's own team)
+- `pendingUpdate`: `false` → **`true`, and it does not clear** (polled twice, minutes apart)
+
+`commit_game` cannot clear it — it requires an `uploadId` from the chunked-upload flow. This needs
+the platform side. Meanwhile `edit_game` / `write_data` / generation all still work, so work is not
+blocked; only the owner's visual slider tuning is. Filed as PLATFORM-BUGS #18.

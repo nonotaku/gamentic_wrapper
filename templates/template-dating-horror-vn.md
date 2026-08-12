@@ -1,4 +1,4 @@
-# template-dating-horror-vn — v3 (genre-flow skill)
+# template-dating-horror-vn — v5 (genre-flow skill)
 
 **A technique pack, not a script.** Every example below is illustrative — reuse the FLOW, the SYSTEMS and the ART ECONOMY, and invent the content fresh per game. Informed by *How to Date an Entity* (itch.io 4.7★/1,389 — `data/analysis/itch_1i76fbh.md`); proven on `g96d22c` (Tea with the Godmother) and `gcc67a8` (Get Well Soon).
 
@@ -11,6 +11,8 @@ Read the matching companion before ordering art or touching code. Unvalidated le
 *v3 (2026-08-01): re-cut per writing-great-skills — cross-genre production recipes moved into the two shared references, so each file has one job and one source of truth.*
 
 *v4 (2026-08-06): three rules paid for on `g96d22c` — fallback-gate prose, the player-camera decision, script-described sound — plus two optional reveal patterns.*
+
+*v5 (2026-08-12): §2 Prose added after the same game's script was rewritten end to end on the owner's verdict 「意義不明」; endings gained the naming rule and one visible method per bad ending.*
 
 ## When to use
 Dating-sim × horror/mystery VN — "survive the encounter with an entity": monster romance, analog-horror narrative. One run 12–20 min, replayed for other routes.
@@ -39,7 +41,27 @@ Main menu → Prologue → First encounter → Interactive scenes ×N (status ac
 
 ---
 
-## 2. Two-layer status
+## 2. Prose — the sentence is the genre
+
+**The failure mode is aphorism.** Short lines, wide gaps, meaning carried by contradiction — *the room is the same. the room is not the same.* · *(tea is patient)* · *(the door was not locked. it never was.)* It reads as style to whoever wrote it and as **意義不明** — *I cannot tell what this sentence means* — to whoever plays it. A whole shipped script was rewritten on that one verdict.
+
+**What VN narration is made of**, and what aphorism drops:
+
+- **你-narration** — second person, doing and noticing, line after line
+- **(the inner voice, in parentheses)** — the protagonist's own thought. Aphorism has no room for it, and it is where dread actually lives
+- **Sensory build-up** — the beat before the beat: the tea going darker, the shadows falling the wrong way
+- **Interaction detail** — the pour, the porcelain, the chair. Two people in a room have to touch things
+- **The antagonist knowing she is inside a story** — one line a chapter, and it is what ties the game to its own subtitle
+
+Keep the old ideas and say them plainly: every aphorism above survived its rewrite as a scene. *The shadows fall in a direction the candles do not explain* is the same thought, and the player can see it.
+
+**Budget the meat — spine beats ×3, transitions and branch reactions ×1.5.** One rewrite ran ~100 → ~320 lines and 10 → 18 minutes without adding a single beat.
+
+**Write the owner's stronger language first, and let the gate cover the other.** Judge, revise and lock one language completely, then retranslate. Every `say` is already `if`-gated per language, so players of the other one keep reading the old unbroken text throughout and the rewrite ships in one piece instead of half-translated.
+
+---
+
+## 3. Two-layer status
 
 | Layer | What it is | What feeds it |
 |---|---|---|
@@ -56,11 +78,12 @@ Main menu → Prologue → First encounter → Interactive scenes ×N (status ac
 
 ---
 
-## 3. Routes & endings — default SMALL
+## 4. Routes & endings — default SMALL
 
 - **One mid-game route split → 2–3 routes; ~2 endings each (4–6 total).** Extra endings are a post-launch patch, not launch scope.
 - **Route flags decide WHICH route; the numeric layer decides WHICH ending inside it.** Carving all endings from one numeric axis makes the player feel they are farming points; branched routes make them feel their choices shaped the story.
 - Every ending: named, one-line epilogue, and an "X of N endings" replay hint.
+- **Name each ending after what she actually does, and check no two names collide.** *Devoured* and *Taken Whole* shipped as endings 1 and 2 and read as the same ending written twice; *Not Worth Swallowing* broke register — a diner idiom inside a gothic fairy tale. Renaming from her own vocabulary — *Received Whole*, *The Guest She Could Not Swallow* — separated them and put her voice on the ending card.
 - Optional hidden ending: ONE cross-route condition, e.g. all three knowledge flags collected.
 - **Write the priority order as a sentence before coding it** — "offence outranks hunger, hunger outranks interest, interest outranks collection" — then implement it as that ladder. Whichever gate is meant to override the others has to be checked first, or the best-behaved player still hits the wrong ending.
 - **A fallback gate collects everyone the gates above it rejected — read its ending's prose against ALL of them.** A shipped `!drank → you bolt for the door` looked airtight until a full-path walk showed 354 of that ending's 646 arrivals were polite sippers, some at favour 72: the middle drink option set no flag, so a taste was indistinguishable from a refusal. Give the middle option its own flag (a sip is a taste, not a meal). Then the deeper check: if no choice in the game performs the action the ending narrates — nobody can actually walk out — either add that choice or re-aim the prose at something every arrival truly did.
@@ -73,7 +96,7 @@ Main menu → Prologue → First encounter → Interactive scenes ×N (status ac
 
 ---
 
-## 4. Art economy — the choice must be SEEN
+## 5. Art economy — the choice must be SEEN
 
 **Distance is the meter.** The character has three tiers — far (full body) / mid (waist-up) / close (chest-up), all derived from the one canon original. A good choice steps them one tier closer; a bad one steps them back or turns them away. No number displayed, and nothing for the player to guess. Far + mid alone are enough to ship the axis.
 
@@ -88,6 +111,10 @@ Main menu → Prologue → First encounter → Interactive scenes ×N (status ac
 
 **Endings: let her speak, then CUT to the consequence.** An ending needs no new picture of the character. Play her last line on a sprite you already own, then change the background to the OBJECT or PLACE the ending turns on and `hide` her — a wrist with a red thread wound round it, a cold cup, doors closing on a thinning line of light. Faceless, so nothing can drift; environment-priced; and an object the player already recognises lands harder than one more bust. One image per ending buys the whole set, and the cut itself is the punctuation.
 
+**Give every bad ending its own method, and let the picture carry it.** Seven object CGs — a cup, a thread, a door — left the player unable to tell one death from another, because none of them showed her doing anything. One method each, visible in the frame: she eats you · folds you in, arms wide · tips the cup and pours you back out · hooks the red thread over one finger and it runs off-frame to your wrist · sews a red stitch into her hem. Cheap when one existing full-frame character CG (16:9, her filling the frame, void behind) is the base for all of them — one edit each, with ratio, identity and brushwork inherited.
+
+**Scope a medium break to exactly one ending.** Breaking the game's painting for the one moment the picture itself should fail is a shock; doing it five times makes it the style, and the hand-painted game vanishes at the last minute.
+
 **Reveal patterns — optional, like the gating patterns: take one only if the story stages a true form.**
 
 - **The frame answers the line.** A line that aims the player's eyes — *look at me as I am* — is a promise the art keeps on that line, not later. Something changes as she says it, and what the player chooses next decides how much more they see. A shipped reveal chapter said that line over an unchanged sprite, and the game's one invitation showed nothing.
@@ -95,13 +122,13 @@ Main menu → Prologue → First encounter → Interactive scenes ×N (status ac
 
 ---
 
-## 5. Numeric defaults
+## 6. Numeric defaults
 
 Tune these in the editor; they are starting points, not canon. Numeric layer starts at **50** (range 0–100). Safe choice **±5**; bold choice **±12**; catastrophic **−25**, always telegraphed by tone and paired with `shake` + `sfx_sting` + the "wrong" bg variant. **8–12 beats and 2–3 interactions per chapter; 3 chapters ≈ 12–18 min.**
 
 ---
 
-## 6. Audio
+## 7. Audio
 
 `bgm_main` + `bgm_tension` from one instrument family, so the tension cue reads as the same world going wrong. Sfx: click / choice / sting / one prop sound the story keeps touching.
 
@@ -109,7 +136,7 @@ Tune these in the editor; they are starting points, not canon. Numeric layer sta
 
 ---
 
-## 7. Runtime wishlist
+## 8. Runtime wishlist
 
 1. **Hotspot interaction** — true click-on-object, currently emulated with choice menus
 2. **Persistent endings gallery** — localStorage plus a menu entry
@@ -117,7 +144,7 @@ Tune these in the editor; they are starting points, not canon. Numeric layer sta
 
 ---
 
-## 8. Ship checklist — the build is not done until every box passes
+## 9. Ship checklist — the build is not done until every box passes
 
 - [ ] Menu is exactly Start / How to play / ⚙ Settings, wordmark drawn, rows clear of the art's focal point, number keys 1–9 pick rows
 - [ ] Every interaction writes state, and every flag written is read by something

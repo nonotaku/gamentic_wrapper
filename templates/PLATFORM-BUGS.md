@@ -4,6 +4,26 @@ Found while fresh agents built COGSPIRE `g3ddaec` and WYRMWARD `g6ead49` from
 `template-isometric-tower-defense.md`. Tooling bugs, not template content — fix server-side,
 then delete the entry (and the file when empty). Items 1–3 reproduced in BOTH builds.
 
+18. **`pendingUpdate` sticks on `true` and the owner loses the editor.** (2026-08-12, `g96d22c`.)
+    After a run of ordinary `edit_game` calls the game's meta went `pendingUpdate: false → true`
+    and stayed there across polls minutes apart, and the owner could no longer open
+    `/edit/<id>` — re-login did not help. The game itself is fine: the served build loads with
+    all 61 labels, a live VN runtime, 52 assets and 41 config keys, and only the known
+    Cloudflare RUM CORS noise in console. Nothing in the MCP toolset can clear the flag —
+    `commit_game` is not it, since it requires an `uploadId` from the chunked-upload flow. Two
+    asks: expose a way to cancel/flush a stuck pending update, and don't let that flag gate the
+    editor when the stored build is valid. Noted alongside it (cause unknown, possibly related):
+    the same game's `teamId` went `null → <team>` in the same window, which no available tool
+    sets.
+
+19. **The top-biased cover-crop patch silently disables every later `drawImage` hook.** (Not a
+    server bug — a documentation gap that costs hours.) That patch rewrites the runtime's
+    5-argument cover draw into a **9-argument source-rect** call before passing it down the
+    chain. Any hook that tests `arguments.length === 5` therefore never fires on a background,
+    with no error — it just does nothing, which reads exactly like "my code didn't load". It
+    also pins `sy = 0`, so a square CG only ever shows the top 56% of the image on a 16:9
+    canvas. Whatever ships this patch should say both things in a comment at the top of it.
+
 1. **`list_assets` wire-scanner greps only `game.html` — and only literal member access.** A
    game whose draw code lives in `src/` files gets every key flagged "generated but never
    used" even while screenshots prove them on screen; and (08-06, third build) the scanner
@@ -82,6 +102,40 @@ then delete the entry (and the file when empty). Items 1–3 reproduced in BOTH 
 14. **`·` (middot) round-trips wrong through `read_game_file` → `edit_game_file`.** A find
     string copied verbatim from read output fails to match; agents fall back to ASCII-only
     substrings. Normalise encoding on one side or the other.
+
+17. **`write_data` still stringifies every object/array value — and together with item 16 it
+    closes BOTH script-editing channels.** (2026-08-06, `g96d22c`.) Setting a label to an
+    array stored the JSON as a *string* and broke the live game's prologue at the first
+    click of 開始; the documented workaround (leaf-scalar writes, parents auto-create) works
+    but costs ~78 calls for one 22-command label — a full chapter is ~700. With `edit_game`
+    hard-locked by the CORS gate (16) and `write_data` unable to accept structure, there is
+    NO practical way to restructure a story on a game with hosted music. Fix either: make
+    `write_data` accept real JSON values, or unblock 16. The stringify bug was first filed
+    2026-07-29 via submit_feedback; today it graduated from nuisance to outage.
+    **Re-probed 2026-08-10: still broken** — writing a 2-element array to a scratch path
+    stored `"[{\"cmd\":\"say\"…}]"`, a string. Downgraded from outage to nuisance because 16
+    is fixed, so `edit_game` now carries structural edits. Division of labour in the field:
+    `edit_game` find/replace to INSERT items, `write_data` to change one existing scalar
+    (`script.<label>[i].text`) — the latter has no string-matching risk and is the safer tool
+    for a pure text fix.
+
+16. **[FIXED 2026-08-10 — verify before deleting] The headless validation gate used to reject
+    every `edit_game` on any game with `generate_music` audio.** Re-probed on `g96d22c` with a
+    real one-line edit: `stored: true, editsApplied: 1`, and 17 further edits landed across
+    four batches. The CORS gate no longer fires; only the cosmetic "外部 URL" warning (item 6)
+    remains. Field rule that came out of it: **probe `edit_game` with one small real edit
+    before assuming it is locked** — the leaf-write workaround costs ~500 calls per chapter
+    where find/replace costs ~4. Original report follows.
+
+    (2026-08-06, `g96d22c`.) The gate opens the game in a
+    sandboxed headless browser (origin `null`) and fails the batch on any `console.error`;
+    something fetches every `GAME_AUDIO` URL at load, and the hosted `/asset/*.mp3` tracks
+    that `generate_music` itself injected have no `Access-Control-Allow-Origin` header, so
+    they CORS-fail deterministically — the platform's own product blocks the platform's own
+    editor. Item 6 escalated from a nuisance warning to a hard lock. Retried twice, identical.
+    Workaround in the field: `write_data` bypasses the gate for script edits and
+    `delete_asset` still works; `media/*` relative audio passes. Fix: serve CORS on `/asset`,
+    or exempt the platform's own hosts from the gate's error scan.
 
 9. **`generate_speech` tooling gaps** (ORISS voice pass, 14 lines): (a) returns `kb` but not
    DURATION in seconds — every lip-synced consumer must measure at runtime and carry a retime
