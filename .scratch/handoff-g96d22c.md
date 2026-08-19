@@ -443,3 +443,77 @@ between v1142 and v1160 that **no tool available here can set**:
 `commit_game` cannot clear it — it requires an `uploadId` from the chunked-upload flow. This needs
 the platform side. Meanwhile `edit_game` / `write_data` / generation all still work, so work is not
 blocked; only the owner's visual slider tuning is. Filed as PLATFORM-BUGS #18.
+
+## Addendum 13 — 2026-08-12 → 08-19 · the devoured CG lands, one beat by hand, her own interface, and her voice (v1162–1376)
+
+**Supersedes Addendum 12's "final state is deliberately conservative" line.** The devoured CG is
+now **T** — she lunges across the table, her hands already black tendrils (`cg_end_devoured`), with
+the per-frame lo-fi filter on top (`lofiOn`, default on; knobs in the inspector). `endShot` is gone
+(`dropConfigKeys`). The six-sprite turning from Addendum 12 still precedes it. The scrawl path and
+`previewDevoured` remain in the source, off by default; 14 `scrawl*` config keys sit in GAME_CONFIG
+with no schema field — harmless, and droppable with `dropConfigKeys` once the owner retires the path.
+
+What finally moved it: the owner's **three actual HTDAE ending screenshots** — a mid-shot, the
+entity *acting*, the player as a fragment, one colour cast. Every close-up, every mouth, every
+found-footage restyle before that was built on my reading of a game the owner had in their head.
+"Ask for their references before the first generation" is now in `reference-vn-art.md`.
+
+**Editor outage — resolved.** The remix test (`gba33c9`, a throwaway copy; ignore or delete)
+isolated the fault to this game's own server record (PLATFORM-BUGS #18); the owner later reported
+the editor usable again. Nothing here fixed it.
+
+**One beat by hand — the ledger.** `src/minigames.js` registers `GI_MINIGAMES.ledger`; `b_join`
+ends in the runtime's **native** `minigame` command (`win: p2_clean`, `lose: p2_caught` →
+`p2_take` / `p2_none` / `p2_seen` / `p2_shut` → `ch2_out`). She rights the twelve cups with her back
+turned (`char_gm_back_b`); you pull the loose pages 1:1 with the hand; caught = one line from her,
+`favor −5`, third catch closes the book. Knobs the owner tunes: `ledgerPullDist`, `ledgerKeep`.
+Headless hooks: `__LEDGER_STEP(dt, n)`, `__LEDGER_POINT(type, x, y)`. Every scar and the design
+rules went into the new `templates/reference-vn-minigame.md` — read that before touching it.
+
+**Her interface.** `src/dialog_skin.js`: `VN_SKIN.paintedBox` paints `ui_box_a3` as the dialogue
+frame (config `paintedBox`, `boxPad`, `boxTopPad`, `boxOverhang`); `wrapChoice()` **wraps** the
+existing `VN_SKIN.choice` and paints a parchment strip per in-game row, red thread on hover, and
+stands down while `S.mg` is set. Main menu: the `bg_parlor_f5` void shows behind the candles on the
+f4 dip tick every `menuVoidEvery` cycles at `menuVoidAlpha` — both inspector knobs.
+
+**Cleanup.** 34 unused assets deleted; the preview page removed; `endShot` retired.
+**Templates.** Two owner-invoked `/writing-great-skills` rounds: `reference-vn-minigame.md` (new),
+`template-dating-horror-vn.md` v6, `reference-gamentic-platform.md` v4, `reference-vn-art.md`
+additions, INDEX rows, PLATFORM-BUGS #16 fixed / #17 re-probed / #18 isolated / #19 drawImage.
+
+### Her voice (the main event of this addendum) — v1162 onward, ≈250 cr
+
+Owner's choice: **C 日文語音 + 中文字幕** — only *her* lines are voiced, Japanese audio under the
+Chinese subtitle; the English mode stays silent. After auditioning 16 candidates the voice is
+**`ja_059`** (taken as `voice_gm`). The register is **A 貴族女主人**: 「わたし」, command forms
+〜なさい, sentence-final 〜のよ／〜わ, no です・ます; 「小さなお客様」 for 小客人, 「坊や」 once in
+`b_worst`, 「人間」 for 凡人, 「まるごと、いただくわ」 for 整個收下, 「いなさい」 for 留下吧, 「……。」
+for her silences. **The owner delegated the Japanese entirely** — "do not ask me for it because I
+do not know either Japanese" — so the script is mine and the owner judges by ear only; do not send
+them JA text to review.
+
+- **Script of record:** `.scratch/story-refine/voice-ja.tsv` — 112 rows: `label, idx, zh, ja,
+  emotion, speed`. Generated with `generate_speech(voice:"ja_059", emotion, intensity 0.4 — 0.3 on
+  the silences, 0.6 on the one angry line — speed 0.75–0.9)`; the engine has no real emotion takes
+  for this actor, so every emotion is the neutral take re-coloured (fine at these intensities).
+- **Wiring:** `"voice": "vo_<label>_<idx>"` on every `gmt` say, added after `"if": "lang_tw"`
+  (two abbreviations: `end_devoured → end_dev`, `end_bring_home → end_home`). **112/112 wired**,
+  every key present in `GAME_AUDIO` (structure probe at v1375); playback confirmed by wrapping
+  `HTMLMediaElement.prototype.play` and `VN.goto`-ing labels whose first zh line is hers
+  (`dia/vo_end_taken_2.mp3`, `vo_end_woven_2`, `vo_end_guest_2`, `vo_ch1_19`). The 16 audition
+  takes (`vo_test_*`) are deleted from the game.
+- **Cost:** ≈1–3 cr a line by length; the 28 ending lines were 61 cr.
+- ⚠ **Auditioning lesson.** `list_voices` previews were inaudible in the pane and useless to the
+  owner anyway; what worked was generating the *same real line* for each candidate and wiring it
+  into `ch1[19]` for in-game A/B. And the owner hears register before timbre — the "人妻" wording
+  was rejected before any voice was; settle the wording first, then shop voices.
+- ⚠ **Shared wallet.** Between two consecutive `generate_speech` calls the balance went
+  124533 → 122430 with nothing of mine in between — another session was spending on the same
+  wallet. Check `budget_status` before attributing cost.
+
+### State at close
+
+v1376 on the **draft** (the embed serves it; `/play/` still serves the last commit — do not commit
+without the owner). Owner still to tune in the inspector: ledger difficulty, the lo-fi filter,
+`menuVoidAlpha` / `menuVoidEvery`, the box pads. Deferred and unasked: English retranslation of the
+whole script; English-mode voice (none exists by design); dropping the dormant `scrawl*` keys.

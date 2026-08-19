@@ -6,6 +6,8 @@ Shared reference for any game built on this platform, VN or not. Pointed at by t
 
 *v3 (2026-08-12): the two `write_data` bullets collapsed into one division of labour; probe-the-lock, scan/walk/simulate, the conditional-goto false positive and the slider lever added; the CJK bullet re-aimed at the cause instead of the audit.*
 
+*v4 (2026-08-13): the canvas is 540-tall-and-window-wide (settle the frame with the owner first); the `minigame` command pointer; "Skinning the box and the rows" (wrap `.choice`, alias `.box`, skip `boxImage`); screenshot-on-version-one. Minigame mechanics live in the new `reference-vn-minigame.md`.*
+
 ---
 
 ## Editing a game safely
@@ -27,6 +29,7 @@ Shared reference for any game built on this platform, VN or not. Pointed at by t
 - **A game auto-restores the last save only where storage works (the dev harness).** On every production route `localStorage`/`sessionStorage`/cookies THROW SecurityError, so embed probes always start fresh — and a player's mid-story save cannot survive a reload; script progress must tolerate that.
 - ⚠ **`S.bg === 'x'` proves the script ran, not that anything is on screen.** A beat whose background had been deleted from `GAME_ASSETS` walked clean through every state assertion and rendered pure black. Close the loop with the image itself: `new Image()` every key any `show` or `bg` references and wait for `onload`. Cheap, and it is the only check that distinguishes a working scene from a black one.
 - ⚠ **Another agent may prune assets under you.** Re-using a long-unreferenced asset is the exact moment a cleanup pass elsewhere deletes it. After pointing the script at anything that was previously dead, re-check that it still exists — and prefer `import_asset` from the library ref, which restores it for free.
+- ⚠ **Ask for the owner's screenshot on version one of anything drawn.** Layout built from geometry alone — a code-drawn figure, tabs, a shelf of tiny cups — earned the verdict *"totally don't know what is doing here"*, and every fix that landed afterwards came from a screenshot. You cannot see the canvas (below), so the first screenshot is part of the build; ask for it before asking whether it works.
 - ⚠ **A collapsed browser pane freezes the page.** `document.hidden` goes true, so `requestAnimationFrame` stops, screenshots time out and timers throttle to a crawl. "The draw hook was never called" then measures the pane, not the code. Confirm a frame counter (`S.t`) is still advancing before reading any render result as evidence — and drive the story by dispatching `pointerdown` on the canvas, which keeps working while the loop is frozen.
 - ⚠ **Canvas taint is a production fact, not a universal one**: on play/embed routes `toDataURL` and `getImageData` throw (opaque origin), while the harness reads pixels freely. Production-side, what survives is `fetch` the PNG and read byte 25 — colour type `6` is RGBA, which is how you prove a sprite really got its alpha channel. Anything genuinely visual ends with the owner's own eyes; say so plainly instead of implying you saw it.
 
@@ -44,7 +47,11 @@ Shared reference for any game built on this platform, VN or not. Pointed at by t
 
 ## VN runtime contract
 
-Shell = `GAME_CONFIG {textSpeed}` + `GAME_ASSETS` / `GAME_AUDIO` / `GAME_DATA` markers + `// __GI_VN_RUNTIME__`. Title and endings are script labels. Look-and-feel comes from `GAME_DATA.theme` — a square `boxImage` misaligns the text, so build the box from theme colours. Balance lives in script data, editable by the owner in the script panel.
+Shell = `GAME_CONFIG {textSpeed}` + `GAME_ASSETS` / `GAME_AUDIO` / `GAME_DATA` markers + `// __GI_VN_RUNTIME__`. Title and endings are script labels. Look-and-feel comes from `GAME_DATA.theme`. Balance lives in script data, editable by the owner in the script panel.
+
+⚠ **The canvas is 540 tall and as wide as the window.** The runtime pins `VH = 540` and lets `VW` follow the window's aspect (clamped 480–1920), drawing through `setTransform(DPR…)`; the `<canvas width=960>` in the shell is a placeholder the runtime overwrites. Consequences: every hand-drawn layout is a **fraction** of the logical size, never a pixel constant; `cv.width` is device pixels and drifts on hi-DPI — hit-tests divide the pointer by the client rect into logical space; and a square CG cover-cropped into that frame shows only its top 56%. **Settle the frame with the owner before laying anything out** — state the default (960×540 logical, wider on wide windows) and ask whether they want it locked; a layout built on the wrong assumption is rebuilt, not tuned.
+
+**The runtime has a first-class `minigame` command** — `{cmd:"minigame", key, win, lose}` hands the canvas and input to `GI_MINIGAMES[key](host)` and routes on `host.done(ok)`. Reach for it before writing any overlay; the contract, its scars and a worked example are in `reference-vn-minigame.md`.
 
 ## Custom main menu
 
@@ -70,6 +77,15 @@ The runtime hard-codes choice rows at **42% canvas height**, with `hitChoice` an
 Point the menu row at a real no-op label (`settings` = `[{goto: start}]`) so it degrades safely, then intercept it in the pick handler (`if (o.goto === 'settings') { OPEN = true; return; }`) — deliberately skipping `goto`, so the title stays live underneath. Draw the panel from `VN_SKIN.choice` on the LAST row index; while it is open the capture handler swallows every click and routes to your own hot-rects, with `pointermove` / `pointerup` for slider dragging and Escape to close.
 
 **Volume:** the runtime builds `Audio` objects that never enter the DOM, so hook `HTMLMediaElement.prototype.play` to collect them and set `volume` on each call — a looping element is music, a one-shot is sfx. Store `musicVolume` / `sfxVolume` in `GAME_CONFIG` so the same knobs appear in the inspector.
+
+## Skinning the box and the rows
+
+Both are `VN_SKIN` hooks; the runtime draws its own only while the hook is not a function. Two rules make a skin survive contact with everything else in the file:
+
+- **`VN_SKIN.box`: paint your art, then lay the text with the runtime's numbers.** Name baseline, line height, `maxLines`, arrow corner — take every one from `box.theme`, so switching the skin off moves nothing. Paint a generated frame with `drawImage` from its opaque bounds (trim the alpha margin once) and let it overhang the box rect a few px so a torn edge reads; the parchment is the name-plate, a hairline underline replaces the plate. Install under your own key (`VN_SKIN.paintedBox`) and alias to `.box` on a short interval — the hide toggle sets `.box = function(){}` and deletes it to restore, and a skin that overwrites blindly will fight it. Reach for this, not `theme.boxImage`: `boxImage` stretches the whole image to the box's aspect and every corner ornament shears.
+- **`VN_SKIN.choice`: wrap, never replace.** By the time a game has a custom menu, `.choice` is already owned by the block that draws the title, the settings overlay and computes the hit `RECTS` for every row. Capture the current function, install a wrapper that calls it first (title, hit-boxes and hover state stay exactly as it computed them), and only then paint your row over its rect for in-game choices — same `bw = W*choiceW`, `bh`, `gap`, `y0 = H*0.42 - …`, so the row you draw is the row it hit-tests. Guard with the same `S.label !== 'start'` split it uses, and skip while `S.mg` is set so a minigame's own buttons are not painted over. Mark the wrapper (`fn.__wrapped = true`) and re-check on an interval, because later blocks may reinstall `.choice`.
+
+Both skins on `g96d22c` share one image, `ui_box_a3`, sliced two ways — the box takes the whole leaf, each row takes the plain band below the lace — so the interface reads as one object. Why that object: `template-dating-horror-vn.md` §5.
 
 ## Three levers for what the runtime never planned for
 

@@ -16,6 +16,15 @@ then delete the entry (and the file when empty). Items 1–3 reproduced in BOTH 
     the same game's `teamId` went `null → <team>` in the same window, which no available tool
     sets.
 
+    **Isolated by a controlled test.** `remix_game` produced `gba33c9` — same owner, same team,
+    same machine, same browser, same session, identical content (61 script labels, all assets)
+    — and **its editor opens normally**. The only differences are the ones that matter: version
+    1 vs **1161**, and no `pendingUpdate` flag at all. So the fault is neither client-side nor
+    account-side; it is in this game's own server record. Two candidates worth checking in that
+    order: the stuck `pendingUpdate`, and whether the editor loads the full version list (1161
+    entries) at boot. Symptom as the owner reports it: the editor's progress bar reaches 100%
+    and then nothing renders.
+
 19. **The top-biased cover-crop patch silently disables every later `drawImage` hook.** (Not a
     server bug — a documentation gap that costs hours.) That patch rewrites the runtime's
     5-argument cover draw into a **9-argument source-rect** call before passing it down the

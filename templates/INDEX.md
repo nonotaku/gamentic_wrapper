@@ -11,7 +11,7 @@ three kinds: `../CONTEXT.md`. Routing rule for genre asks vs named-game asks:
 | File | What | Validation |
 |---|---|---|
 | [reference-runtime-surfaces.md](reference-runtime-surfaces.md) | What each serving surface forbids (sandbox matrix, harness drift) | Measured by probe rig `g8bb0c7`, re-runnable in one screenshot |
-| [reference-gamentic-platform.md](reference-gamentic-platform.md) | Editing, verification, storage, VN-runtime traps | v2 — live-build scars; three claims re-measured 2026-08-04 |
+| [reference-gamentic-platform.md](reference-gamentic-platform.md) | Editing, verification, storage, VN-runtime traps, skinning the box and rows | v4 — live-build scars through the `g96d22c` UI pass (2026-08-13) |
 
 ## Cross-genre (any canvas-shell game; genre templates point here)
 
@@ -24,6 +24,7 @@ three kinds: `../CONTEXT.md`. Routing rule for genre asks vs named-game asks:
 | [reference-canvas-i18n.md](reference-canvas-i18n.md) | EN + zh-TW for canvas games (dictionary-by-source-string) | Proven in `gbe4dbe` full translation; no blind test yet |
 | [reference-talent-tree.md](reference-talent-tree.md) | Icon talent tree that composes a loadout — **free to use, not a mandate** | Proven in `gbe4dbe`; no blind test yet |
 | [reference-vn-art.md](reference-vn-art.md) | VN-family art recipes: identity/canon rule, prompts, camera grammar — **an optional art reference, nothing is gated on it** | Proven across the VN lineage (`g96d22c`, `gcc67a8`) |
+| [reference-vn-minigame.md](reference-vn-minigame.md) | One hand-played beat inside a VN: the runtime's `minigame` command + host contract, logical coordinates, headless drive hooks, the interlocking-knobs scar, the ledger scene as worked example — **optional, one per game is enough** | Proven once: the ledger scene on `g96d22c` (2026-08-13) |
 
 ## Genre blueprints (read when building that genre)
 

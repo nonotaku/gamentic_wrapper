@@ -1,10 +1,11 @@
-# template-dating-horror-vn — v5 (genre-flow skill)
+# template-dating-horror-vn — v6 (genre-flow skill)
 
 **A technique pack, not a script.** Every example below is illustrative — reuse the FLOW, the SYSTEMS and the ART ECONOMY, and invent the content fresh per game. Informed by *How to Date an Entity* (itch.io 4.7★/1,389 — `data/analysis/itch_1i76fbh.md`); proven on `g96d22c` (Tea with the Godmother) and `gcc67a8` (Get Well Soon).
 
-**Two companions carry everything platform-shaped, so this file can stay about the genre:**
+**Three companions carry everything platform-shaped, so this file can stay about the genre:**
 - Making the art — identity, prompts, expressions, camera grammar, budget → **`reference-vn-art.md`**
 - Making the runtime behave — menu, bilingual, editing, verification, storage → **`reference-gamentic-platform.md`**
+- Putting one hand-played beat inside the story — the `minigame` command, the host contract, the headless hooks → **`reference-vn-minigame.md`**
 
 Read the matching companion before ordering art or touching code. Unvalidated leads: `technique-character-in-scene.md`, `technique-scene-backgrounds.md`.
 
@@ -13,6 +14,8 @@ Read the matching companion before ordering art or touching code. Unvalidated le
 *v4 (2026-08-06): three rules paid for on `g96d22c` — fallback-gate prose, the player-camera decision, script-described sound — plus two optional reveal patterns.*
 
 *v5 (2026-08-12): §2 Prose added after the same game's script was rewritten end to end on the owner's verdict 「意義不明」; endings gained the naming rule and one visible method per bad ending.*
+
+*v6 (2026-08-13): §3 gained the one-beat-by-hand rule after the ledger minigame shipped (mechanics in the new `reference-vn-minigame.md`); §5 gained "the interface is hers".*
 
 ## When to use
 Dating-sim × horror/mystery VN — "survive the encounter with an entity": monster romance, analog-horror narrative. One run 12–20 min, replayed for other routes.
@@ -76,6 +79,12 @@ Keep the old ideas and say them plainly: every aphorism above survived its rewri
 
 **Wiring rule: every interaction writes state** (`add` or `set`). An interaction with no consequence is a fake interaction, and a flag nothing reads is the same failure one step later — grep your own flags before shipping.
 
+**One beat by hand — optional, and one is enough.** A minigame in this genre is not a mode; it is a beat the text already asked for, done with the player's hand instead of a menu row. The one that shipped took the existing choice *(slip the loose page free / touch nothing of hers)* and made it the act itself: she turns to right the cups, you pull the page while her back is turned, the chime says let go. Three rules, all paid for:
+- **The verb is already in the fiction.** Stealing the page was a text choice; the minigame is the same beat by hand. Invent no new mechanic the story never mentioned.
+- **Both outcomes are story.** Four out-labels — took pages, took nothing, was seen, she shut the book — all continue to the same next scene. A minigame with a wall is a VN with a locked door.
+- **She never raises her voice — not even here.** Getting caught earns one spoken line, never a fail screen: 「……小心點。紙很脆。」→「你的手在抖，小客人。」→「夠了。」and on the third she closes the ledger 像替睡著的人蓋被. The failure feedback is written in her register or it breaks her.
+One is enough: a design panel that costed a second one in the same chapter found it put a minute of minigame inside a fifteen-minute story. Build one, playtest it alone, and only then ask whether the game wants another. Mechanics, contract and scars: `reference-vn-minigame.md`.
+
 ---
 
 ## 4. Routes & endings — default SMALL
@@ -108,6 +117,8 @@ Keep the old ideas and say them plainly: every aphorism above survived its rewri
 - **Danger tells** carry the hidden meter: below ~30 → hollow expression + `bgm_tension`; above ~65 → pleased.
 - Budget ≈ 3–5 new images per scene, everything else reuse.
 - **The player is a camera until you decide otherwise — and the first drawing designs him.** This lineage crops him out on purpose; the prologue's door-push cut the hands off its own shot. If one beat earns an exception (the ending where you leave together), take it knowingly: the moment he has a coat and a haircut, every later shot of him must match. Make that call at art-planning time, not at the eighth ending.
+
+**The interface is hers.** Pick one object from the fiction and make every UI surface out of it, so the chrome reads as the character's and not the engine's. On `g96d22c` that object is the ledger page: the dialogue box is a torn ledger leaf with one lace trim and one red bow; the choice rows are strips of the same leaf, and the hovered row shows a thin red thread down its left edge — her ribbon, the thread she winds round your wrist; the main-menu cinemagraph's one dark tick lets her silhouette show for half a second in the curtain gap behind the candles, then not. None of it is decoration: each piece is a thing she owns, placed where the engine used to put a rectangle. Painting recipe for the frame and the two skins that carry it: `reference-gamentic-platform.md`.
 
 **Endings: let her speak, then CUT to the consequence.** An ending needs no new picture of the character. Play her last line on a sprite you already own, then change the background to the OBJECT or PLACE the ending turns on and `hide` her — a wrist with a red thread wound round it, a cold cup, doors closing on a thinning line of light. Faceless, so nothing can drift; environment-priced; and an object the player already recognises lands harder than one more bust. One image per ending buys the whole set, and the cut itself is the punctuation.
 

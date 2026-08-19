@@ -6,6 +6,8 @@ Two words carry this file. **Canon** is the one approved image everything else m
 
 *(2026-08-12: chain-drift given a count and a return-to-canon interval; prop removal gained the relocate move; the cannot-move-a-mark rule, the `transparent: false` trap and inventory-before-ordering added.)*
 
+*(2026-08-13: ask-for-their-references-first, after a day of ending CGs built on the wrong reading of a named game; the cinemagraph gained its rare fourth patch.)*
+
 ---
 
 ## The base rule — the base carries identity
@@ -28,6 +30,7 @@ Everything below is a consequence:
 - **Character design:** beautiful human first, horror as detail (a faint third eye, not full scales). Heavy monster traits eat the "I trust her" read that a horror reversal leans on; if the owner wants them anyway, the warmth has to come from dialogue instead.
 - **Prompt traps:** `visual novel character sprite` and glam adjectives → polished anime; `character sheet` → hallucinated photo insets; `mature female` alone → elderly. Directional words in imperative form get PAINTED AS TEXT ("pushed inward" appeared as signage on the doors) — describe geometry instead, and add `no text, no words, no letters`.
 - **Reference images beat description.** Owner-pasted target screenshots converged a redesign in 1–2 rounds where blind style words took 5. It restores as well as it designs: a collar and ribbon lost in an earlier edit came back at 70% from careful description and at 100% from feeding the original back as image2 and saying *copy image2's neckline*.
+- ⚠ **"In the style of X" means the owner's X, not yours — ask for the pictures before the first generation.** A whole day of ending CGs was spent on one reading of *How to Date an Entity's* horror — add eyes, add mouths, add hands, add copies of her — and every take was rejected. Three actual ending screenshots from the game turned it round in one round: mid shot, the entity inside its room *doing* something, the player present only as a fragment (a skull in her hand, a fistful of hair), a single colour cast over the whole frame. Nothing in that list is a face close-up, which was the entire failed direction. Whenever a brief names a game, an artist or a genre as the target, the first move is a request for their reference images, and generation waits on the answer.
 - **Ask for one more, not for five.** "Five eyes scattered across the face" collapses to a normal pair every time — a face has two eyes, and the prior wins. "Keep the pair she has and open three MORE" lands all five. Count from what is already in the picture; the generator adds far more reliably than it re-plans.
 - **Name a mark's geometry, not its colour.** "Two flat pale shapes for eyes" produced filled ovals and a banana grin — a cartoon smiley. "A thin crescent LINE, one curved stroke tapering to a point at each end, hollow inside" produced the intended mark. Say line or stroke or opening, give it a thickness, and say what is inside it.
 - **Orientation decides what a mark reads as.** The same slit on a black face is a gill when it stands vertical and an eye when it lies horizontal. Fix the axis before arguing about the count.
@@ -119,8 +122,9 @@ A menu or idle scene wants motion, but krea-edit repaints the WHOLE frame on eve
 - **Cadence:** an fps config slider (default 2 — storybook low-frame pacing; 0 = static), and an irregular pattern — eight flicker ticks, then one dip — beats a metronome. The dip tick is a flat translucent darkening of the whole frame: a light-only change, no pixel moves.
 - **Verification is counters, not pixels** (the canvas is cross-origin-tainted — `reference-gamentic-platform.md`): expose a ready flag once patches are built and increment a counter inside the composite path; an offscreen `drawImage` of the canon URL fires the path deterministically even while a hidden pane freezes rAF.
 - ⚠ `animated_cg` (LTX) drifts and cannot loop — play it once as a cutscene; a menu loop is this composite's job.
+- **The composite has room for a rare event.** Because the base is static and only patches move, one more patch that fires *only on the dip tick, and only every Nth cycle*, adds a glimpse without breaking the light-only rule for any other frame: her silhouette in the curtain gap behind the candles, generated as a variant of the dip frame, cut to a feathered ellipse, painted at half alpha for the half-second the dip lasts. Every third cycle by default; `menuVoidAlpha` / `menuVoidEvery` in the inspector. It reads as *did I just see —* and is gone before the eye settles, which is the whole effect; painted on every dip it is a poster.
 
-Shipped and owner-verified on `g96d22c` v343 (three patches: candelabra flames + two steam wisps).
+Shipped and owner-verified on `g96d22c` v343 (three patches: candelabra flames + two steam wisps); the rare fourth patch added v1226.
 
 ## Aspect
 
