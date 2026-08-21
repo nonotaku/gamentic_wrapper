@@ -536,3 +536,26 @@ rows 41 → 32) once the runtime's 0.6 s `bg` fade clears.
 ⚠ Two rules for anyone hooking the prototype again: **draw through the original you captured, never
 through `ctx.drawImage`** — and when a probe measures the frame right after a `bg` command, render
 ~80 frames first, because `S.fade` paints the whole frame black for the first 0.6 s.
+
+### 2026-08-21 (later) · owner's first look at the devoured CG (v1378–1379, free)
+
+Owner saw the CG with the filter and said three things; all three landed as inspector knobs rather than
+hard edits, so nothing here needs an agent to retune:
+
+- **"filter too strong, and red instead of green."** The teal cast is gone: the multiply/screen pair now
+  takes its colour from **`lofiTintColor`** (inspector colour field, default `#c84646`) with strength
+  **`lofiTintAmt`** (renamed from `lofiTeal`; default 0.55, and the desaturation coupling dropped from
+  0.75 to 0.5 so the red can read). Structural defaults softened: blur 2.2→1.2, scan 0.22→0.12, noise
+  0.18→0.12, ghost 0.28→0.16, drop 0.25→0.15. All under 被吞噬結局; **「試睇 CG」(`previewDevoured`)
+  paints the filtered CG over the live scene every frame, so the owner can tune without playing to the
+  ending** — now that the hook no longer recurses, that switch actually works.
+- **"wording is on the edge of the dialog box."** `boxPad` 20→48 and `boxTopPad` 14→28 (the skin adds
+  +6 to `boxPad` for the inked edge); slider ranges widened to 10–140 / 0–90 and relabelled
+  文字左右內距（向右推）／文字頂部內距（向下推）. No code change in `src/dialog_skin.js`.
+- **"the sound is too bad, sounds like Google Translate — stop using it, we try again later."** The
+  Japanese voice-over is **paused, not removed**: a `play()` gate appended before the `src/` scripts
+  refuses any `/vo_*.mp3` while **`voiceOn`** (文字音量 → 日文語音) is false. The 112 files, the
+  `voice` keys and `voice-ja.tsv` all stay, so a better engine or voice can be dropped in by
+  regenerating the same keys. Don't delete the `vo_` assets as "unused" — the gate is why they look idle.
+  The owner's verdict is on the *synthesis quality* of `ja_059`, not the script; when retrying, audition
+  engines with one real line into `ch1[19]` as before, and flip `voiceOn` on to hear it in place.
