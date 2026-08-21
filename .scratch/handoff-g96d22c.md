@@ -517,3 +517,22 @@ v1376 on the **draft** (the embed serves it; `/play/` still serves the last comm
 without the owner). Owner still to tune in the inspector: ledger difficulty, the lo-fi filter,
 `menuVoidAlpha` / `menuVoidEvery`, the box pads. Deferred and unasked: English retranslation of the
 whole script; English-mode voice (none exists by design); dropping the dormant `scrawl*` keys.
+
+### 2026-08-21 · the bad ending "stuck at the transforming" (v1377, free)
+
+Owner report: the devoured ending froze at the transformation and "ended with a bug". Root cause was
+mine: the devoured hook replaces `CanvasRenderingContext2D.prototype.drawImage`, and `lofi()` drew the
+CG with `ctx.drawImage(...)` — which *is* the hook. Every frame at the CG recursed until the stack
+overflowed; the `try/catch` swallowed it, so nothing was drawn, and every recursion level leaked one
+`ctx.save()` — the tab locked up within seconds of the cut. Headless walks "passed" because the error
+never surfaced; the tell was the browser pane going unresponsive after a probe parked the game on
+that CG. Fix: all draws inside `lofi()` go through the captured original `_di`; a `busy` re-entrancy
+lock on the hook; `try/finally` around the save/restore; and the hook now derives W/H from the
+context transform (`canvas.width / getTransform().a`) instead of device pixels, so hi-DPI screens
+no longer get a DPR×-zoomed CG. Verified: 1 save / 1 restore per draw, one lofi pass per frame, the
+rudest path runs to the ending card, and the filter is measurably present (mean R 52 → 31, scanline
+rows 41 → 32) once the runtime's 0.6 s `bg` fade clears.
+
+⚠ Two rules for anyone hooking the prototype again: **draw through the original you captured, never
+through `ctx.drawImage`** — and when a probe measures the frame right after a `bg` command, render
+~80 frames first, because `S.fade` paints the whole frame black for the first 0.6 s.
