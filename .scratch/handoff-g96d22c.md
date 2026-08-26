@@ -559,3 +559,14 @@ hard edits, so nothing here needs an agent to retune:
   regenerating the same keys. Don't delete the `vo_` assets as "unused" — the gate is why they look idle.
   The owner's verdict is on the *synthesis quality* of `ja_059`, not the script; when retrying, audition
   engines with one real line into `ch1[19]` as before, and flip `voiceOn` on to hear it in place.
+
+### 2026-08-21 (later still) · the many-eyed sprite stops being googly (v1382–1386, 120 cr)
+
+Owner saw `t_gaze` and called `char_gm_void_many` ugly — it was six oval grey-iris eyes in two neat
+rows plus a pink smile, everything the void line's own avoid-lists warn against. Three candidates went
+up (all one-step edits off the canon `asset:a43d290737b`): scattered slit-eyes (faint first take, then
+a bright retake), one enormous forehead seam-eye, and the existing free `char_gm_grin_m1`. **Owner
+picked `char_gm_many_slits2`** — five-six narrow pale slit-eyes, unequal and off-level, same mark as
+her canon pair. Wired into `t_gaze` (v1385); `char_gm_void_many`, the faint `char_gm_many_slits` and
+the unpicked `char_gm_many_wide` deleted from the game (library copies remain, v1386). Verified on the
+embed: actor key swaps, image loads, no missing show/bg keys anywhere.
