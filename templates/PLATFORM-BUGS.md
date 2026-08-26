@@ -154,3 +154,13 @@ then delete the entry (and the file when empty). Items 1–3 reproduced in BOTH 
    external-URL linter warning (item 6) names NO offending asset, so every unrelated edit
    reads as if it introduced the problem, and `playtest_screenshot` has no way to report
    that a sound was emitted — audio work is unverifiable end-to-end in the harness.
+
+20. **The web editor's save clobbers concurrent API edits without conflict detection.** The editor
+    holds a full-document snapshot from load time; every save (including the implicit save when
+    the owner tweaks an inspector slider) writes that stale HTML back wholesale. Two `edit_game`
+    batches on `g96d22c` (v1388, v1389, 2026-08-26) each reported success and were silently
+    reverted seconds later by the owner's open editor session; the version counter kept climbing,
+    so nothing looked wrong from either side. `src/` files are stored separately and survive.
+    Wanted: last-write merge at field level, or at minimum a version-conflict rejection so the
+    editor cannot resurrect old code. (Same session: `pendingUpdate` stuck at `true` again — the
+    #18 symptom is back.)

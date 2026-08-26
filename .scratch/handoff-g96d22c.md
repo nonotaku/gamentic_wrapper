@@ -588,3 +588,36 @@ leakage, catch line confirmed by forcing a catch in EN. ⚠ Template candidate f
 `/writing-great-skills`: a minigame's strings must follow the game's language flag — the ledger
 shipped zh-only and it took the owner playing EN mode to catch it (`reference-vn-minigame.md` has
 no i18n line today).
+
+### 2026-08-26 · the English mode gets its physical (audit clean; two lines held hostage)
+
+Owner asked for a whole-game English check. Method: fetch the embed HTML locally (needs a browser
+User-Agent — bare urllib gets 403), brace-match GAME_DATA out, then (1) a static audit and (2) a
+full path-walk simulator in EN mode (`.scratch`-less, lives in the session scratchpad; rebuild is
+ten minutes). Results:
+
+- **Structure: clean.** 4,716 distinct EN paths ended; all 8 endings reachable in EN; the zh mirror
+  labels (`ask_tw`, `tw_ch3_ask`, `tw_t_join`, `tw_end_*_via`) are never entered with lang_tw off;
+  zero CJK ever displayed in any EN say or choice; no empty choices, no dead labels. The audit's
+  raw "leak" list fires ONLY inside those mirrors — the label is the gate; do not "fix" them.
+- **Statics fixed en route:** the ledger minigame was zh-only (previous entry), and the runtime
+  ending screen draws `TH.endTitle`/`TH.restartLabel` (完／再玩一次) in both languages — patched to
+  `lang_tw ? theme : 'FIN' / 'Play again'`. `logLabel` was already bilingual in D.theme.
+- ⚠ **The ending-screen patch would not stick: the owner's open editor clobbers agent edits.**
+  v1388 and v1389 both reported editsApplied and were reverted within seconds — the editor saves a
+  full-document snapshot from whatever code it loaded, so any agent edit made after the editor
+  opened is silently undone on the owner's next slider tweak (their config wins and their stale
+  HTML wins). Everything landed BEFORE the editor opened (v1377–1386: lofi fix, voice gate,
+  minigame i18n in src/ — src files are outside the editor's snapshot — and the sprite swap)
+  survived. Filed as PLATFORM-BUGS #20. The two-line fix is parked until the owner closes the
+  editor and says so.
+- **The real gap is coverage, not correctness: EN 107 says vs zh 325.** The Chinese literary
+  rewrite (v1092–1104) never propagated; 31 labels sit at or under a third of the zh line count
+  (end_devoured 5/18, ch3 3/13, t_veil 3/13, ch2 3/14, prologue 4/13 …). English mode plays the
+  old skeleton draft. Full EN rewrite proposed to the owner; awaiting their call.
+- `pendingUpdate` flipped back to **true** (same stuck flag as PLATFORM-BUGS #18, previously
+  self-described as fixed after the remix test) — if the owner's editor stops opening again,
+  it is that.
+
+Owner's own inspector tuning today (safe, server-side config): lofi filter pushed to
+`#c5280d`, blur 3.5, ghost 0.54, scan 0.52, drop 0.75 — they made the red their own.
