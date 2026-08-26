@@ -660,3 +660,30 @@ replay starts unnamed and the via-epilogues can no longer double-fire across run
 replay bug this feature would have exposed. Verified live: ???/??? at boot → steal page1 →
 Godmother／教母 within a poll tick → re-enter prologue → flags cleared, plate back to ???/???,
 console clean.
+
+### 2026-08-26 (night) · the saucer learns to be played (v1403–1405, free)
+
+Owner: the ch1 saucer steal should be a minigame like the ledger. Built as **`G.saucer`** in
+`src/minigames.js`, and it is deliberately the ledger's opposite: **the ledger punishes being
+seen; the saucer punishes being loud.** She turns away to refill the pot (the pour stream is the
+clock — it sputters for the last 1.6 s, the steam wisp shortens); the page is pinned under your
+cup and saucer; it follows the hand 1:1 pulling LEFT, and pull SPEED above `saucerNoise` rings the
+china (`sfx_teacup`, cup wobble, one of the chink pips fills). Three rings → she turns: favor −5,
+one line (「小客人。瓷器很脆——小心你的手。」), lose. Pour ends first → quiet fail. The c2_join
+CHOICE survives — picking 悄悄收進掌心 routes to `p1_try` (the minigame), leave-it stays ch1_out.
+win → the existing `p1_take` (its prose already reads as the aftermath, and page1 → the nameplate
+flips); lose → `p1_fail` → `p1_rattled` (her 「瓷器很脆，小客人。就像某些規矩。」 echoing 紙很脆)
+or `p1_quiet` (…也許，之後還有機會 — true: the ledger re-offers page1) → ch1_out. Bilingual from
+birth this time. Knobs under 茶碟小遊戲: `saucerEnabled` (off = auto-win, same convention as the
+ledger), `saucerPullDist`, `saucerNoise`, `saucerPourSecs`, `saucerChinks`. `c1_rattled` joined the
+prologue reset block. Headless hooks `__SAUCER_STEP/__SAUCER_POINT/__SAUCER_DBG`.
+
+QA (all headless, both languages, v1405): win by slow pull (0 chinks) → p1_take → plate flips
+after a poll tick; three fast yanks → 3 chinks, favor 50→45, `c1_rattled`, p1_rattled lines →
+ch1_out; pour timeout → p1_quiet; 收手 button → p1_quiet; EN strings all-English; the full pull
+now stays on-screen (saucer moved 0.36W→0.40W after the first take ended at x=−6); the ledger
+still starts from b_join; console clean. NOT yet: the two new zh her-lines have no voice keys —
+generate `vo_p1_rattled_*` with ja_059 whenever the owner un-pauses the voice. ⚠ Template note for
+the next `/writing-great-skills`: `reference-vn-minigame.md` says "one per game is enough" — the
+owner has now deliberately shipped a second one in a DIFFERENT chapter with an inverted danger
+axis; the rule wants softening to "one per chapter, each with its own axis".
