@@ -570,3 +570,21 @@ picked `char_gm_many_slits2`** — five-six narrow pale slit-eyes, unequal and o
 her canon pair. Wired into `t_gaze` (v1385); `char_gm_void_many`, the faint `char_gm_many_slits` and
 the unpicked `char_gm_many_wide` deleted from the game (library copies remain, v1386). Verified on the
 embed: actor key swaps, image loads, no missing show/bg keys anywhere.
+
+### 2026-08-21 (later again) · the ledger learns English (src/minigames.js, free)
+
+Owner caught the ledger minigame showing Chinese in the English mode — every string in
+`src/minigames.js` was hardcoded zh. All seven user-facing sites are now `isTW ? zh : en`
+(language read once from `VN.S.flags.lang_tw` at minigame start; it locks on the title so once is
+enough): the two page quotes (EN matches the main script's canon — "twelve guests came before you.
+Twelve cups" from `p2_take`, "she was not always the Godmother" echoing the "You were not always
+this." choice), her three catch lines ("...Careful. The paper is brittle." straight from `p2_seen`),
+the ledger rows (周巧雲 → "Chou Chiao-yun · Winter, 1968", 你之前的那一位 → "The one before you ·
+Last night"), the instruction bar (15px in EN vs 18px zh — Latin runs longer), and the 收手 button
+("Stop"). The page-quote fit maths gained a per-language glyph width (CJK ~1.02em, Latin ~0.55em)
+and splits EN at a space instead of a full-width comma. Verified live in both modes by capturing
+every `fillText` during a driven minigame frame: zh byte-identical to before, EN with zero CJK
+leakage, catch line confirmed by forcing a catch in EN. ⚠ Template candidate for the next
+`/writing-great-skills`: a minigame's strings must follow the game's language flag — the ledger
+shipped zh-only and it took the owner playing EN mode to catch it (`reference-vn-minigame.md` has
+no i18n line today).
