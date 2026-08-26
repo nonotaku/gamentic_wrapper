@@ -155,12 +155,14 @@ then delete the entry (and the file when empty). Items 1–3 reproduced in BOTH 
    reads as if it introduced the problem, and `playtest_screenshot` has no way to report
    that a sound was emitted — audio work is unverifiable end-to-end in the harness.
 
-20. **The web editor's save clobbers concurrent API edits without conflict detection.** The editor
-    holds a full-document snapshot from load time; every save (including the implicit save when
-    the owner tweaks an inspector slider) writes that stale HTML back wholesale. Two `edit_game`
-    batches on `g96d22c` (v1388, v1389, 2026-08-26) each reported success and were silently
-    reverted seconds later by the owner's open editor session; the version counter kept climbing,
-    so nothing looked wrong from either side. `src/` files are stored separately and survive.
-    Wanted: last-write merge at field level, or at minimum a version-conflict rejection so the
-    editor cannot resurrect old code. (Same session: `pendingUpdate` stuck at `true` again — the
-    #18 symptom is back.)
+20. **The `// __GI_VN_RUNTIME__` marker block is re-rendered from its template on EVERY save, so
+    `edit_game` edits inside it report success and silently vanish.** Reproduced four times on
+    `g96d22c` (v1388–1391, 2026-08-26): a batch of 20 edits stored, the 18 that touched the
+    GAME_DATA blob persisted, and the 2 that touched a draw call inside the runtime were gone by
+    the next read — including with the owner's editor confirmed closed. (An earlier version of
+    this entry blamed the owner's open editor session; the concurrent tuning was real but
+    innocent — the regeneration happens on the agent's own store.) Wanted: either apply text
+    edits after the runtime render, or reject an edit whose find lands inside the regenerated
+    region so it fails loudly instead of lying. Workaround that works: hook the behaviour from an
+    inline script OUTSIDE the markers (e.g. a `fillText` shim survived nine subsequent saves).
+    (Same session: `pendingUpdate` stuck at `true` again — the #18 symptom is back.)

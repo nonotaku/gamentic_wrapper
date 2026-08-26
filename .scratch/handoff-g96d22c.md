@@ -621,3 +621,28 @@ ten minutes). Results:
 
 Owner's own inspector tuning today (safe, server-side config): lofi filter pushed to
 `#c5280d`, blur 3.5, ghost 0.54, scan 0.52, drop 0.75 — they made the red their own.
+
+### 2026-08-26 (later) · the English script catches up (v1391–1401, free)
+
+Owner approved the full EN rewrite. **EN says went 107 → 261** against zh 325 (some EN lines
+deliberately absorb two short zh beats); no label is EN-empty or under a third of its zh count any
+more. ~150 new/upgraded lines across nine `edit_game` batches, her register held throughout (no
+contractions, "little guest", storybook cadence). Verified on the fresh build with the two-language
+path walker: **EN and zh each walk 4,716 paths to all 8 endings with zero wrong-language lines,
+zero broken choices, and neither language ever enters the other's mirror labels.** Console clean;
+prologue's lit-window line relocated so the EN sequence builds in order (v1401).
+
+Mechanics that made 150 edits survivable — keep for the next big text pass:
+- **Tail-append anchors.** Find `"text": "<zh>",\n "if": "lang_tw"\n },` (or the её line's
+  `"voice": "vo_x"\n },`) and append the EN object AFTER it. In EN mode the zh line is skipped, so
+  en-after-zh is order-equivalent — and the anchor survives hidden fields (one say carries a stray
+  `"label"` field that killed the object-head anchor). Order-sensitive inserts anchor on the
+  existing EN object instead.
+- **Literal CJK only, copied from a dump.** Two batches bounced on single hand-escaped codepoints
+  (砌→砦, 頜). Dump the script (`script_full.txt` recipe: fetch embed with a browser UA — bare
+  urllib gets 403 — then brace-match GAME_DATA), copy anchors character-for-character.
+- **The ending screen (完／再玩一次) cannot be edited** — PLATFORM-BUGS #20: the runtime block is
+  re-rendered from template on every save (the earlier "editor clobber" theory was wrong; the
+  owner's editor was innocent). Fixed with a `fillText` shim outside the markers: 完→FIN,
+  再玩一次→Play again when `lang_tw` is off. Verified at pixel level (the drawn run widens to
+  three Latin glyphs in EN).
