@@ -646,3 +646,17 @@ Mechanics that made 150 edits survivable — keep for the next big text pass:
   owner's editor was innocent). Fixed with a `fillText` shim outside the markers: 完→FIN,
   再玩一次→Play again when `lang_tw` is off. Verified at pixel level (the drawn run widens to
   three Latin glyphs in EN).
+
+### 2026-08-26 (later still) · her name is a reward (v1402, free)
+
+Owner: the ??? plate should turn into her name once the hero finds it. The name's only in-fiction
+source is the first stolen page (『……她並非一直都是教母……』), so the trigger is **`page1`** —
+stolen at the saucer in ch1 or pulled from the ledger in ch2. An outside-marker poll (same script
+tag as the FIN shim) flips `D.characters.gm.name` → "Godmother" and `gmt` → 「教母」 while the flag
+is set; the runtime reads the characters table live, so every later line — and the backlog —
+renames itself. Because the runtime's restart never clears flags, **`prologue` now opens with a
+reset block** (page1/2/3, quiet, drank, tasted, paid, curious, seen, halfread, catches, via_*) so a
+replay starts unnamed and the via-epilogues can no longer double-fire across runs — a latent
+replay bug this feature would have exposed. Verified live: ???/??? at boot → steal page1 →
+Godmother／教母 within a poll tick → re-enter prologue → flags cleared, plate back to ???/???,
+console clean.
