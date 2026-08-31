@@ -687,3 +687,12 @@ generate `vo_p1_rattled_*` with ja_059 whenever the owner un-pauses the voice. �
 the next `/writing-great-skills`: `reference-vn-minigame.md` says "one per game is enough" — the
 owner has now deliberately shipped a second one in a DIFFERENT chapter with an inverted danger
 axis; the rule wants softening to "one per chapter, each with its own axis".
+
+### 2026-08-31 · the inspector speaks English (v1406, free)
+
+Owner asked for the tuning panel in English. Full schema resubmitted with every group and field
+label translated (Dialogue box / Main menu / Ledger minigame / Saucer minigame / Devoured ending /
+Sprite grading / Text & audio); keys untouched, and the server echo confirms every tuned config
+value survived (their red filter, pads, saucer knobs all intact). The in-game ⚙ settings overlay
+is a different surface — already bilingual, follows the game language, untouched. `pendingUpdate`
+incidentally read false again.
